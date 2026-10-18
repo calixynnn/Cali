@@ -1,555 +1,594 @@
 <!DOCTYPE html>
-<html lang="en" class="dark">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>System Status & Scheduled Maintenance | Cloud Core Services</title>
-    <script src="https://cdn.tailwindcss.com"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Midterm Activity Presentation - Sensor and LCD Integration Using Arduino</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=display" rel="stylesheet">
-    
-    <script>
-        tailwind.config = {
-            darkMode: 'class',
-            theme: {
-                extend: {
-                    fontFamily: {
-                        sans: ['"Plus Jakarta Sans"', 'sans-serif'],
-                        mono: ['"JetBrains Mono"', 'monospace'],
-                    },
-                    colors: {
-                        brand: {
-                            50: '#f0f7ff',
-                            100: '#e0effe',
-                            500: '#0066ff',
-                            600: '#0052cc',
-                            900: '#002966',
-                        },
-                        status: {
-                            operational: '#10b981',
-                            maintenance: '#f59e0b',
-                            degraded: '#f97316',
-                            outage: '#ef4444',
-                        },
-                        dark: {
-                            bg: '#090d16',
-                            card: '#111726',
-                            border: '#1f293d',
-                            subtle: '#182032'
-                        }
-                    },
-                    animation: {
-                        'pulse-slow': 'pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite',
-                        'glow': 'glow 2s ease-in-out infinite alternate',
-                    },
-                    keyframes: {
-                        glow: {
-                            '0%': { boxShadow: '0 0 15px rgba(245, 158, 11, 0.15)' },
-                            '100%': { boxShadow: '0 0 30px rgba(245, 158, 11, 0.35)' },
-                        }
-                    }
-                }
+    <style>
+        :root {
+            --primary: #00ffcc;
+            --secondary: #ff007f;
+            --accent: #3b82f6;
+            --bg-dark: #030712;
+            --card-bg: rgba(13, 20, 38, 0.85);
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+            --border-glow: rgba(0, 255, 204, 0.4);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Poppins', sans-serif;
+            user-select: none;
+        }
+
+        body {
+            background-color: var(--bg-dark);
+            background-image: 
+                radial-gradient(circle at 15% 15%, rgba(0, 255, 204, 0.12) 0%, transparent 45%),
+                radial-gradient(circle at 85% 85%, rgba(255, 0, 127, 0.12) 0%, transparent 45%);
+            color: var(--text-main);
+            height: 100vh;
+            height: 100dvh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+            position: relative;
+        }
+
+        /* Tech Cyber Grid Background */
+        body::before {
+            content: '';
+            position: absolute;
+            width: 200%;
+            height: 200%;
+            background-image: linear-gradient(rgba(0, 255, 204, 0.03) 1px, transparent 1px),
+                              linear-gradient(90deg, rgba(0, 255, 204, 0.03) 1px, transparent 1px);
+            background-size: 50px 50px;
+            transform: perspective(600px) rotateX(60deg) translateY(-120px);
+            z-index: -1;
+            animation: gridPulse 15s linear infinite;
+        }
+
+        @keyframes gridPulse {
+            0% { background-position: 0 0; }
+            100% { background-position: 0 50px; }
+        }
+
+        .presentation-container {
+            width: 92vw;
+            max-width: 1050px;
+            height: 84vh;
+            max-height: 680px;
+            perspective: 1400px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .slide-card {
+            flex: 1;
+            background: var(--card-bg);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid var(--border-glow);
+            border-radius: 24px;
+            box-shadow: 
+                0 25px 60px rgba(0, 0, 0, 0.7),
+                0 0 35px rgba(0, 255, 204, 0.15),
+                inset 0 0 25px rgba(255, 255, 255, 0.04);
+            padding: clamp(24px, 3.5vw, 44px);
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            position: relative;
+            overflow-y: auto;
+            transform-style: preserve-3d;
+            transition: transform 0.4s cubic-bezier(0.2, 0.8, 0.2, 1), opacity 0.4s ease;
+        }
+
+        .slide {
+            display: none;
+            flex-direction: column;
+            height: 100%;
+            animation: slideIn 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
+
+        .slide.active {
+            display: flex;
+        }
+
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateY(15px) scale(0.98); }
+            to { opacity: 1; transform: translateY(0) scale(1); }
+        }
+
+        /* Typography */
+        .badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: rgba(0, 255, 204, 0.1);
+            color: var(--primary);
+            padding: 5px 14px;
+            border-radius: 30px;
+            font-size: clamp(10px, 1.1vw, 12px);
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            margin-bottom: 10px;
+            align-self: flex-start;
+            border: 1px solid rgba(0, 255, 204, 0.3);
+            box-shadow: 0 0 10px rgba(0, 255, 204, 0.1);
+        }
+
+        h2 {
+            font-family: 'Orbitron', sans-serif;
+            font-size: clamp(1.3rem, 2.3vw, 2rem);
+            font-weight: 700;
+            color: #fff;
+            margin-bottom: 14px;
+            text-shadow: 0 2px 12px rgba(0,0,0,0.6);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            letter-spacing: 0.5px;
+        }
+
+        h2 i {
+            color: var(--primary);
+            filter: drop-shadow(0 0 8px var(--primary));
+        }
+
+        p, li {
+            font-size: clamp(0.85rem, 1.25vw, 1.02rem);
+            color: var(--text-muted);
+            line-height: 1.55;
+        }
+
+        ul {
+            list-style-type: none;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-top: 6px;
+        }
+
+        ul li {
+            position: relative;
+            padding-left: 22px;
+        }
+
+        ul li::before {
+            content: '⚡';
+            color: var(--primary);
+            position: absolute;
+            left: 0;
+            font-size: 0.9em;
+        }
+
+        .content-grid {
+            display: grid;
+            grid-template-columns: 1.2fr 0.8fr;
+            gap: 20px;
+            align-items: center;
+            height: 100%;
+        }
+
+        .members-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+            margin-top: 8px;
+        }
+
+        @media (max-width: 768px) {
+            .members-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            .content-grid {
+                grid-template-columns: 1fr;
             }
         }
-    </script>
 
-    <style>
-        body {
-            background-color: #090d16;
-            color: #f1f5f9;
-            font-family: 'Plus Jakarta Sans', sans-serif;
-        }
-
-        /* Glassmorphism Styles */
-        .glass-panel {
-            background: rgba(17, 23, 38, 0.7);
-            backdrop-filter: blur(16px);
-            -webkit-backdrop-filter: blur(16px);
+        .member-card {
+            background: rgba(255, 255, 255, 0.03);
             border: 1px solid rgba(255, 255, 255, 0.08);
+            padding: 10px;
+            border-radius: 12px;
+            text-align: center;
+            transition: all 0.3s ease;
         }
 
-        .glass-panel-hover {
+        .member-card:hover {
+            border-color: var(--primary);
+            transform: translateY(-3px);
+            background: rgba(0, 255, 204, 0.06);
+            box-shadow: 0 5px 15px rgba(0, 255, 204, 0.15);
+        }
+
+        .member-card i {
+            color: var(--primary);
+            font-size: 1.2rem;
+            margin-bottom: 4px;
+        }
+
+        .member-card h4 {
+            font-size: clamp(0.78rem, 1.05vw, 0.92rem);
+            color: #fff;
+            font-weight: 600;
+        }
+
+        /* Arduino Futuristic Card Box */
+        .arduino-box {
+            background: linear-gradient(135deg, rgba(0, 255, 204, 0.05), rgba(59, 130, 246, 0.05));
+            border: 1px solid rgba(0, 255, 204, 0.3);
+            border-radius: 16px;
+            padding: 18px;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            box-shadow: inset 0 0 15px rgba(0, 255, 204, 0.05);
+        }
+
+        .arduino-box i {
+            font-size: 2.8rem;
+            color: var(--primary);
+            filter: drop-shadow(0 0 12px var(--primary));
+        }
+
+        /* Navigation Controls */
+        .nav-controls {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 15px;
+            width: 100%;
+            border-top: 1px solid rgba(255, 255, 255, 0.06);
+            padding-top: 12px;
+        }
+
+        .btn {
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            color: #fff;
+            padding: 8px 20px;
+            border-radius: 30px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: clamp(0.8rem, 1.1vw, 0.92rem);
+            display: flex;
+            align-items: center;
+            gap: 8px;
             transition: all 0.25s ease;
         }
-        .glass-panel-hover:hover {
-            border-color: rgba(255, 255, 255, 0.18);
+
+        .btn:hover {
+            background: var(--primary);
+            color: #030712;
+            border-color: var(--primary);
+            box-shadow: 0 0 20px rgba(0, 255, 204, 0.5);
             transform: translateY(-2px);
         }
 
-        /* Ambient Glow Backdrop */
-        .ambient-glow {
-            position: absolute;
-            width: 600px;
-            height: 350px;
-            background: radial-gradient(circle, rgba(245, 158, 11, 0.12) 0%, rgba(9, 13, 22, 0) 70%);
-            top: 0;
-            left: 50%;
-            transform: translateX(-50%);
-            pointer-events: none;
-            z-index: 0;
+        .slide-indicators {
+            display: flex;
+            gap: 6px;
+            overflow-x: auto;
+            max-width: 45%;
+            padding: 4px;
         }
 
-        /* Custom Scrollbar */
-        ::-webkit-scrollbar {
-            width: 6px;
-            height: 6px;
+        .indicator {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.2);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            flex-shrink: 0;
         }
-        ::-webkit-scrollbar-track {
-            background: #090d16;
+
+        .indicator.active {
+            background: var(--primary);
+            width: 24px;
+            border-radius: 4px;
+            box-shadow: 0 0 10px var(--primary);
         }
-        ::-webkit-scrollbar-thumb {
-            background: #1f293d;
-            border-radius: 9999px;
-        }
-        ::-webkit-scrollbar-thumb:hover {
-            background: #374151;
+
+        .slide-counter {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 0.82rem;
+            color: var(--text-muted);
+            letter-spacing: 1px;
         }
     </style>
 </head>
-<body class="min-h-screen flex flex-col justify-between selection:bg-brand-500 selection:text-white relative">
-    
-    <!-- Ambient Backdrop Light -->
-    <div class="ambient-glow"></div>
+<body>
 
-    <!-- Top Navigation Header -->
-    <header class="sticky top-0 z-40 border-b border-dark-border/80 glass-panel">
-        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+    <div class="presentation-container">
+        <div class="slide-card">
             
-            <!-- Logo & Brand Name -->
-            <div class="flex items-center space-x-3">
-                <div class="w-8 h-8 rounded-lg bg-gradient-to-tr from-brand-600 to-cyan-400 flex items-center justify-center text-white shadow-lg shadow-brand-500/20 font-bold text-sm">
-                    <i class="fa-solid fa-cube"></i>
+            <!-- Slide 1: Title Slide -->
+            <div class="slide active" data-slide="1">
+                <div>
+                    <span class="badge"><i class="fa-solid fa-microchip"></i> Midterm Practical Activity</span>
+                    <h2>Sensor and LCD Integration Using Arduino</h2>
+                </div>
+                <div style="margin: 8px 0;">
+                    <p style="color: var(--primary); font-weight: 600; margin-bottom: 6px;">Project Title: <span style="color: #fff; font-weight: 400;">Smart Sensor Monitoring System with 16x2 LCD</span></p>
+                    <p style="font-size: 0.88rem; margin-bottom: 4px;"><i class="fa-solid fa-graduation-cap"></i> <strong>Subject:</strong> Application Development of Emerging Technologies / Arduino Programming</p>
+                    <p style="font-size: 0.88rem; margin-bottom: 10px;"><i class="fa-solid fa-user-tie"></i> <strong>Instructor:</strong> Prof. [Instructor Name]</p>
                 </div>
                 <div>
-                    <span class="font-bold text-base tracking-tight text-white">ApexCloud</span>
-                    <span class="text-xs text-gray-400 ml-2 border-l border-gray-700 pl-2 hidden sm:inline">Status Portal</span>
+                    <p style="font-size: 0.82rem; margin-bottom: 6px; font-weight: 600; color: #fff; text-transform: uppercase; letter-spacing: 1px;">Group Members (6 Members):</p>
+                    <div class="members-grid">
+                        <div class="member-card"><i class="fa-solid fa-user-shield"></i><h4>Member 1</h4></div>
+                        <div class="member-card"><i class="fa-solid fa-user-shield"></i><h4>Member 2</h4></div>
+                        <div class="member-card"><i class="fa-solid fa-user-shield"></i><h4>Member 3</h4></div>
+                        <div class="member-card"><i class="fa-solid fa-user-shield"></i><h4>Member 4</h4></div>
+                        <div class="member-card"><i class="fa-solid fa-user-shield"></i><h4>Member 5</h4></div>
+                        <div class="member-card"><i class="fa-solid fa-user-shield"></i><h4>Member 6</h4></div>
+                    </div>
                 </div>
             </div>
 
-            <!-- Header Action Controls -->
-            <div class="flex items-center space-x-3">
-                <!-- Developer Credit Badge -->
-                <div class="hidden sm:flex items-center space-x-2 px-3 py-1.5 rounded-lg bg-dark-subtle border border-dark-border text-xs text-gray-300">
-                    <i class="fa-solid fa-code text-brand-500"></i>
-                    <span>Dev: <strong class="text-white">Wel</strong></span>
-                </div>
-
-                <!-- Auto-Refresh Toggle -->
-                <button id="autoRefreshBtn" onclick="toggleAutoRefresh()" class="flex items-center space-x-2 px-3 py-1.5 rounded-lg bg-dark-subtle border border-dark-border text-xs text-gray-300 hover:text-white hover:border-gray-600 transition">
-                    <span class="relative flex h-2 w-2">
-                      <span id="refreshPulse" class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
-                      <span id="refreshDot" class="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
-                    </span>
-                    <span id="refreshText">Updates: 🔴</span>
-                </button>
-
-                <!-- Subscribe Button -->
-                <button onclick="scrollToNotify()" class="px-3.5 py-1.5 rounded-lg bg-brand-500 hover:bg-brand-600 text-white font-medium text-xs shadow-md shadow-brand-500/20 transition flex items-center gap-1.5">
-                    <i class="fa-regular fa-bell"></i>
-                    <span>Subscribe</span>
-                </button>
-            </div>
-        </div>
-    </header>
-
-    <!-- Main Content Container -->
-    <main class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8 w-full flex-grow space-y-8 z-10">
-        
-        <!-- Banner: Incident Status & Details -->
-        <section class="rounded-2xl glass-panel p-6 sm:p-8 border-l-4 border-amber-500 relative overflow-hidden shadow-2xl animate-glow">
-            <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-6">
-                
-                <!-- Incident Summary Text -->
-                <div class="space-y-3 max-w-2xl">
-                    <div class="inline-flex items-center space-x-2 px-3 py-1 rounded-full bg-amber-500/10 border border-amber-500/30 text-amber-400 text-xs font-semibold uppercase tracking-wider">
-                        <span class="w-2 h-2 rounded-full bg-amber-400 animate-pulse"></span>
-                        <span>Scheduled Maintenance in Progress</span>
-                    </div>
-
-                    <h1 class="text-2xl sm:text-3xl font-extrabold text-white tracking-tight">
-                        Database Cluster Upgrade & Infrastructure Maintenance
-                    </h1>
-
-                    <p class="text-gray-300 text-sm sm:text-base leading-relaxed">
-                        THE SERVER IS DOWM.
-                    </p>
-
-                    <div class="flex flex-wrap items-center gap-4 text-xs text-gray-400 pt-1">
-                        <div class="flex items-center gap-1.5">
-                            <i class="fa-solid fa-user-gear text-brand-500"></i>
-                            <span>Head of IT: <strong class="text-white">Wel</strong></span>
-                        </div>
-                        <div class="flex items-center gap-1.5">
-                            <i class="fa-solid fa-shield-halved text-emerald-400"></i>
-                            <span>Status: Automated Patching inactive</span>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Lead Developer & Engine Card -->
-                <div class="bg-dark-bg/80 border border-dark-border rounded-xl p-5 flex flex-col items-center justify-center text-center min-w-[240px]">
-                    <span class="text-xs uppercase tracking-widest text-gray-400 font-semibold mb-2 flex items-center gap-1.5">
-                        <i class="fa-solid fa-terminal text-brand-500"></i> System Maintainer
-                    </span>
-                    
-                    <div class="bg-dark-card border border-dark-border rounded-lg px-6 py-3 my-1">
-                        <span class="block text-2xl font-bold text-white font-mono tracking-wide">wel</span>
-                        <span class="text-[10px] text-brand-500 uppercase font-semibold">Core Systems Engineer</span>
-                    </div>
-
-                    <span class="text-[11px] text-gray-400 italic mt-1">Live telemetry streaming active</span>
-                </div>
-            </div>
-        </section>
-
-        <!-- Actionable Summary & Technical Quick View -->
-        <section class="grid grid-cols-1 md:grid-cols-3 gap-6">
-            
-            <!-- What this means for you -->
-            <div class="glass-panel rounded-xl p-5 md:col-span-2 flex flex-col justify-between">
+            <!-- Slide 2: Project Objectives -->
+            <div class="slide" data-slide="2">
                 <div>
-                    <h3 class="font-semibold text-sm text-white mb-2 flex items-center gap-2">
-                        <i class="fa-solid fa-circle-info text-brand-500"></i> What this means for you
-                    </h3>
-                    <ul class="space-y-2 text-xs text-gray-300">
-                        <li class="flex items-start gap-2">
-                            <i class="fa-solid fa-check text-emerald-400 mt-0.5"></i>
-                            <span><strong>Web App & Dashboard:</strong> Fully accessible for viewing reports and managing team settings.</span>
-                        </li>
-                        <li class="flex items-start gap-2">
-                            <i class="fa-solid fa-triangle-exclamation text-amber-400 mt-0.5"></i>
-                            <span><strong>API Write Operations:</strong> REST & GraphQL write requests may return HTTP 503 during short 2-minute maintenance intervals. Retry mechanisms are recommended.</span>
-                        </li>
-                        <li class="flex items-start gap-2">
-                            <i class="fa-solid fa-check text-emerald-400 mt-0.5"></i>
-                            <span><strong>Data Safety:</strong> All queued tasks and webhooks will be automatically reprocessed once maintenance concludes.</span>
-                        </li>
+                    <span class="badge"><i class="fa-solid fa-crosshairs"></i> Slide 2</span>
+                    <h2>Project Objectives</h2>
+                </div>
+                <ul>
+                    <li>Understand how physical sensors work seamlessly with Arduino[cite: 1].</li>
+                    <li>Display real-time sensor measurements accurately on an LCD module[cite: 1].</li>
+                    <li>Apply fundamental Arduino programming logic and circuit connections[cite: 1].</li>
+                    <li>Develop a fully functional, automated environmental monitoring system[cite: 1].</li>
+                </ul>
+                <div class="arduino-box" style="padding: 12px; margin-top: 10px;">
+                    <i class="fa-solid fa-bolt"></i>
+                    <p style="font-size: 0.82rem;">Building practical expertise in embedded microcontrollers and hardware interfacing.</p>
+                </div>
+            </div>
+
+            <!-- Slide 3: Components and Materials -->
+            <div class="slide" data-slide="3">
+                <div>
+                    <span class="badge"><i class="fa-solid fa-box-open"></i> Slide 3</span>
+                    <h2>Components & Materials</h2>
+                </div>
+                <div class="content-grid">
+                    <ul>
+                        <li>Arduino Uno or compatible microcontroller board[cite: 1]</li>
+                        <li>Approved sensor (Ultrasonic, Temperature, or LDR)[cite: 1, 3]</li>
+                        <li>16x2 LCD module equipped with I2C interface[cite: 1]</li>
+                        <li>Breadboard and high-quality jumper wires[cite: 1]</li>
+                        <li>USB cable for power and sketch uploading[cite: 1]</li>
+                        <li>Required resistors and auxiliary components[cite: 1]</li>
                     </ul>
-                </div>
-            </div>
-
-            <!-- Quick Copy JSON Status Endpoint -->
-            <div class="glass-panel rounded-xl p-5 flex flex-col justify-between">
-                <div>
-                    <div class="flex justify-between items-center mb-2">
-                        <h3 class="font-semibold text-xs text-gray-300 uppercase tracking-wider">Developer Endpoint</h3>
-                        <span class="text-[10px] bg-emerald-500/10 text-emerald-400 px-2 py-0.5 rounded border border-emerald-500/20 font-mono">JSON v1</span>
-                    </div>
-                    <div class="bg-dark-bg p-2.5 rounded-lg border border-dark-border font-mono text-[11px] text-gray-300 overflow-x-auto">
-                        <code>https://status.apexcloud.io/api/v1/health</code>
-                    </div>
-                </div>
-                <button onclick="copyApiEndpoint()" class="mt-3 w-full py-1.5 rounded bg-dark-subtle hover:bg-dark-border text-xs text-gray-300 hover:text-white border border-dark-border transition flex items-center justify-center gap-2">
-                    <i id="copyIcon" class="fa-regular fa-copy"></i>
-                    <span id="copyText">Copy Endpoint URL</span>
-                </button>
-            </div>
-        </section>
-
-        <!-- Affected Services Grid -->
-        <section class="glass-panel rounded-xl p-6">
-            <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 pb-5 border-b border-dark-border">
-                <div>
-                    <h2 class="text-base font-bold text-white flex items-center gap-2">
-                        <i class="fa-solid fa-server text-brand-500"></i> Service Operational Breakdown
-                    </h2>
-                    <p class="text-xs text-gray-400">Real-time breakdown of internal systems and regional clusters</p>
-                </div>
-
-                <!-- Filter / Search Controls -->
-                <div class="flex items-center space-x-2 w-full sm:w-auto">
-                    <div class="relative w-full sm:w-48">
-                        <i class="fa-solid fa-magnifying-glass absolute left-3 top-2.5 text-xs text-gray-500"></i>
-                        <input type="text" id="serviceSearch" oninput="filterServices()" placeholder="Filter services..." class="w-full bg-dark-bg border border-dark-border rounded-lg pl-8 pr-3 py-1.5 text-xs text-white placeholder-gray-500 focus:outline-none focus:border-brand-500 transition">
+                    <div class="arduino-box">
+                        <i class="fa-solid fa-microchip"></i>
+                        <h4 style="color: #fff; font-size: 0.92rem;">Arduino Uno Board</h4>
+                        <p style="font-size: 0.74rem;">The processing heart of our automated monitoring hardware.</p>
                     </div>
                 </div>
             </div>
 
-            <!-- Service Items List -->
-            <div id="serviceGrid" class="divide-y divide-dark-border/60">
-                <!-- Dynamically populated via JavaScript -->
-            </div>
-        </section>
-
-        <!-- Live Timeline / Updates Log -->
-        <section class="glass-panel rounded-xl p-6">
-            <div class="flex justify-between items-center pb-5 border-b border-dark-border">
+            <!-- Slide 4: System Overview -->
+            <div class="slide" data-slide="4">
                 <div>
-                    <h2 class="text-base font-bold text-white flex items-center gap-2">
-                        <i class="fa-solid fa-timeline text-amber-400"></i> Incident & Maintenance Log
-                    </h2>
-                    <p class="text-xs text-gray-400">Chronological history of status updates and operational notices</p>
+                    <span class="badge"><i class="fa-solid fa-network-wired"></i> Slide 4</span>
+                    <h2>System Overview</h2>
                 </div>
-                <span class="text-xs font-mono text-gray-400 bg-dark-bg px-2.5 py-1 rounded border border-dark-border">INC-84920</span>
-            </div>
-
-            <div id="timelineContainer" class="mt-6 space-y-6 relative before:absolute before:inset-0 before:left-3.5 before:w-0.5 before:bg-dark-border">
-                <!-- Dynamically populated via JavaScript -->
-            </div>
-        </section>
-
-        <!-- Subscribe & Support Footer Banner -->
-        <section id="notifySection" class="glass-panel rounded-xl p-6 sm:p-8 border border-brand-500/20 bg-gradient-to-r from-dark-card via-dark-card to-brand-900/10">
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
-                <div>
-                    <span class="text-xs font-semibold text-brand-500 uppercase tracking-wider">Stay Informed</span>
-                    <h2 class="text-xl font-bold text-white mt-1">Get instant updates on this incident</h2>
-                    <p class="text-xs text-gray-300 mt-2 leading-relaxed">
-                        Subscribe to receive automated notifications when maintenance progress updates occur or when services return to 100% operational status.
-                    </p>
-                </div>
-
-                <form onsubmit="handleSubscribe(event)" class="space-y-3">
-                    <div class="flex flex-col sm:flex-row gap-2">
-                        <input type="email" id="subEmail" required placeholder="name@company.com" class="flex-grow bg-dark-bg border border-dark-border rounded-lg px-3.5 py-2 text-xs text-white placeholder-gray-500 focus:outline-none focus:border-brand-500 transition">
-                        <button type="submit" class="px-5 py-2 rounded-lg bg-brand-500 hover:bg-brand-600 text-white font-medium text-xs shadow-md shadow-brand-500/20 transition whitespace-nowrap">
-                            Notify Me
-                        </button>
+                <div style="display: flex; flex-direction: column; gap: 10px; margin-top: 6px;">
+                    <div style="display: flex; align-items: center; gap: 14px; background: rgba(255,255,255,0.03); padding: 10px 14px; border-radius: 12px; border-left: 4px solid var(--primary);">
+                        <i class="fa-solid fa-eye" style="font-size: 1.4rem; color: var(--primary);"></i>
+                        <div>
+                            <h4 style="color: #fff; font-size: 0.92rem;">1. Sensor Detection</h4>
+                            <p style="font-size: 0.82rem;">Detects physical environmental variables (distance, temp, or light)[cite: 1].</p>
+                        </div>
                     </div>
-                    <p class="text-[11px] text-gray-500 flex items-center gap-1">
-                        <i class="fa-solid fa-shield-halved"></i> No spam. Unsubscribe anytime with one click.
-                    </p>
-                </form>
+                    <div style="display: flex; align-items: center; gap: 14px; background: rgba(255,255,255,0.03); padding: 10px 14px; border-radius: 12px; border-left: 4px solid var(--secondary);">
+                        <i class="fa-solid fa-microchip" style="font-size: 1.4rem; color: var(--secondary);"></i>
+                        <div>
+                            <h4 style="color: #fff; font-size: 0.92rem;">2. Data Processing</h4>
+                            <p style="font-size: 0.82rem;">Arduino reads, computes, and converts raw signals into meaningful data[cite: 1].</p>
+                        </div>
+                    </div>
+                    <div style="display: flex; align-items: center; gap: 14px; background: rgba(255,255,255,0.03); padding: 10px 14px; border-radius: 12px; border-left: 4px solid #3b82f6;">
+                        <i class="fa-solid fa-desktop" style="font-size: 1.4rem; color: #3b82f6;"></i>
+                        <div>
+                            <h4 style="color: #fff; font-size: 0.92rem;">3. LCD Visualization</h4>
+                            <p style="font-size: 0.82rem;">Renders real-time outputs and system status clearly on screen[cite: 1].</p>
+                        </div>
+                    </div>
+                </div>
             </div>
-        </section>
 
-    </main>
-
-    <!-- Footer -->
-    <footer class="border-t border-dark-border/80 glass-panel py-6 text-xs text-gray-400 mt-12 z-10">
-        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row justify-between items-center gap-4">
-            <div class="flex items-center space-x-2">
-                <span class="w-2 h-2 rounded-full bg-amber-400"></span>
-                <span>ApexCloud Core Systems Status • Developed & Maintained by <strong class="text-white">wel</strong></span>
+            <!-- Slide 5: Circuit Diagram and Connections -->
+            <div class="slide" data-slide="5">
+                <div>
+                    <span class="badge"><i class="fa-solid fa-diagram-project"></i> Slide 5</span>
+                    <h2>Circuit & Connections</h2>
+                </div>
+                <ul>
+                    <li>Present clear schematic diagrams and breadboard layouts[cite: 1].</li>
+                    <li>Identify individual sensor pin allocations (VCC, GND, Trigger/Echo)[cite: 1].</li>
+                    <li>Integrate I2C module lines (SDA to A4, SCL to A5 on Arduino Uno)[cite: 1].</li>
+                    <li>Establish stable 5V power and ground rails across the breadboard[cite: 1].</li>
+                </ul>
+                <div class="arduino-box" style="margin-top: 10px; padding: 10px;">
+                    <p style="font-size: 0.82rem; color: #fff;"><i class="fa-solid fa-triangle-exclamation" style="color: var(--secondary);"></i> Double-check all wire polarity before powering via USB to safeguard hardware components.</p>
+                </div>
             </div>
-            
-            <div class="flex items-center space-x-6">
-                <a href="#" onclick="showToast('Redirecting to Developer Documentation...')" class="hover:text-white transition">API Docs</a>
-                <a href="#" onclick="showToast('Opening Support Desk Ticket...')" class="hover:text-white transition">Contact Support</a>
-                <a href="#" onclick="showToast('Opening Incident History Archive...')" class="hover:text-white transition">Past Incidents</a>
-            </div>
-        </div>
-    </footer>
 
-    <!-- Toast Notification Container -->
-    <div id="toast" class="fixed bottom-6 right-6 z-50 transform translate-y-20 opacity-0 transition-all duration-300 pointer-events-none">
-        <div class="bg-dark-card border border-brand-500/40 text-white px-4 py-3 rounded-xl shadow-2xl flex items-center space-x-3">
-            <i id="toastIcon" class="fa-solid fa-circle-check text-emerald-400 text-base"></i>
-            <span id="toastMsg" class="text-xs font-medium">Notification message here</span>
+            <!-- Slide 6: Arduino Program -->
+            <div class="slide" data-slide="6">
+                <div>
+                    <span class="badge"><i class="fa-solid fa-code"></i> Slide 6</span>
+                    <h2>Arduino Program</h2>
+                </div>
+                <ul>
+                    <li>Import required control libraries (e.g., Wire.h, LiquidCrystal_I2C)[cite: 1].</li>
+                    <li>Declare global variables and assign proper pin mappings[cite: 1].</li>
+                    <li>Initialize communication and screen setups inside <code>setup()</code>[cite: 1].</li>
+                    <li>Continuously poll sensor metrics and refresh LCD in <code>loop()</code>[cite: 1].</li>
+                </ul>
+                <div style="background: #010409; padding: 10px; border-radius: 10px; margin-top: 8px; font-family: monospace; font-size: 0.74rem; color: var(--primary); border: 1px solid rgba(0,255,204,0.2);">
+                    #include &lt;LiquidCrystal_I2C.h&gt;<br>
+                    LiquidCrystal_I2C lcd(0x27, 16, 2);<br>
+                    void setup() { lcd.init(); lcd.backlight(); }<br>
+                    void loop() { /* Fetch sensor & print to LCD */ }
+                </div>
+            </div>
+
+            <!-- Slide 7: Actual Demonstration -->
+            <div class="slide" data-slide="7">
+                <div>
+                    <span class="badge"><i class="fa-solid fa-video"></i> Slide 7</span>
+                    <h2>Actual Demonstration</h2>
+                </div>
+                <ul>
+                    <li>Display the live, fully assembled physical prototype circuit[cite: 1].</li>
+                    <li>Demonstrate active sensor reactivity under changing conditions[cite: 1].</li>
+                    <li>Showcase live LCD display updates corresponding to input variations[cite: 1].</li>
+                    <li>Explain the dynamic values captured during live system testing[cite: 1].</li>
+                </ul>
+                <div class="arduino-box" style="margin-top: 10px;">
+                    <i class="fa-solid fa-circle-play"></i>
+                    <p style="font-size: 0.82rem;">Live Prototype Operation & Output Verification</p>
+                </div>
+            </div>
+
+            <!-- Slide 8: Testing and Results -->
+            <div class="slide" data-slide="8">
+                <div>
+                    <span class="badge"><i class="fa-solid fa-clipboard-check"></i> Slide 8</span>
+                    <h2>Testing & Results</h2>
+                </div>
+                <ul>
+                    <li>Evaluated performance across at least three unique test scenarios[cite: 1].</li>
+                    <li>Compared baseline sensor inputs directly against LCD screen outputs[cite: 1].</li>
+                    <li>Diagnosed hardware/wiring hiccups and implemented robust fixes[cite: 1].</li>
+                    <li>Incorporated photo/screenshot documentation of actual system testing[cite: 1].</li>
+                </ul>
+                <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-top: 10px;">
+                    <div class="member-card"><h4>Test 1</h4><p style="font-size: 0.7rem;">Normal Baseline</p></div>
+                    <div class="member-card"><h4>Test 2</h4><p style="font-size: 0.7rem;">Threshold Limit</p></div>
+                    <div class="member-card"><h4>Test 3</h4><p style="font-size: 0.7rem;">Maximum Range</p></div>
+                </div>
+            </div>
+
+            <!-- Slide 9: Applications and Conclusion -->
+            <div class="slide" data-slide="9">
+                <div>
+                    <span class="badge"><i class="fa-solid fa-lightbulb"></i> Slide 9</span>
+                    <h2>Applications & Conclusion</h2>
+                </div>
+                <ul>
+                    <li>Real-world applications in smart homes, automation, and remote telemetry[cite: 1].</li>
+                    <li>Key takeaways: Hardware troubleshooting and embedded coding fluency[cite: 1].</li>
+                    <li>Future enhancements: Integrating IoT modules (Wi-Fi/Bluetooth) or warning alarms[cite: 1].</li>
+                </ul>
+                <div class="arduino-box" style="margin-top: 10px; padding: 10px;">
+                    <p style="font-size: 0.82rem; color: #fff;">"Successfully transformed physical sensor telemetry into an intuitive, readable display interface."</p>
+                </div>
+            </div>
+
+            <!-- Slide 10: Question and Answer -->
+            <div class="slide" data-slide="10">
+                <div style="text-align: center; margin: auto;">
+                    <i class="fa-solid fa-circle-question" style="font-size: 3.8rem; color: var(--primary); margin-bottom: 12px; filter: drop-shadow(0 0 15px var(--primary));"></i>
+                    <h2 style="justify-content: center;">Question & Answer</h2>
+                    <p style="font-size: 0.95rem; max-width: 550px; margin: 8px auto;">Prepared to answer queries regarding circuit architecture, programming logic, sensor metrics, and troubleshooting steps[cite: 1].</p>
+                    <h3 style="font-family: 'Orbitron', sans-serif; color: var(--primary); margin-top: 16px; font-size: 1.15rem; letter-spacing: 1px;">Thank You for Listening!</h3>
+                </div>
+            </div>
+
+            <!-- Bottom Navigation Bar -->
+            <div class="nav-controls">
+                <button class="btn" id="prevBtn"><i class="fa-solid fa-arrow-left"></i> Prev</button>
+                <div class="slide-counter"><span id="currentNum">01</span> / 10</div>
+                <div class="slide-indicators" id="indicators"></div>
+                <button class="btn" id="nextBtn">Next <i class="fa-solid fa-arrow-right"></i></button>
+            </div>
+
         </div>
     </div>
 
     <script>
-        // --- Core Mock Data ---
-        const servicesData = [
-            { id: "api", name: "REST & GraphQL API Gateway", group: "Core Platform", status: "degraded", metric: "98.2% Operational", desc: "Intermittent elevated latency during index re-building." },
-            { id: "auth", name: "Authentication & OAuth Services", group: "Identity", status: "operational", metric: "100% Operational", desc: "Normal operations." },
-            { id: "db", name: "Primary PostgreSQL Database Cluster", group: "Data Layer", status: "maintenance", metric: "Under Maintenance", desc: "Applying critical security patches and cluster re-indexing." },
-            { id: "dash", name: "Web Management Dashboard", group: "Core Platform", status: "operational", metric: "100% Operational", desc: "Normal operations." },
-            { id: "webhooks", name: "Outbound Webhook Delivery Engine", group: "Integrations", status: "degraded", metric: "Queued (Slight Delay)", desc: "Webhooks queued safely; will dispatch as database indexes complete." },
-            { id: "storage", name: "S3 Object Storage & CDN", group: "Infrastructure", status: "operational", metric: "100% Operational", desc: "Normal operations." },
-        ];
+        const slides = document.querySelectorAll('.slide');
+        const indicatorsContainer = document.getElementById('indicators');
+        const currentNum = document.getElementById('currentNum');
+        const prevBtn = document.getElementById('prevBtn');
+        const nextBtn = document.getElementById('nextBtn');
+        
+        let currentSlide = 0;
+        const totalSlides = slides.length;
 
-        let timelineData = [
-            {
-                stage: "In Progress",
-                badgeClass: "bg-amber-500/10 text-amber-400 border-amber-500/30",
-                title: "Secondary Node Re-indexing Underway",
-                desc: "Database secondary replicas have successfully completed structural patching. Lead developer wel is verifying query execution plans before switching write traffic."
-            },
-            {
-                stage: "Update",
-                badgeClass: "bg-blue-500/10 text-blue-400 border-blue-500/30",
-                title: "Maintenance Window Initiated",
-                desc: "Scheduled maintenance window has officially commenced. Traffic is routed through secondary read-only pools while primary upgrades occur."
-            },
-            {
-                stage: "Scheduled",
-                badgeClass: "bg-gray-500/10 text-gray-400 border-gray-500/30",
-                title: "Scheduled Maintenance Reminder Issued",
-                desc: "Automated alert sent to subscribers regarding upcoming planned maintenance window."
+        // Create indicators
+        for (let i = 0; i < totalSlides; i++) {
+            const ind = document.createElement('div');
+            ind.classList.add('indicator');
+            if (i === 0) ind.classList.add('active');
+            ind.addEventListener('click', () => goToSlide(i));
+            indicatorsContainer.appendChild(ind);
+        }
+
+        const indicators = document.querySelectorAll('.indicator');
+
+        function updateSlide() {
+            slides.forEach((slide, index) => {
+                slide.classList.toggle('active', index === currentSlide);
+            });
+            indicators.forEach((ind, index) => {
+                ind.classList.toggle('active', index === currentSlide);
+            });
+            currentNum.textContent = String(currentSlide + 1).padStart(2, '0');
+        }
+
+        function goToSlide(n) {
+            currentSlide = (n + totalSlides) % totalSlides;
+            updateSlide();
+        }
+
+        prevBtn.addEventListener('click', () => goToSlide(currentSlide - 1));
+        nextBtn.addEventListener('click', () => goToSlide(currentSlide + 1));
+
+        // Keyboard navigation
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowRight' || e.key === 'PageDown' || e.key === ' ') {
+                goToSlide(currentSlide + 1);
+            } else if (e.key === 'ArrowLeft' || e.key === 'PageUp') {
+                goToSlide(currentSlide - 1);
             }
-        ];
+        });
 
-        // --- Render Services Grid ---
-        function renderServices(filter = "") {
-            const container = document.getElementById("serviceGrid");
-            const filtered = servicesData.filter(s => 
-                s.name.toLowerCase().includes(filter.toLowerCase()) || 
-                s.group.toLowerCase().includes(filter.toLowerCase())
-            );
+        // Touch swipe support for mobile
+        let touchStartX = 0;
+        let touchEndX = 0;
 
-            if (filtered.length === 0) {
-                container.innerHTML = `
-                    <div class="py-8 text-center text-xs text-gray-500">
-                        No services matching "${filter}"
-                    </div>
-                `;
-                return;
+        document.addEventListener('touchstart', e => {
+            touchStartX = e.changedTouches[0].screenX;
+        });
+
+        document.addEventListener('touchend', e => {
+            touchEndX = e.changedTouches[0].screenX;
+            if (touchEndX < touchStartX - 40) {
+                goToSlide(currentSlide + 1);
             }
-
-            container.innerHTML = filtered.map(s => {
-                let statusBadge = "";
-                if (s.status === "operational") {
-                    statusBadge = `<span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium bg-emerald-500/10 text-emerald-400 border border-emerald-500/20"><span class="w-1.5 h-1.5 rounded-full bg-emerald-400 mr-1.5"></span>Operational</span>`;
-                } else if (s.status === "maintenance") {
-                    statusBadge = `<span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium bg-amber-500/10 text-amber-400 border border-amber-500/20"><span class="w-1.5 h-1.5 rounded-full bg-amber-400 mr-1.5 animate-pulse"></span>Maintenance</span>`;
-                } else if (s.status === "degraded") {
-                    statusBadge = `<span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium bg-orange-500/10 text-orange-400 border border-orange-500/20"><span class="w-1.5 h-1.5 rounded-full bg-orange-400 mr-1.5"></span>Degraded</span>`;
-                }
-
-                return `
-                    <div class="py-4 flex flex-col sm:flex-row sm:items-center justify-between gap-3 hover:bg-dark-subtle/30 px-2 rounded-lg transition">
-                        <div>
-                            <div class="flex items-center space-x-2">
-                                <span class="font-medium text-sm text-white">${s.name}</span>
-                                <span class="text-[10px] text-gray-500 border border-dark-border px-1.5 py-0.5 rounded font-mono">${s.group}</span>
-                            </div>
-                            <p class="text-xs text-gray-400 mt-1">${s.desc}</p>
-                        </div>
-                        <div class="flex items-center justify-between sm:justify-end space-x-4">
-                            <span class="text-xs text-gray-500 font-mono hidden md:inline">${s.metric}</span>
-                            ${statusBadge}
-                        </div>
-                    </div>
-                `;
-            }).join('');
-        }
-
-        // --- Render Timeline Logs ---
-        function renderTimeline() {
-            const container = document.getElementById("timelineContainer");
-            container.innerHTML = timelineData.map((item) => `
-                <div class="relative pl-8 group">
-                    <!-- Timeline Node Icon -->
-                    <div class="absolute left-1.5 top-1.5 -translate-x-1/2 w-4 h-4 rounded-full bg-dark-bg border-2 border-amber-400 flex items-center justify-center">
-                        <div class="w-1.5 h-1.5 rounded-full bg-amber-400"></div>
-                    </div>
-
-                    <div class="glass-panel p-4 rounded-xl border border-dark-border/80 group-hover:border-dark-border transition">
-                        <div class="flex flex-wrap items-center justify-between gap-2 mb-1.5">
-                            <div class="flex items-center space-x-2">
-                                <span class="text-xs font-bold text-white">${item.title}</span>
-                                <span class="px-2 py-0.5 text-[10px] rounded-full border font-semibold ${item.badgeClass}">${item.stage}</span>
-                            </div>
-                        </div>
-                        <p class="text-xs text-gray-300 leading-relaxed">${item.desc}</p>
-                    </div>
-                </div>
-            `).join('');
-        }
-
-        // --- Service Search Filter ---
-        function filterServices() {
-            const query = document.getElementById("serviceSearch").value;
-            renderServices(query);
-        }
-
-        // --- Auto Refresh Simulation ---
-        let autoRefreshActive = true;
-        let refreshInterval = null;
-
-        function toggleAutoRefresh() {
-            autoRefreshActive = !autoRefreshActive;
-            const text = document.getElementById("refreshText");
-            const pulse = document.getElementById("refreshPulse");
-            const dot = document.getElementById("refreshDot");
-
-            if (autoRefreshActive) {
-                text.innerText = "Live Updates: ON";
-                pulse.classList.remove("hidden");
-                dot.className = "relative inline-flex rounded-full h-2 w-2 bg-emerald-500";
-                startAutoRefreshLoop();
-                showToast("Live telemetry stream resumed");
-            } else {
-                text.innerText = "Live Updates: OFF";
-                pulse.classList.add("hidden");
-                dot.className = "relative inline-flex rounded-full h-2 w-2 bg-gray-500";
-                clearInterval(refreshInterval);
-                showToast("Live telemetry paused");
+            if (touchEndX > touchStartX + 40) {
+                goToSlide(currentSlide - 1);
             }
-        }
-
-        function startAutoRefreshLoop() {
-            clearInterval(refreshInterval);
-            refreshInterval = setInterval(() => {
-                if (!autoRefreshActive) return;
-                
-                const mockUpdates = [
-                    "Telemetry Ping: Database cluster memory utilization stabilized by dev wel.",
-                    "Query cache warm-up initiated for primary read nodes.",
-                    "Healthcheck response time improved across all regional edge locations."
-                ];
-                const randomMsg = mockUpdates[Math.floor(Math.random() * mockUpdates.length)];
-                
-                timelineData.unshift({
-                    stage: "Telemetry",
-                    badgeClass: "bg-emerald-500/10 text-emerald-400 border-emerald-500/30",
-                    title: "Automated Diagnostics Ping",
-                    desc: randomMsg
-                });
-                
-                if(timelineData.length > 6) timelineData.pop();
-                renderTimeline();
-            }, 12000);
-        }
-
-        // --- Interactive Copying & Actions ---
-        function copyApiEndpoint() {
-            const dummyUrl = "https://status.apexcloud.io/api/v1/health";
-            
-            const el = document.createElement('textarea');
-            el.value = dummyUrl;
-            document.body.appendChild(el);
-            el.select();
-            document.execCommand('copy');
-            document.body.removeChild(el);
-
-            const copyText = document.getElementById("copyText");
-            const copyIcon = document.getElementById("copyIcon");
-
-            copyText.innerText = "Copied!";
-            copyIcon.className = "fa-solid fa-check text-emerald-400";
-
-            setTimeout(() => {
-                copyText.innerText = "Copy Endpoint URL";
-                copyIcon.className = "fa-regular fa-copy";
-            }, 2000);
-
-            showToast("Endpoint URL copied to clipboard!");
-        }
-
-        function scrollToNotify() {
-            document.getElementById("notifySection").scrollIntoView({ behavior: 'smooth' });
-        }
-
-        function handleSubscribe(e) {
-            e.preventDefault();
-            const email = document.getElementById("subEmail").value;
-            showToast(`Subscribed ${email} to incident updates!`);
-            document.getElementById("subEmail").value = "";
-        }
-
-        function showToast(message) {
-            const toast = document.getElementById("toast");
-            const msgEl = document.getElementById("toastMsg");
-
-            msgEl.innerText = message;
-            toast.classList.remove("translate-y-20", "opacity-0", "pointer-events-none");
-            toast.classList.add("translate-y-0", "opacity-100");
-
-            setTimeout(() => {
-                toast.classList.remove("translate-y-0", "opacity-100");
-                toast.classList.add("translate-y-20", "opacity-0", "pointer-events-none");
-            }, 3000);
-        }
-
-        // --- Init on Page Load ---
-        window.onload = function() {
-            renderServices();
-            renderTimeline();
-            startAutoRefreshLoop();
-        };
+        });
     </script>
 </body>
 </html>
