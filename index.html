@@ -12,7 +12,7 @@
             --secondary: #ff007f;
             --accent: #3b82f6;
             --bg-dark: #030712;
-            --card-bg: rgba(13, 20, 38, 0.85);
+            --card-bg: rgba(13, 20, 38, 0.88);
             --text-main: #f8fafc;
             --text-muted: #94a3b8;
             --border-glow: rgba(0, 255, 204, 0.4);
@@ -23,7 +23,7 @@
             margin: 0;
             padding: 0;
             font-family: 'Poppins', sans-serif;
-            user-select: none;
+            /* Inalis ang user-select: none para maging selectable/kopyable ang mga text */
         }
 
         body {
@@ -63,9 +63,9 @@
 
         .presentation-container {
             width: 92vw;
-            max-width: 1050px;
-            height: 84vh;
-            max-height: 680px;
+            max-width: 1080px;
+            height: 85vh;
+            max-height: 700px;
             perspective: 1400px;
             display: flex;
             flex-direction: column;
@@ -82,7 +82,7 @@
                 0 25px 60px rgba(0, 0, 0, 0.7),
                 0 0 35px rgba(0, 255, 204, 0.15),
                 inset 0 0 25px rgba(255, 255, 255, 0.04);
-            padding: clamp(24px, 3.5vw, 44px);
+            padding: clamp(20px, 3vw, 40px);
             display: flex;
             flex-direction: column;
             justify-content: space-between;
@@ -121,7 +121,7 @@
             font-weight: 600;
             text-transform: uppercase;
             letter-spacing: 1.5px;
-            margin-bottom: 10px;
+            margin-bottom: 8px;
             align-self: flex-start;
             border: 1px solid rgba(0, 255, 204, 0.3);
             box-shadow: 0 0 10px rgba(0, 255, 204, 0.1);
@@ -129,10 +129,10 @@
 
         h2 {
             font-family: 'Orbitron', sans-serif;
-            font-size: clamp(1.3rem, 2.3vw, 2rem);
+            font-size: clamp(1.2rem, 2.2vw, 1.8rem);
             font-weight: 700;
             color: #fff;
-            margin-bottom: 14px;
+            margin-bottom: 12px;
             text-shadow: 0 2px 12px rgba(0,0,0,0.6);
             display: flex;
             align-items: center;
@@ -146,17 +146,17 @@
         }
 
         p, li {
-            font-size: clamp(0.85rem, 1.25vw, 1.02rem);
+            font-size: clamp(0.82rem, 1.2vw, 0.98rem);
             color: var(--text-muted);
-            line-height: 1.55;
+            line-height: 1.5;
         }
 
         ul {
             list-style-type: none;
             display: flex;
             flex-direction: column;
-            gap: 10px;
-            margin-top: 6px;
+            gap: 8px;
+            margin-top: 4px;
         }
 
         ul li {
@@ -169,13 +169,13 @@
             color: var(--primary);
             position: absolute;
             left: 0;
-            font-size: 0.9em;
+            font-size: 0.85em;
         }
 
         .content-grid {
             display: grid;
-            grid-template-columns: 1.2fr 0.8fr;
-            gap: 20px;
+            grid-template-columns: 1.1fr 0.9fr;
+            gap: 16px;
             align-items: center;
             height: 100%;
         }
@@ -183,8 +183,8 @@
         .members-grid {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
-            gap: 10px;
-            margin-top: 8px;
+            gap: 8px;
+            margin-top: 6px;
         }
 
         @media (max-width: 768px) {
@@ -199,7 +199,7 @@
         .member-card {
             background: rgba(255, 255, 255, 0.03);
             border: 1px solid rgba(255, 255, 255, 0.08);
-            padding: 10px;
+            padding: 8px;
             border-radius: 12px;
             text-align: center;
             transition: all 0.3s ease;
@@ -214,12 +214,12 @@
 
         .member-card i {
             color: var(--primary);
-            font-size: 1.2rem;
-            margin-bottom: 4px;
+            font-size: 1.1rem;
+            margin-bottom: 3px;
         }
 
         .member-card h4 {
-            font-size: clamp(0.78rem, 1.05vw, 0.92rem);
+            font-size: clamp(0.75rem, 1vw, 0.88rem);
             color: #fff;
             font-weight: 600;
         }
@@ -229,20 +229,45 @@
             background: linear-gradient(135deg, rgba(0, 255, 204, 0.05), rgba(59, 130, 246, 0.05));
             border: 1px solid rgba(0, 255, 204, 0.3);
             border-radius: 16px;
-            padding: 18px;
+            padding: 14px;
             text-align: center;
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            gap: 8px;
+            gap: 6px;
             box-shadow: inset 0 0 15px rgba(0, 255, 204, 0.05);
         }
 
         .arduino-box i {
-            font-size: 2.8rem;
+            font-size: 2.5rem;
             color: var(--primary);
             filter: drop-shadow(0 0 12px var(--primary));
+        }
+
+        /* Rubric Grid Table */
+        .rubric-grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 6px;
+            background: rgba(0,0,0,0.2);
+            padding: 10px;
+            border-radius: 12px;
+            border: 1px solid rgba(0,255,204,0.15);
+        }
+
+        .rubric-header {
+            font-weight: 700;
+            color: var(--primary);
+            border-bottom: 1px solid rgba(0,255,204,0.3);
+            padding-bottom: 4px;
+            font-size: 0.85rem;
+        }
+
+        .rubric-item {
+            font-size: 0.8rem;
+            color: #e2e8f0;
+            padding: 3px 0;
         }
 
         /* Navigation Controls */
@@ -250,24 +275,24 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-top: 15px;
+            margin-top: 10px;
             width: 100%;
             border-top: 1px solid rgba(255, 255, 255, 0.06);
-            padding-top: 12px;
+            padding-top: 10px;
         }
 
         .btn {
             background: rgba(255, 255, 255, 0.04);
             border: 1px solid rgba(255, 255, 255, 0.12);
             color: #fff;
-            padding: 8px 20px;
+            padding: 6px 18px;
             border-radius: 30px;
             cursor: pointer;
             font-weight: 600;
-            font-size: clamp(0.8rem, 1.1vw, 0.92rem);
+            font-size: clamp(0.75rem, 1vw, 0.88rem);
             display: flex;
             align-items: center;
-            gap: 8px;
+            gap: 6px;
             transition: all 0.25s ease;
         }
 
@@ -281,15 +306,15 @@
 
         .slide-indicators {
             display: flex;
-            gap: 6px;
+            gap: 5px;
             overflow-x: auto;
             max-width: 45%;
             padding: 4px;
         }
 
         .indicator {
-            width: 8px;
-            height: 8px;
+            width: 7px;
+            height: 7px;
             border-radius: 50%;
             background: rgba(255, 255, 255, 0.2);
             cursor: pointer;
@@ -299,14 +324,14 @@
 
         .indicator.active {
             background: var(--primary);
-            width: 24px;
+            width: 20px;
             border-radius: 4px;
             box-shadow: 0 0 10px var(--primary);
         }
 
         .slide-counter {
             font-family: 'Orbitron', sans-serif;
-            font-size: 0.82rem;
+            font-size: 0.8rem;
             color: var(--text-muted);
             letter-spacing: 1px;
         }
@@ -320,16 +345,16 @@
             <!-- Slide 1: Title Slide -->
             <div class="slide active" data-slide="1">
                 <div>
-                    <span class="badge"><i class="fa-solid fa-microchip"></i> Midterm Practical Activity</span>
+                    <span class="badge"><i class="fa-solid fa-microchip"></i> Midterm Practical Activity & Presentation</span>
                     <h2>Sensor and LCD Integration Using Arduino</h2>
                 </div>
-                <div style="margin: 8px 0;">
-                    <p style="color: var(--primary); font-weight: 600; margin-bottom: 6px;">Project Title: <span style="color: #fff; font-weight: 400;">Smart Sensor Monitoring System with 16x2 LCD</span></p>
-                    <p style="font-size: 0.88rem; margin-bottom: 4px;"><i class="fa-solid fa-graduation-cap"></i> <strong>Subject:</strong> Application Development of Emerging Technologies / Arduino Programming</p>
-                    <p style="font-size: 0.88rem; margin-bottom: 10px;"><i class="fa-solid fa-user-tie"></i> <strong>Instructor:</strong> Prof. [Instructor Name]</p>
+                <div style="margin: 6px 0;">
+                    <p style="color: var(--primary); font-weight: 600; margin-bottom: 4px;">Project Title: <span style="color: #fff; font-weight: 400;">Smart Sensor Monitoring System with 16x2 LCD</span></p>
+                    <p style="font-size: 0.85rem; margin-bottom: 3px;"><i class="fa-solid fa-graduation-cap"></i> <strong>Course/Subject:</strong> Application Development of Emerging Technologies / Arduino Programming[cite: 5]</p>
+                    <p style="font-size: 0.85rem; margin-bottom: 8px;"><i class="fa-solid fa-user-tie"></i> <strong>Instructor:</strong> Prof. [Instructor Name][cite: 5]</p>
                 </div>
                 <div>
-                    <p style="font-size: 0.82rem; margin-bottom: 6px; font-weight: 600; color: #fff; text-transform: uppercase; letter-spacing: 1px;">Group Members (6 Members):</p>
+                    <p style="font-size: 0.8rem; margin-bottom: 4px; font-weight: 600; color: #fff; text-transform: uppercase; letter-spacing: 1px;">Group Members (6 Members)[cite: 5]:</p>
                     <div class="members-grid">
                         <div class="member-card"><i class="fa-solid fa-user-shield"></i><h4>Member 1</h4></div>
                         <div class="member-card"><i class="fa-solid fa-user-shield"></i><h4>Member 2</h4></div>
@@ -348,18 +373,18 @@
                     <h2>Project Objectives</h2>
                 </div>
                 <ul>
-                    <li>Understand how physical sensors work seamlessly with Arduino[cite: 1].</li>
-                    <li>Display real-time sensor measurements accurately on an LCD module[cite: 1].</li>
-                    <li>Apply fundamental Arduino programming logic and circuit connections[cite: 1].</li>
-                    <li>Develop a fully functional, automated environmental monitoring system[cite: 1].</li>
+                    <li>Understand how sensors work with Arduino[cite: 5].</li>
+                    <li>Display sensor readings on an LCD[cite: 5].</li>
+                    <li>Apply basic Arduino programming and circuit connections[cite: 5].</li>
+                    <li>Develop a functional monitoring system[cite: 5].</li>
                 </ul>
-                <div class="arduino-box" style="padding: 12px; margin-top: 10px;">
+                <div class="arduino-box" style="padding: 10px; margin-top: 12px;">
                     <i class="fa-solid fa-bolt"></i>
-                    <p style="font-size: 0.82rem;">Building practical expertise in embedded microcontrollers and hardware interfacing.</p>
+                    <p style="font-size: 0.8rem;">Building foundational skills in hardware integration and real-time microcontroller applications.</p>
                 </div>
             </div>
 
-            <!-- Slide 3: Components and Materials -->
+            <!-- Slide 3: Components and Project Options -->
             <div class="slide" data-slide="3">
                 <div>
                     <span class="badge"><i class="fa-solid fa-box-open"></i> Slide 3</span>
@@ -367,17 +392,18 @@
                 </div>
                 <div class="content-grid">
                     <ul>
-                        <li>Arduino Uno or compatible microcontroller board[cite: 1]</li>
-                        <li>Approved sensor (Ultrasonic, Temperature, or LDR)[cite: 1, 3]</li>
-                        <li>16x2 LCD module equipped with I2C interface[cite: 1]</li>
-                        <li>Breadboard and high-quality jumper wires[cite: 1]</li>
-                        <li>USB cable for power and sketch uploading[cite: 1]</li>
-                        <li>Required resistors and auxiliary components[cite: 1]</li>
+                        <li>Arduino Uno or compatible board[cite: 5]</li>
+                        <li>One approved sensor (Ultrasonic, Temp, or Light)[cite: 4, 5]</li>
+                        <li>16x2 LCD module, with I2C interface[cite: 5]</li>
+                        <li>Breadboard and jumper wires[cite: 5]</li>
+                        <li>USB cable and computer[cite: 5]</li>
+                        <li>Required resistors / supporting components[cite: 5]</li>
                     </ul>
-                    <div class="arduino-box">
-                        <i class="fa-solid fa-microchip"></i>
-                        <h4 style="color: #fff; font-size: 0.92rem;">Arduino Uno Board</h4>
-                        <p style="font-size: 0.74rem;">The processing heart of our automated monitoring hardware.</p>
+                    <div class="arduino-box" style="padding: 10px;">
+                        <h4 style="color: var(--primary); font-size: 0.85rem; text-transform: uppercase;">Suggested Options[cite: 4]:</h4>
+                        <p style="font-size: 0.72rem;">1. Distance Monitor (Ultrasonic)[cite: 4]</p>
+                        <p style="font-size: 0.72rem;">2. Temp & Humidity (DHT11/22)[cite: 4]</p>
+                        <p style="font-size: 0.72rem;">3. Light Intensity (LDR)[cite: 4]</p>
                     </div>
                 </div>
             </div>
@@ -388,26 +414,26 @@
                     <span class="badge"><i class="fa-solid fa-network-wired"></i> Slide 4</span>
                     <h2>System Overview</h2>
                 </div>
-                <div style="display: flex; flex-direction: column; gap: 10px; margin-top: 6px;">
-                    <div style="display: flex; align-items: center; gap: 14px; background: rgba(255,255,255,0.03); padding: 10px 14px; border-radius: 12px; border-left: 4px solid var(--primary);">
-                        <i class="fa-solid fa-eye" style="font-size: 1.4rem; color: var(--primary);"></i>
+                <div style="display: flex; flex-direction: column; gap: 8px; margin-top: 4px;">
+                    <div style="display: flex; align-items: center; gap: 12px; background: rgba(255,255,255,0.03); padding: 8px 12px; border-radius: 10px; border-left: 4px solid var(--primary);">
+                        <i class="fa-solid fa-eye" style="font-size: 1.3rem; color: var(--primary);"></i>
                         <div>
-                            <h4 style="color: #fff; font-size: 0.92rem;">1. Sensor Detection</h4>
-                            <p style="font-size: 0.82rem;">Detects physical environmental variables (distance, temp, or light)[cite: 1].</p>
+                            <h4 style="color: #fff; font-size: 0.88rem;">1. Detection Phase</h4>
+                            <p style="font-size: 0.78rem;">The sensor detects or measures a physical condition in the room[cite: 5].</p>
                         </div>
                     </div>
-                    <div style="display: flex; align-items: center; gap: 14px; background: rgba(255,255,255,0.03); padding: 10px 14px; border-radius: 12px; border-left: 4px solid var(--secondary);">
-                        <i class="fa-solid fa-microchip" style="font-size: 1.4rem; color: var(--secondary);"></i>
+                    <div style="display: flex; align-items: center; gap: 12px; background: rgba(255,255,255,0.03); padding: 8px 12px; border-radius: 10px; border-left: 4px solid var(--secondary);">
+                        <i class="fa-solid fa-microchip" style="font-size: 1.3rem; color: var(--secondary);"></i>
                         <div>
-                            <h4 style="color: #fff; font-size: 0.92rem;">2. Data Processing</h4>
-                            <p style="font-size: 0.82rem;">Arduino reads, computes, and converts raw signals into meaningful data[cite: 1].</p>
+                            <h4 style="color: #fff; font-size: 0.88rem;">2. Processing Phase</h4>
+                            <p style="font-size: 0.78rem;">Arduino reads and processes the incoming sensor data[cite: 5].</p>
                         </div>
                     </div>
-                    <div style="display: flex; align-items: center; gap: 14px; background: rgba(255,255,255,0.03); padding: 10px 14px; border-radius: 12px; border-left: 4px solid #3b82f6;">
-                        <i class="fa-solid fa-desktop" style="font-size: 1.4rem; color: #3b82f6;"></i>
+                    <div style="display: flex; align-items: center; gap: 12px; background: rgba(255,255,255,0.03); padding: 8px 12px; border-radius: 10px; border-left: 4px solid #3b82f6;">
+                        <i class="fa-solid fa-desktop" style="font-size: 1.3rem; color: #3b82f6;"></i>
                         <div>
-                            <h4 style="color: #fff; font-size: 0.92rem;">3. LCD Visualization</h4>
-                            <p style="font-size: 0.82rem;">Renders real-time outputs and system status clearly on screen[cite: 1].</p>
+                            <h4 style="color: #fff; font-size: 0.88rem;">3. Display Phase</h4>
+                            <p style="font-size: 0.78rem;">The 16x2 LCD displays the measured value or system status[cite: 5].</p>
                         </div>
                     </div>
                 </div>
@@ -417,16 +443,16 @@
             <div class="slide" data-slide="5">
                 <div>
                     <span class="badge"><i class="fa-solid fa-diagram-project"></i> Slide 5</span>
-                    <h2>Circuit & Connections</h2>
+                    <h2>Circuit Diagram & Connections</h2>
                 </div>
                 <ul>
-                    <li>Present clear schematic diagrams and breadboard layouts[cite: 1].</li>
-                    <li>Identify individual sensor pin allocations (VCC, GND, Trigger/Echo)[cite: 1].</li>
-                    <li>Integrate I2C module lines (SDA to A4, SCL to A5 on Arduino Uno)[cite: 1].</li>
-                    <li>Establish stable 5V power and ground rails across the breadboard[cite: 1].</li>
+                    <li>Present the circuit diagram schematic[cite: 5].</li>
+                    <li>Identify sensor pins and LCD connections clearly[cite: 5].</li>
+                    <li>Explain power (5V), ground (GND), and signal pin connections[cite: 5].</li>
+                    <li>Show specific Arduino pin assignments used in the project[cite: 5].</li>
                 </ul>
-                <div class="arduino-box" style="margin-top: 10px; padding: 10px;">
-                    <p style="font-size: 0.82rem; color: #fff;"><i class="fa-solid fa-triangle-exclamation" style="color: var(--secondary);"></i> Double-check all wire polarity before powering via USB to safeguard hardware components.</p>
+                <div class="arduino-box" style="margin-top: 10px; padding: 8px;">
+                    <p style="font-size: 0.78rem; color: #fff;"><i class="fa-solid fa-triangle-exclamation" style="color: var(--secondary);"></i> Verify I2C bus wiring (SDA/SCL) and check line voltages before testing[cite: 5].</p>
                 </div>
             </div>
 
@@ -434,19 +460,19 @@
             <div class="slide" data-slide="6">
                 <div>
                     <span class="badge"><i class="fa-solid fa-code"></i> Slide 6</span>
-                    <h2>Arduino Program</h2>
+                    <h2>Arduino Program Code</h2>
                 </div>
                 <ul>
-                    <li>Import required control libraries (e.g., Wire.h, LiquidCrystal_I2C)[cite: 1].</li>
-                    <li>Declare global variables and assign proper pin mappings[cite: 1].</li>
-                    <li>Initialize communication and screen setups inside <code>setup()</code>[cite: 1].</li>
-                    <li>Continuously poll sensor metrics and refresh LCD in <code>loop()</code>[cite: 1].</li>
+                    <li>Explain the required libraries (e.g., LiquidCrystal_I2C.h)[cite: 5].</li>
+                    <li>Discuss variable declarations and pin configurations[cite: 5].</li>
+                    <li>Explain <code>setup()</code> and <code>loop()</code> operations[cite: 5].</li>
+                    <li>Demonstrate how sensor readings are obtained and displayed on LCD[cite: 5].</li>
                 </ul>
-                <div style="background: #010409; padding: 10px; border-radius: 10px; margin-top: 8px; font-family: monospace; font-size: 0.74rem; color: var(--primary); border: 1px solid rgba(0,255,204,0.2);">
-                    #include &lt;LiquidCrystal_I2C.h&gt;<br>
+                <div style="background: #010409; padding: 8px; border-radius: 8px; margin-top: 6px; font-family: monospace; font-size: 0.72rem; color: var(--primary); border: 1px solid rgba(0,255,204,0.2);">
+                    #include &lt;LiquidCrystal_I2C.h&gt;[cite: 5]<br>
                     LiquidCrystal_I2C lcd(0x27, 16, 2);<br>
-                    void setup() { lcd.init(); lcd.backlight(); }<br>
-                    void loop() { /* Fetch sensor & print to LCD */ }
+                    void setup() { lcd.init(); lcd.backlight(); }[cite: 5]<br>
+                    void loop() { /* Fetch sensor & print to LCD */ }[cite: 5]
                 </div>
             </div>
 
@@ -457,14 +483,14 @@
                     <h2>Actual Demonstration</h2>
                 </div>
                 <ul>
-                    <li>Display the live, fully assembled physical prototype circuit[cite: 1].</li>
-                    <li>Demonstrate active sensor reactivity under changing conditions[cite: 1].</li>
-                    <li>Showcase live LCD display updates corresponding to input variations[cite: 1].</li>
-                    <li>Explain the dynamic values captured during live system testing[cite: 1].</li>
+                    <li>Show the physical assembled circuit prototype[cite: 4, 5].</li>
+                    <li>Demonstrate the sensor detecting environmental changes[cite: 4, 5].</li>
+                    <li>Show the LCD updating its readings in real-time[cite: 4, 5].</li>
+                    <li>Explain the displayed values during live testing[cite: 5].</li>
                 </ul>
-                <div class="arduino-box" style="margin-top: 10px;">
+                <div class="arduino-box" style="margin-top: 8px;">
                     <i class="fa-solid fa-circle-play"></i>
-                    <p style="font-size: 0.82rem;">Live Prototype Operation & Output Verification</p>
+                    <p style="font-size: 0.78rem;">Live Working Prototype Demonstration[cite: 4]</p>
                 </div>
             </div>
 
@@ -472,18 +498,18 @@
             <div class="slide" data-slide="8">
                 <div>
                     <span class="badge"><i class="fa-solid fa-clipboard-check"></i> Slide 8</span>
-                    <h2>Testing & Results</h2>
+                    <h2>Testing and Results</h2>
                 </div>
                 <ul>
-                    <li>Evaluated performance across at least three unique test scenarios[cite: 1].</li>
-                    <li>Compared baseline sensor inputs directly against LCD screen outputs[cite: 1].</li>
-                    <li>Diagnosed hardware/wiring hiccups and implemented robust fixes[cite: 1].</li>
-                    <li>Incorporated photo/screenshot documentation of actual system testing[cite: 1].</li>
+                    <li>Present at least three test scenarios[cite: 5].</li>
+                    <li>Compare sensor readings with the LCD output[cite: 4, 5].</li>
+                    <li>Identify errors encountered and their implemented solutions[cite: 5].</li>
+                    <li>Include photos or screenshots of actual project testing[cite: 4, 5].</li>
                 </ul>
-                <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-top: 10px;">
-                    <div class="member-card"><h4>Test 1</h4><p style="font-size: 0.7rem;">Normal Baseline</p></div>
-                    <div class="member-card"><h4>Test 2</h4><p style="font-size: 0.7rem;">Threshold Limit</p></div>
-                    <div class="member-card"><h4>Test 3</h4><p style="font-size: 0.7rem;">Maximum Range</p></div>
+                <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-top: 8px;">
+                    <div class="member-card"><h4>Scenario 1</h4><p style="font-size: 0.68rem;">Normal Test[cite: 5]</p></div>
+                    <div class="member-card"><h4>Scenario 2</h4><p style="font-size: 0.68rem;">Threshold Test[cite: 5]</p></div>
+                    <div class="member-card"><h4>Scenario 3</h4><p style="font-size: 0.68rem;">Error Limit Test[cite: 5]</p></div>
                 </div>
             </div>
 
@@ -491,25 +517,44 @@
             <div class="slide" data-slide="9">
                 <div>
                     <span class="badge"><i class="fa-solid fa-lightbulb"></i> Slide 9</span>
-                    <h2>Applications & Conclusion</h2>
+                    <h2>Applications and Conclusion</h2>
                 </div>
                 <ul>
-                    <li>Real-world applications in smart homes, automation, and remote telemetry[cite: 1].</li>
-                    <li>Key takeaways: Hardware troubleshooting and embedded coding fluency[cite: 1].</li>
-                    <li>Future enhancements: Integrating IoT modules (Wi-Fi/Bluetooth) or warning alarms[cite: 1].</li>
+                    <li>Explain practical uses of the system in real life[cite: 5].</li>
+                    <li>Discuss what the group learned during development[cite: 5].</li>
+                    <li>Suggest possible improvements or additional features (e.g. IoT, Wireless)[cite: 5].</li>
                 </ul>
-                <div class="arduino-box" style="margin-top: 10px; padding: 10px;">
-                    <p style="font-size: 0.82rem; color: #fff;">"Successfully transformed physical sensor telemetry into an intuitive, readable display interface."</p>
+                <div class="arduino-box" style="margin-top: 8px; padding: 8px;">
+                    <p style="font-size: 0.78rem; color: #fff;">Expected Output: "A working Arduino-based monitoring system that reads data from a sensor and displays meaningful information on an LCD."[cite: 4]</p>
                 </div>
             </div>
 
-            <!-- Slide 10: Question and Answer -->
+            <!-- Slide 10: Question & Answer / Grading Rubric -->
             <div class="slide" data-slide="10">
-                <div style="text-align: center; margin: auto;">
-                    <i class="fa-solid fa-circle-question" style="font-size: 3.8rem; color: var(--primary); margin-bottom: 12px; filter: drop-shadow(0 0 15px var(--primary));"></i>
-                    <h2 style="justify-content: center;">Question & Answer</h2>
-                    <p style="font-size: 0.95rem; max-width: 550px; margin: 8px auto;">Prepared to answer queries regarding circuit architecture, programming logic, sensor metrics, and troubleshooting steps[cite: 1].</p>
-                    <h3 style="font-family: 'Orbitron', sans-serif; color: var(--primary); margin-top: 16px; font-size: 1.15rem; letter-spacing: 1px;">Thank You for Listening!</h3>
+                <div>
+                    <span class="badge"><i class="fa-solid fa-circle-question"></i> Slide 10</span>
+                    <h2>Q&A & Grading Rubric</h2>
+                </div>
+                <div class="content-grid" style="gap: 10px;">
+                    <div>
+                        <p style="font-size: 0.8rem; margin-bottom: 6px; color: #fff;">Be prepared to explain[cite: 5]:</p>
+                        <ul style="gap: 4px;">
+                            <li>Circuit & pin layout[cite: 4, 5]</li>
+                            <li>Code & logic execution[cite: 4, 5]</li>
+                            <li>Sensor & LCD operation[cite: 4, 5]</li>
+                            <li>Troubleshooting process[cite: 5]</li>
+                        </ul>
+                    </div>
+                    <div class="rubric-grid">
+                        <div class="rubric-header">Criteria[cite: 4]</div>
+                        <div class="rubric-header">Weight[cite: 4]</div>
+                        <div class="rubric-item">Prototype Functionality[cite: 4]</div><div class="rubric-item" style="color:var(--primary)">30%[cite: 4]</div>
+                        <div class="rubric-item">Circuit Connections[cite: 4]</div><div class="rubric-item" style="color:var(--primary)">20%[cite: 4]</div>
+                        <div class="rubric-item">Arduino Programming[cite: 4]</div><div class="rubric-item" style="color:var(--primary)">20%[cite: 4]</div>
+                        <div class="rubric-item">Presentation / Explanation[cite: 4]</div><div class="rubric-item" style="color:var(--primary)">15%[cite: 4]</div>
+                        <div class="rubric-item">Testing & Troubleshooting[cite: 4]</div><div class="rubric-item" style="color:var(--primary)">10%[cite: 4]</div>
+                        <div class="rubric-item">Teamwork & Docs[cite: 4]</div><div class="rubric-item" style="color:var(--primary)">5%[cite: 4]</div>
+                    </div>
                 </div>
             </div>
 
