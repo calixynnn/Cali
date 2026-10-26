@@ -2,638 +2,621 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Midterm Activity Presentation - Sensor and LCD Integration Using Arduino</title>
-    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Counting Down to Cali's Return ✨</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font Awesome Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <!-- Canvas Confetti -->
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+    <!-- Tone.js for Web Audio SFX -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/tone/14.8.49/Tone.js"></script>
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        pastelPink: '#FFD1DC',
+                        pastelPurple: '#E6E6FA',
+                        pastelPeach: '#FFE5B4',
+                        pastelRose: '#FFB7B2',
+                        pastelLav: '#D8B4FE',
+                        softBackground: '#FFF5F7',
+                        cardBg: 'rgba(255, 255, 255, 0.85)',
+                    },
+                    fontFamily: {
+                        fredoka: ['Fredoka', 'sans-serif'],
+                        nunito: ['Nunito', 'sans-serif'],
+                    },
+                    animation: {
+                        'float': 'float 4s ease-in-out infinite',
+                        'bounce-soft': 'bounceSoft 2s infinite',
+                        'sparkle': 'sparkle 1.5s ease-in-out infinite alternate',
+                        'pulse-glow': 'pulseGlow 2s infinite alternate',
+                        'blink': 'blink 4s infinite',
+                        'tail-wag': 'tailWag 1.2s ease-in-out infinite alternate',
+                    },
+                    keyframes: {
+                        float: {
+                            '0%, 100%': { transform: 'translateY(0px) rotate(0deg)' },
+                            '50%': { transform: 'translateY(-12px) rotate(2deg)' },
+                        },
+                        bounceSoft: {
+                            '0%, 100%': { transform: 'translateY(0)' },
+                            '50%': { transform: 'translateY(-8px)' },
+                        },
+                        sparkle: {
+                            '0%': { opacity: '0.4', transform: 'scale(0.8)' },
+                            '100%': { opacity: '1', transform: 'scale(1.2)' },
+                        },
+                        pulseGlow: {
+                            '0%': { boxShadow: '0 0 15px rgba(255, 182, 193, 0.4)' },
+                            '100%': { boxShadow: '0 0 30px rgba(255, 105, 180, 0.8)' },
+                        },
+                        blink: {
+                            '0%, 90%, 100%': { transform: 'scaleY(1)' },
+                            '95%': { transform: 'scaleY(0.1)' }
+                        },
+                        tailWag: {
+                            '0%': { transform: 'rotate(-5deg)' },
+                            '100%': { transform: 'rotate(5deg)' }
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+
     <style>
-        :root {
-            --primary: #00ffcc;
-            --secondary: #ff007f;
-            --accent: #3b82f6;
-            --bg-dark: #030712;
-            --card-bg: rgba(13, 20, 38, 0.88);
-            --text-main: #f8fafc;
-            --text-muted: #94a3b8;
-            --border-glow: rgba(0, 255, 204, 0.4);
-        }
-
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-            font-family: 'Poppins', sans-serif;
-            /* Inalis ang user-select: none para maging selectable/kopyable ang mga text */
-        }
-
         body {
-            background-color: var(--bg-dark);
-            background-image: 
-                radial-gradient(circle at 15% 15%, rgba(0, 255, 204, 0.12) 0%, transparent 45%),
-                radial-gradient(circle at 85% 85%, rgba(255, 0, 127, 0.12) 0%, transparent 45%);
-            color: var(--text-main);
-            height: 100vh;
-            height: 100dvh;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            overflow: hidden;
-            position: relative;
+            font-family: 'Nunito', sans-serif;
+            background: linear-gradient(135deg, #FFF0F5 0%, #F3E8FF 50%, #FFE4E1 100%);
+            min-height: 100vh;
+            overflow-x: hidden;
+            user-select: none;
         }
 
-        /* Tech Cyber Grid Background */
-        body::before {
-            content: '';
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #FFF5F7;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #FFB7B2;
+            border-radius: 10px;
+        }
+
+        /* Glassmorphism Card Style */
+        .glass-card {
+            background: rgba(255, 255, 255, 0.75);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 2px solid rgba(255, 255, 255, 0.9);
+            box-shadow: 0 10px 30px rgba(236, 72, 153, 0.12);
+        }
+
+        .floating-heart {
             position: absolute;
-            width: 200%;
-            height: 200%;
-            background-image: linear-gradient(rgba(0, 255, 204, 0.03) 1px, transparent 1px),
-                              linear-gradient(90deg, rgba(0, 255, 204, 0.03) 1px, transparent 1px);
-            background-size: 50px 50px;
-            transform: perspective(600px) rotateX(60deg) translateY(-120px);
-            z-index: -1;
-            animation: gridPulse 15s linear infinite;
+            pointer-events: none;
+            animation: floatUp linear infinite;
         }
 
-        @keyframes gridPulse {
-            0% { background-position: 0 0; }
-            100% { background-position: 0 50px; }
-        }
-
-        .presentation-container {
-            width: 92vw;
-            max-width: 1080px;
-            height: 85vh;
-            max-height: 700px;
-            perspective: 1400px;
-            display: flex;
-            flex-direction: column;
-        }
-
-        .slide-card {
-            flex: 1;
-            background: var(--card-bg);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
-            border: 1px solid var(--border-glow);
-            border-radius: 24px;
-            box-shadow: 
-                0 25px 60px rgba(0, 0, 0, 0.7),
-                0 0 35px rgba(0, 255, 204, 0.15),
-                inset 0 0 25px rgba(255, 255, 255, 0.04);
-            padding: clamp(20px, 3vw, 40px);
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-            position: relative;
-            overflow-y: auto;
-            transform-style: preserve-3d;
-            transition: transform 0.4s cubic-bezier(0.2, 0.8, 0.2, 1), opacity 0.4s ease;
-        }
-
-        .slide {
-            display: none;
-            flex-direction: column;
-            height: 100%;
-            animation: slideIn 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-        }
-
-        .slide.active {
-            display: flex;
-        }
-
-        @keyframes slideIn {
-            from { opacity: 0; transform: translateY(15px) scale(0.98); }
-            to { opacity: 1; transform: translateY(0) scale(1); }
-        }
-
-        /* Typography */
-        .badge {
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
-            background: rgba(0, 255, 204, 0.1);
-            color: var(--primary);
-            padding: 5px 14px;
-            border-radius: 30px;
-            font-size: clamp(10px, 1.1vw, 12px);
-            font-weight: 600;
-            text-transform: uppercase;
-            letter-spacing: 1.5px;
-            margin-bottom: 8px;
-            align-self: flex-start;
-            border: 1px solid rgba(0, 255, 204, 0.3);
-            box-shadow: 0 0 10px rgba(0, 255, 204, 0.1);
-        }
-
-        h2 {
-            font-family: 'Orbitron', sans-serif;
-            font-size: clamp(1.2rem, 2.2vw, 1.8rem);
-            font-weight: 700;
-            color: #fff;
-            margin-bottom: 12px;
-            text-shadow: 0 2px 12px rgba(0,0,0,0.6);
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            letter-spacing: 0.5px;
-        }
-
-        h2 i {
-            color: var(--primary);
-            filter: drop-shadow(0 0 8px var(--primary));
-        }
-
-        p, li {
-            font-size: clamp(0.82rem, 1.2vw, 0.98rem);
-            color: var(--text-muted);
-            line-height: 1.5;
-        }
-
-        ul {
-            list-style-type: none;
-            display: flex;
-            flex-direction: column;
-            gap: 8px;
-            margin-top: 4px;
-        }
-
-        ul li {
-            position: relative;
-            padding-left: 22px;
-        }
-
-        ul li::before {
-            content: '⚡';
-            color: var(--primary);
-            position: absolute;
-            left: 0;
-            font-size: 0.85em;
-        }
-
-        .content-grid {
-            display: grid;
-            grid-template-columns: 1.1fr 0.9fr;
-            gap: 16px;
-            align-items: center;
-            height: 100%;
-        }
-
-        .members-grid {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 8px;
-            margin-top: 6px;
-        }
-
-        @media (max-width: 768px) {
-            .members-grid {
-                grid-template-columns: repeat(2, 1fr);
+        @keyframes floatUp {
+            0% {
+                transform: translateY(100vh) scale(0) rotate(0deg);
+                opacity: 1;
             }
-            .content-grid {
-                grid-template-columns: 1fr;
+            100% {
+                transform: translateY(-10vh) scale(1.2) rotate(360deg);
+                opacity: 0;
             }
         }
 
-        .member-card {
-            background: rgba(255, 255, 255, 0.03);
-            border: 1px solid rgba(255, 255, 255, 0.08);
-            padding: 8px;
-            border-radius: 12px;
-            text-align: center;
+        /* Kawaii Girl interactive animations */
+        .eye-left, .eye-right {
+            transform-origin: center;
+            animation: blink 4s infinite;
+        }
+
+        .wink .eye-right {
+            animation: none !important;
+            transform: scaleY(0.1);
+        }
+
+        .blush {
             transition: all 0.3s ease;
         }
 
-        .member-card:hover {
-            border-color: var(--primary);
-            transform: translateY(-3px);
-            background: rgba(0, 255, 204, 0.06);
-            box-shadow: 0 5px 15px rgba(0, 255, 204, 0.15);
+        .super-blush {
+            fill: #FF69B4 !important;
+            opacity: 0.9 !important;
+            transform: scale(1.3);
+            transform-origin: center;
         }
 
-        .member-card i {
-            color: var(--primary);
-            font-size: 1.1rem;
-            margin-bottom: 3px;
+        .arm-wave {
+            transform-origin: 20% 80%;
+            animation: wave 1.5s ease-in-out infinite alternate;
         }
 
-        .member-card h4 {
-            font-size: clamp(0.75rem, 1vw, 0.88rem);
-            color: #fff;
-            font-weight: 600;
-        }
-
-        /* Arduino Futuristic Card Box */
-        .arduino-box {
-            background: linear-gradient(135deg, rgba(0, 255, 204, 0.05), rgba(59, 130, 246, 0.05));
-            border: 1px solid rgba(0, 255, 204, 0.3);
-            border-radius: 16px;
-            padding: 14px;
-            text-align: center;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            gap: 6px;
-            box-shadow: inset 0 0 15px rgba(0, 255, 204, 0.05);
-        }
-
-        .arduino-box i {
-            font-size: 2.5rem;
-            color: var(--primary);
-            filter: drop-shadow(0 0 12px var(--primary));
-        }
-
-        /* Rubric Grid Table */
-        .rubric-grid {
-            display: grid;
-            grid-template-columns: 2fr 1fr;
-            gap: 6px;
-            background: rgba(0,0,0,0.2);
-            padding: 10px;
-            border-radius: 12px;
-            border: 1px solid rgba(0,255,204,0.15);
-        }
-
-        .rubric-header {
-            font-weight: 700;
-            color: var(--primary);
-            border-bottom: 1px solid rgba(0,255,204,0.3);
-            padding-bottom: 4px;
-            font-size: 0.85rem;
-        }
-
-        .rubric-item {
-            font-size: 0.8rem;
-            color: #e2e8f0;
-            padding: 3px 0;
-        }
-
-        /* Navigation Controls */
-        .nav-controls {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-top: 10px;
-            width: 100%;
-            border-top: 1px solid rgba(255, 255, 255, 0.06);
-            padding-top: 10px;
-        }
-
-        .btn {
-            background: rgba(255, 255, 255, 0.04);
-            border: 1px solid rgba(255, 255, 255, 0.12);
-            color: #fff;
-            padding: 6px 18px;
-            border-radius: 30px;
-            cursor: pointer;
-            font-weight: 600;
-            font-size: clamp(0.75rem, 1vw, 0.88rem);
-            display: flex;
-            align-items: center;
-            gap: 6px;
-            transition: all 0.25s ease;
-        }
-
-        .btn:hover {
-            background: var(--primary);
-            color: #030712;
-            border-color: var(--primary);
-            box-shadow: 0 0 20px rgba(0, 255, 204, 0.5);
-            transform: translateY(-2px);
-        }
-
-        .slide-indicators {
-            display: flex;
-            gap: 5px;
-            overflow-x: auto;
-            max-width: 45%;
-            padding: 4px;
-        }
-
-        .indicator {
-            width: 7px;
-            height: 7px;
-            border-radius: 50%;
-            background: rgba(255, 255, 255, 0.2);
-            cursor: pointer;
-            transition: all 0.3s ease;
-            flex-shrink: 0;
-        }
-
-        .indicator.active {
-            background: var(--primary);
-            width: 20px;
-            border-radius: 4px;
-            box-shadow: 0 0 10px var(--primary);
-        }
-
-        .slide-counter {
-            font-family: 'Orbitron', sans-serif;
-            font-size: 0.8rem;
-            color: var(--text-muted);
-            letter-spacing: 1px;
+        @keyframes wave {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(-25deg); }
         }
     </style>
 </head>
-<body>
+<body class="flex flex-col min-h-screen justify-between items-center relative p-4 md:p-8">
 
-    <div class="presentation-container">
-        <div class="slide-card">
-            
-            <!-- Slide 1: Title Slide -->
-            <div class="slide active" data-slide="1">
-                <div>
-                    <span class="badge"><i class="fa-solid fa-microchip"></i> Midterm Practical Activity & Presentation</span>
-                    <h2>Sensor and LCD Integration Using Arduino</h2>
-                </div>
-                <div style="margin: 6px 0;">
-                    <p style="color: var(--primary); font-weight: 600; margin-bottom: 4px;">Project Title: <span style="color: #fff; font-weight: 400;">Smart Sensor Monitoring System with 16x2 LCD</span></p>
-                    <p style="font-size: 0.85rem; margin-bottom: 3px;"><i class="fa-solid fa-graduation-cap"></i> <strong>Course/Subject:</strong> Application Development of Emerging Technologies / Arduino Programming[cite: 5]</p>
-                    <p style="font-size: 0.85rem; margin-bottom: 8px;"><i class="fa-solid fa-user-tie"></i> <strong>Instructor:</strong> Prof. [Instructor Name][cite: 5]</p>
-                </div>
-                <div>
-                    <p style="font-size: 0.8rem; margin-bottom: 4px; font-weight: 600; color: #fff; text-transform: uppercase; letter-spacing: 1px;">Group Members (6 Members)[cite: 5]:</p>
-                    <div class="members-grid">
-                        <div class="member-card"><i class="fa-solid fa-user-shield"></i><h4>Member 1</h4></div>
-                        <div class="member-card"><i class="fa-solid fa-user-shield"></i><h4>Member 2</h4></div>
-                        <div class="member-card"><i class="fa-solid fa-user-shield"></i><h4>Member 3</h4></div>
-                        <div class="member-card"><i class="fa-solid fa-user-shield"></i><h4>Member 4</h4></div>
-                        <div class="member-card"><i class="fa-solid fa-user-shield"></i><h4>Member 5</h4></div>
-                        <div class="member-card"><i class="fa-solid fa-user-shield"></i><h4>Member 6</h4></div>
-                    </div>
-                </div>
+    <!-- Floating Background Particles (Hearts & Stars) -->
+    <div id="particles-container" class="fixed inset-0 pointer-events-none z-0 overflow-hidden"></div>
+
+    <!-- Header / Navigation Bar -->
+    <header class="w-full max-w-4xl z-10 flex justify-between items-center py-2 px-4 glass-card rounded-full mb-4">
+        <div class="flex items-center gap-2">
+            <span class="text-2xl animate-bounce">💖</span>
+            <span class="font-fredoka text-lg md:text-xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-pink-500 to-purple-600">
+                Cali's Journey Home
+            </span>
+        </div>
+        <div class="flex items-center gap-3">
+            <button id="soundToggle" class="p-2.5 px-4 bg-pink-100 hover:bg-pink-200 text-pink-600 rounded-full text-sm font-semibold transition-all transform active:scale-95 flex items-center gap-2 shadow-sm">
+                <i class="fas font-bold fa-volume-up" id="soundIcon"></i>
+                <span id="soundText" class="hidden sm:inline">Sound ON</span>
+            </button>
+        </div>
+    </header>
+
+    <!-- Main Content Container -->
+    <main class="w-full max-w-4xl z-10 flex flex-col items-center justify-center my-auto space-y-6">
+
+        <!-- Title Banner -->
+        <div class="text-center space-y-2">
+            <div class="inline-block px-4 py-1.5 bg-pink-200/60 rounded-full text-pink-700 font-fredoka text-sm md:text-base font-semibold tracking-wide animate-pulse">
+                ✨ Counting down every second until we meet! ✨
+            </div>
+            <h1 class="font-fredoka text-3xl sm:text-5xl md:text-6xl font-bold text-gray-800 drop-shadow-sm leading-tight">
+                CALI RETURNS IN <span class="bg-gradient-to-r from-pink-500 via-purple-500 to-indigo-500 bg-clip-text text-transparent">...</span>
+            </h1>
+            <p class="text-gray-600 text-sm sm:text-base max-w-md mx-auto">
+                Target Date: <span id="targetDateDisplay" class="font-semibold text-pink-600">Calculating...</span>
+            </p>
+        </div>
+
+        <!-- Kawaii Girl Character Illustration -->
+        <div class="relative group cursor-pointer my-2" id="girlCharacterContainer" title="Click to interact with me!">
+            <!-- Speech Bubble -->
+            <div id="speechBubble" class="absolute -top-12 left-1/2 transform -translate-x-1/2 bg-white px-4 py-1.5 rounded-2xl shadow-md border-2 border-pink-300 text-xs sm:text-sm font-fredoka font-semibold text-pink-600 whitespace-nowrap z-20 transition-all duration-300 animate-bounce-soft">
+                I miss Cali so much! 🎀
             </div>
 
-            <!-- Slide 2: Project Objectives -->
-            <div class="slide" data-slide="2">
-                <div>
-                    <span class="badge"><i class="fa-solid fa-crosshairs"></i> Slide 2</span>
-                    <h2>Project Objectives</h2>
-                </div>
-                <ul>
-                    <li>Understand how sensors work with Arduino[cite: 5].</li>
-                    <li>Display sensor readings on an LCD[cite: 5].</li>
-                    <li>Apply basic Arduino programming and circuit connections[cite: 5].</li>
-                    <li>Develop a functional monitoring system[cite: 5].</li>
-                </ul>
-                <div class="arduino-box" style="padding: 10px; margin-top: 12px;">
-                    <i class="fa-solid fa-bolt"></i>
-                    <p style="font-size: 0.8rem;">Building foundational skills in hardware integration and real-time microcontroller applications.</p>
-                </div>
+            <!-- SVG Vector Anime/Kawaii Girl Character -->
+            <div class="w-44 h-44 sm:w-56 sm:h-56 relative animate-float">
+                <svg viewBox="0 0 200 200" class="w-full h-full drop-shadow-lg">
+                    <!-- Soft Halo Sparkle -->
+                    <circle cx="100" cy="100" r="90" fill="url(#pastelGrad)" opacity="0.3"/>
+
+                    <defs>
+                        <linearGradient id="pastelGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                            <stop offset="0%" stop-color="#FFD1DC"/>
+                            <stop offset="100%" stop-color="#E6E6FA"/>
+                        </linearGradient>
+                        <linearGradient id="hairGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+                            <stop offset="0%" stop-color="#FF9EAA"/>
+                            <stop offset="100%" stop-color="#FF7088"/>
+                        </linearGradient>
+                    </defs>
+
+                    <!-- Hair Back / Twintails -->
+                    <path d="M 40,80 Q 20,120 30,160 Q 55,140 60,100 Z" fill="url(#hairGrad)" />
+                    <path d="M 160,80 Q 180,120 170,160 Q 145,140 140,100 Z" fill="url(#hairGrad)" />
+
+                    <!-- Twintail Ribbons -->
+                    <circle cx="50" cy="85" r="8" fill="#FF4B72"/>
+                    <circle cx="150" cy="85" r="8" fill="#FF4B72"/>
+
+                    <!-- Body / Cute Dress -->
+                    <path d="M 70,135 Q 100,125 130,135 L 145,190 Q 100,200 55,190 Z" fill="#D8B4FE"/>
+                    <!-- Collar -->
+                    <path d="M 85,135 Q 100,145 115,135 L 100,150 Z" fill="#FFFFFF"/>
+
+                    <!-- Head / Face -->
+                    <ellipse cx="100" cy="95" rx="45" ry="40" fill="#FFE5D9"/>
+
+                    <!-- Hair Bangs -->
+                    <path d="M 55,85 Q 80,60 100,80 Q 120,60 145,85 Q 130,65 100,65 Q 70,65 55,85 Z" fill="url(#hairGrad)"/>
+
+                    <!-- Cute Cat Ears / Headband -->
+                    <path d="M 65,60 L 50,35 L 75,50 Z" fill="#FF9EAA"/>
+                    <path d="M 68,57 L 57,40 L 74,50 Z" fill="#FFD1DC"/>
+                    <path d="M 135,60 L 150,35 L 125,50 Z" fill="#FF9EAA"/>
+                    <path d="M 132,57 L 143,40 L 126,50 Z" fill="#FFD1DC"/>
+
+                    <!-- Blush Circles -->
+                    <ellipse class="blush" id="blushLeft" cx="72" cy="104" rx="7" ry="4" fill="#FF8DA1" opacity="0.6"/>
+                    <ellipse class="blush" id="blushRight" cx="128" cy="104" rx="7" ry="4" fill="#FF8DA1" opacity="0.6"/>
+
+                    <!-- Eyes -->
+                    <g id="eyesGroup">
+                        <!-- Left Eye -->
+                        <ellipse class="eye-left" cx="78" cy="95" rx="5" ry="7" fill="#332233"/>
+                        <circle cx="76" cy="93" r="2" fill="#FFFFFF"/>
+                        <!-- Right Eye -->
+                        <ellipse class="eye-right" cx="122" cy="95" rx="5" ry="7" fill="#332233"/>
+                        <circle cx="120" cy="93" r="2" fill="#FFFFFF"/>
+                    </g>
+
+                    <!-- Mouth -->
+                    <path id="mouth" d="M 94,106 Q 100,112 106,106" fill="none" stroke="#663344" stroke-width="2.5" stroke-linecap="round"/>
+
+                    <!-- Left Arm holding Star -->
+                    <g class="arm-wave">
+                        <path d="M 65,140 Q 45,130 40,110" fill="none" stroke="#FFE5D9" stroke-width="9" stroke-linecap="round"/>
+                        <polygon points="40,105 43,112 50,112 45,116 47,123 40,119 33,123 35,116 30,112 37,112" fill="#FFD700"/>
+                    </g>
+
+                    <!-- Right Arm holding Heart -->
+                    <g>
+                        <path d="M 135,140 Q 155,135 150,115" fill="none" stroke="#FFE5D9" stroke-width="9" stroke-linecap="round"/>
+                        <!-- Sparkly Heart in Hand -->
+                        <path d="M 150,108 C 150,105 145,100 140,104 C 135,108 140,115 150,122 C 160,115 165,108 160,104 C 155,100 150,105 150,108 Z" fill="#FF4B72" class="animate-pulse"/>
+                    </g>
+                </svg>
+            </div>
+        </div>
+
+        <!-- Countdown Timer Grid Cards -->
+        <div class="grid grid-cols-2 sm:grid-cols-5 gap-3 sm:gap-4 w-full">
+
+            <!-- Years Card -->
+            <div class="glass-card rounded-3xl p-4 sm:p-5 text-center transform transition-all duration-300 hover:scale-105 hover:-translate-y-1">
+                <div class="text-3xl sm:text-4xl md:text-5xl font-fredoka font-bold text-pink-600 tracking-tight" id="years">00</div>
+                <div class="text-xs sm:text-sm font-bold text-gray-500 uppercase tracking-wider mt-1">Years</div>
+                <div class="mt-1 text-xs text-pink-400 font-medium">✨ 5 Years</div>
             </div>
 
-            <!-- Slide 3: Components and Project Options -->
-            <div class="slide" data-slide="3">
-                <div>
-                    <span class="badge"><i class="fa-solid fa-box-open"></i> Slide 3</span>
-                    <h2>Components & Materials</h2>
-                </div>
-                <div class="content-grid">
-                    <ul>
-                        <li>Arduino Uno or compatible board[cite: 5]</li>
-                        <li>One approved sensor (Ultrasonic, Temp, or Light)[cite: 4, 5]</li>
-                        <li>16x2 LCD module, with I2C interface[cite: 5]</li>
-                        <li>Breadboard and jumper wires[cite: 5]</li>
-                        <li>USB cable and computer[cite: 5]</li>
-                        <li>Required resistors / supporting components[cite: 5]</li>
-                    </ul>
-                    <div class="arduino-box" style="padding: 10px;">
-                        <h4 style="color: var(--primary); font-size: 0.85rem; text-transform: uppercase;">Suggested Options[cite: 4]:</h4>
-                        <p style="font-size: 0.72rem;">1. Distance Monitor (Ultrasonic)[cite: 4]</p>
-                        <p style="font-size: 0.72rem;">2. Temp & Humidity (DHT11/22)[cite: 4]</p>
-                        <p style="font-size: 0.72rem;">3. Light Intensity (LDR)[cite: 4]</p>
-                    </div>
-                </div>
+            <!-- Days Card -->
+            <div class="glass-card rounded-3xl p-4 sm:p-5 text-center transform transition-all duration-300 hover:scale-105 hover:-translate-y-1">
+                <div class="text-3xl sm:text-4xl md:text-5xl font-fredoka font-bold text-purple-600 tracking-tight" id="days">00</div>
+                <div class="text-xs sm:text-sm font-bold text-gray-500 uppercase tracking-wider mt-1">Days</div>
+                <div class="mt-1 text-xs text-purple-400 font-medium">🌸 120 Days</div>
             </div>
 
-            <!-- Slide 4: System Overview -->
-            <div class="slide" data-slide="4">
-                <div>
-                    <span class="badge"><i class="fa-solid fa-network-wired"></i> Slide 4</span>
-                    <h2>System Overview</h2>
-                </div>
-                <div style="display: flex; flex-direction: column; gap: 8px; margin-top: 4px;">
-                    <div style="display: flex; align-items: center; gap: 12px; background: rgba(255,255,255,0.03); padding: 8px 12px; border-radius: 10px; border-left: 4px solid var(--primary);">
-                        <i class="fa-solid fa-eye" style="font-size: 1.3rem; color: var(--primary);"></i>
-                        <div>
-                            <h4 style="color: #fff; font-size: 0.88rem;">1. Detection Phase</h4>
-                            <p style="font-size: 0.78rem;">The sensor detects or measures a physical condition in the room[cite: 5].</p>
-                        </div>
-                    </div>
-                    <div style="display: flex; align-items: center; gap: 12px; background: rgba(255,255,255,0.03); padding: 8px 12px; border-radius: 10px; border-left: 4px solid var(--secondary);">
-                        <i class="fa-solid fa-microchip" style="font-size: 1.3rem; color: var(--secondary);"></i>
-                        <div>
-                            <h4 style="color: #fff; font-size: 0.88rem;">2. Processing Phase</h4>
-                            <p style="font-size: 0.78rem;">Arduino reads and processes the incoming sensor data[cite: 5].</p>
-                        </div>
-                    </div>
-                    <div style="display: flex; align-items: center; gap: 12px; background: rgba(255,255,255,0.03); padding: 8px 12px; border-radius: 10px; border-left: 4px solid #3b82f6;">
-                        <i class="fa-solid fa-desktop" style="font-size: 1.3rem; color: #3b82f6;"></i>
-                        <div>
-                            <h4 style="color: #fff; font-size: 0.88rem;">3. Display Phase</h4>
-                            <p style="font-size: 0.78rem;">The 16x2 LCD displays the measured value or system status[cite: 5].</p>
-                        </div>
-                    </div>
-                </div>
+            <!-- Hours Card -->
+            <div class="glass-card rounded-3xl p-4 sm:p-5 text-center transform transition-all duration-300 hover:scale-105 hover:-translate-y-1">
+                <div class="text-3xl sm:text-4xl md:text-5xl font-fredoka font-bold text-indigo-600 tracking-tight" id="hours">00</div>
+                <div class="text-xs sm:text-sm font-bold text-gray-500 uppercase tracking-wider mt-1">Hours</div>
+                <div class="mt-1 text-xs text-indigo-400 font-medium">⏰ Today</div>
             </div>
 
-            <!-- Slide 5: Circuit Diagram and Connections -->
-            <div class="slide" data-slide="5">
-                <div>
-                    <span class="badge"><i class="fa-solid fa-diagram-project"></i> Slide 5</span>
-                    <h2>Circuit Diagram & Connections</h2>
-                </div>
-                <ul>
-                    <li>Present the circuit diagram schematic[cite: 5].</li>
-                    <li>Identify sensor pins and LCD connections clearly[cite: 5].</li>
-                    <li>Explain power (5V), ground (GND), and signal pin connections[cite: 5].</li>
-                    <li>Show specific Arduino pin assignments used in the project[cite: 5].</li>
-                </ul>
-                <div class="arduino-box" style="margin-top: 10px; padding: 8px;">
-                    <p style="font-size: 0.78rem; color: #fff;"><i class="fa-solid fa-triangle-exclamation" style="color: var(--secondary);"></i> Verify I2C bus wiring (SDA/SCL) and check line voltages before testing[cite: 5].</p>
-                </div>
+            <!-- Minutes Card -->
+            <div class="glass-card rounded-3xl p-4 sm:p-5 text-center transform transition-all duration-300 hover:scale-105 hover:-translate-y-1">
+                <div class="text-3xl sm:text-4xl md:text-5xl font-fredoka font-bold text-rose-500 tracking-tight" id="minutes">00</div>
+                <div class="text-xs sm:text-sm font-bold text-gray-500 uppercase tracking-wider mt-1">Minutes</div>
+                <div class="mt-1 text-xs text-rose-400 font-medium">🎀 Live</div>
             </div>
 
-            <!-- Slide 6: Arduino Program -->
-            <div class="slide" data-slide="6">
-                <div>
-                    <span class="badge"><i class="fa-solid fa-code"></i> Slide 6</span>
-                    <h2>Arduino Program Code</h2>
-                </div>
-                <ul>
-                    <li>Explain the required libraries (e.g., LiquidCrystal_I2C.h)[cite: 5].</li>
-                    <li>Discuss variable declarations and pin configurations[cite: 5].</li>
-                    <li>Explain <code>setup()</code> and <code>loop()</code> operations[cite: 5].</li>
-                    <li>Demonstrate how sensor readings are obtained and displayed on LCD[cite: 5].</li>
-                </ul>
-                <div style="background: #010409; padding: 8px; border-radius: 8px; margin-top: 6px; font-family: monospace; font-size: 0.72rem; color: var(--primary); border: 1px solid rgba(0,255,204,0.2);">
-                    #include &lt;LiquidCrystal_I2C.h&gt;[cite: 5]<br>
-                    LiquidCrystal_I2C lcd(0x27, 16, 2);<br>
-                    void setup() { lcd.init(); lcd.backlight(); }[cite: 5]<br>
-                    void loop() { /* Fetch sensor & print to LCD */ }[cite: 5]
-                </div>
-            </div>
-
-            <!-- Slide 7: Actual Demonstration -->
-            <div class="slide" data-slide="7">
-                <div>
-                    <span class="badge"><i class="fa-solid fa-video"></i> Slide 7</span>
-                    <h2>Actual Demonstration</h2>
-                </div>
-                <ul>
-                    <li>Show the physical assembled circuit prototype[cite: 4, 5].</li>
-                    <li>Demonstrate the sensor detecting environmental changes[cite: 4, 5].</li>
-                    <li>Show the LCD updating its readings in real-time[cite: 4, 5].</li>
-                    <li>Explain the displayed values during live testing[cite: 5].</li>
-                </ul>
-                <div class="arduino-box" style="margin-top: 8px;">
-                    <i class="fa-solid fa-circle-play"></i>
-                    <p style="font-size: 0.78rem;">Live Working Prototype Demonstration[cite: 4]</p>
-                </div>
-            </div>
-
-            <!-- Slide 8: Testing and Results -->
-            <div class="slide" data-slide="8">
-                <div>
-                    <span class="badge"><i class="fa-solid fa-clipboard-check"></i> Slide 8</span>
-                    <h2>Testing and Results</h2>
-                </div>
-                <ul>
-                    <li>Present at least three test scenarios[cite: 5].</li>
-                    <li>Compare sensor readings with the LCD output[cite: 4, 5].</li>
-                    <li>Identify errors encountered and their implemented solutions[cite: 5].</li>
-                    <li>Include photos or screenshots of actual project testing[cite: 4, 5].</li>
-                </ul>
-                <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-top: 8px;">
-                    <div class="member-card"><h4>Scenario 1</h4><p style="font-size: 0.68rem;">Normal Test[cite: 5]</p></div>
-                    <div class="member-card"><h4>Scenario 2</h4><p style="font-size: 0.68rem;">Threshold Test[cite: 5]</p></div>
-                    <div class="member-card"><h4>Scenario 3</h4><p style="font-size: 0.68rem;">Error Limit Test[cite: 5]</p></div>
-                </div>
-            </div>
-
-            <!-- Slide 9: Applications and Conclusion -->
-            <div class="slide" data-slide="9">
-                <div>
-                    <span class="badge"><i class="fa-solid fa-lightbulb"></i> Slide 9</span>
-                    <h2>Applications and Conclusion</h2>
-                </div>
-                <ul>
-                    <li>Explain practical uses of the system in real life[cite: 5].</li>
-                    <li>Discuss what the group learned during development[cite: 5].</li>
-                    <li>Suggest possible improvements or additional features (e.g. IoT, Wireless)[cite: 5].</li>
-                </ul>
-                <div class="arduino-box" style="margin-top: 8px; padding: 8px;">
-                    <p style="font-size: 0.78rem; color: #fff;">Expected Output: "A working Arduino-based monitoring system that reads data from a sensor and displays meaningful information on an LCD."[cite: 4]</p>
-                </div>
-            </div>
-
-            <!-- Slide 10: Question & Answer / Grading Rubric -->
-            <div class="slide" data-slide="10">
-                <div>
-                    <span class="badge"><i class="fa-solid fa-circle-question"></i> Slide 10</span>
-                    <h2>Q&A & Grading Rubric</h2>
-                </div>
-                <div class="content-grid" style="gap: 10px;">
-                    <div>
-                        <p style="font-size: 0.8rem; margin-bottom: 6px; color: #fff;">Be prepared to explain[cite: 5]:</p>
-                        <ul style="gap: 4px;">
-                            <li>Circuit & pin layout[cite: 4, 5]</li>
-                            <li>Code & logic execution[cite: 4, 5]</li>
-                            <li>Sensor & LCD operation[cite: 4, 5]</li>
-                            <li>Troubleshooting process[cite: 5]</li>
-                        </ul>
-                    </div>
-                    <div class="rubric-grid">
-                        <div class="rubric-header">Criteria[cite: 4]</div>
-                        <div class="rubric-header">Weight[cite: 4]</div>
-                        <div class="rubric-item">Prototype Functionality[cite: 4]</div><div class="rubric-item" style="color:var(--primary)">30%[cite: 4]</div>
-                        <div class="rubric-item">Circuit Connections[cite: 4]</div><div class="rubric-item" style="color:var(--primary)">20%[cite: 4]</div>
-                        <div class="rubric-item">Arduino Programming[cite: 4]</div><div class="rubric-item" style="color:var(--primary)">20%[cite: 4]</div>
-                        <div class="rubric-item">Presentation / Explanation[cite: 4]</div><div class="rubric-item" style="color:var(--primary)">15%[cite: 4]</div>
-                        <div class="rubric-item">Testing & Troubleshooting[cite: 4]</div><div class="rubric-item" style="color:var(--primary)">10%[cite: 4]</div>
-                        <div class="rubric-item">Teamwork & Docs[cite: 4]</div><div class="rubric-item" style="color:var(--primary)">5%[cite: 4]</div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Bottom Navigation Bar -->
-            <div class="nav-controls">
-                <button class="btn" id="prevBtn"><i class="fa-solid fa-arrow-left"></i> Prev</button>
-                <div class="slide-counter"><span id="currentNum">01</span> / 10</div>
-                <div class="slide-indicators" id="indicators"></div>
-                <button class="btn" id="nextBtn">Next <i class="fa-solid fa-arrow-right"></i></button>
+            <!-- Seconds Card -->
+            <div class="glass-card rounded-3xl p-4 sm:p-5 text-center col-span-2 sm:col-span-1 transform transition-all duration-300 hover:scale-105 hover:-translate-y-1 border-2 border-pink-300">
+                <div class="text-3xl sm:text-4xl md:text-5xl font-fredoka font-bold text-pink-500 tracking-tight animate-pulse" id="seconds">00</div>
+                <div class="text-xs sm:text-sm font-bold text-gray-500 uppercase tracking-wider mt-1">Seconds</div>
+                <div class="mt-1 text-xs text-pink-400 font-medium">💖 Custom +50s</div>
             </div>
 
         </div>
-    </div>
 
+        <!-- Interactive Buttons Bar -->
+        <div class="flex flex-wrap justify-center items-center gap-4 pt-2 w-full">
+            <button id="sendLoveBtn" class="px-6 py-3 bg-gradient-to-r from-pink-400 to-rose-400 hover:from-pink-500 hover:to-rose-500 text-white font-fredoka font-semibold rounded-2xl shadow-lg shadow-pink-200 transform hover:-translate-y-0.5 active:translate-y-0 active:scale-95 transition-all flex items-center gap-2">
+                <i class="fas fa-heart text-pink-100"></i>
+                <span>Send Love to Cali</span>
+            </button>
+
+            <button id="cheerBtn" class="px-6 py-3 bg-gradient-to-r from-purple-400 to-indigo-400 hover:from-purple-500 hover:to-indigo-500 text-white font-fredoka font-semibold rounded-2xl shadow-lg shadow-purple-200 transform hover:-translate-y-0.5 active:translate-y-0 active:scale-95 transition-all flex items-center gap-2">
+                <i class="fas fa-magic text-yellow-200"></i>
+                <span>Cheer & Sparkle</span>
+            </button>
+
+            <button id="hugGirlBtn" class="px-6 py-3 bg-gradient-to-r from-peach-300 via-pink-300 to-purple-300 text-pink-700 font-fredoka font-semibold rounded-2xl shadow-md transform hover:-translate-y-0.5 active:translate-y-0 active:scale-95 transition-all flex items-center gap-2">
+                <i class="fas fa-hand-holding-heart"></i>
+                <span>Give Hug</span>
+            </button>
+        </div>
+
+        <!-- Sweet Message Card -->
+        <div class="w-full glass-card rounded-3xl p-6 text-center relative overflow-hidden">
+            <div class="absolute -right-4 -bottom-4 text-7xl opacity-10 text-pink-500 pointer-events-none">
+                <i class="fas fa-envelope-open-text"></i>
+            </div>
+            <h3 class="font-fredoka text-xl font-bold text-pink-600 mb-2 flex items-center justify-center gap-2">
+                <i class="fas fa-star text-yellow-400"></i> Sweet Note for Cali <i class="fas fa-star text-yellow-400"></i>
+            </h3>
+            <p id="sweetQuote" class="text-gray-700 italic font-medium max-w-xl mx-auto text-sm sm:text-base">
+                "No matter how many days or miles stand between us, every tick of this clock brings Cali one second closer to home!"
+            </p>
+        </div>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="w-full max-w-4xl z-10 text-center py-4 text-xs font-semibold text-gray-400">
+        Crafted with 💖 for Cali • Countdown initialized for 5 Years, 120 Days & 50 Seconds
+    </footer>
+
+    <!-- JavaScript Logic -->
     <script>
-        const slides = document.querySelectorAll('.slide');
-        const indicatorsContainer = document.getElementById('indicators');
-        const currentNum = document.getElementById('currentNum');
-        const prevBtn = document.getElementById('prevBtn');
-        const nextBtn = document.getElementById('nextBtn');
+        // --- 1. Audio Setup using Tone.js ---
+        let soundEnabled = true;
+        const soundToggleBtn = document.getElementById('soundToggle');
+        const soundIcon = document.getElementById('soundIcon');
+        const soundText = document.getElementById('soundText');
+
+        // Synth for cute sound effects
+        let synth;
+        function initAudio() {
+            if (!synth) {
+                synth = new Tone.PolySynth(Tone.Synth, {
+                    oscillator: { type: "sine" },
+                    envelope: { attack: 0.01, decay: 0.1, sustain: 0.1, release: 0.5 }
+                }).toDestination();
+                synth.volume.value = -12;
+            }
+        }
+
+        function playCuteSound(notes = ["C5", "E5", "G5"]) {
+            if (!soundEnabled) return;
+            try {
+                initAudio();
+                Tone.start();
+                const now = Tone.now();
+                notes.forEach((note, index) => {
+                    synth.triggerAttackRelease(note, "8n", now + index * 0.08);
+                });
+            } catch (e) {
+                console.log("Audio play error:", e);
+            }
+        }
+
+        soundToggleBtn.addEventListener('click', () => {
+            soundEnabled = !soundEnabled;
+            if (soundEnabled) {
+                soundIcon.className = 'fas fa-volume-up font-bold';
+                soundText.textContent = 'Sound ON';
+                playCuteSound(["G5", "C6"]);
+            } else {
+                soundIcon.className = 'fas fa-volume-mute font-bold';
+                soundText.textContent = 'Sound OFF';
+            }
+        });
+
+
+        // --- 2. Countdown Calculation Logic ---
+        // Target requested: Today + 5 years + 120 days + 50 seconds
+        // Today relative base: Oct 27, 2026
+        // Base launch date stored in memory
+        const startDate = new Date(); // Dynamic live current date
         
-        let currentSlide = 0;
-        const totalSlides = slides.length;
+        // Calculate Target: Add 5 years, 120 days, and 50 seconds
+        const targetDate = new Date(startDate.getTime());
+        targetDate.setFullYear(targetDate.getFullYear() + 5);
+        targetDate.setDate(targetDate.getDate() + 120);
+        targetDate.setSeconds(targetDate.getSeconds() + 50);
 
-        // Create indicators
-        for (let i = 0; i < totalSlides; i++) {
-            const ind = document.createElement('div');
-            ind.classList.add('indicator');
-            if (i === 0) ind.classList.add('active');
-            ind.addEventListener('click', () => goToSlide(i));
-            indicatorsContainer.appendChild(ind);
+        // Display Target Date formatted sweetly
+        const options = { year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit' };
+        document.getElementById('targetDateDisplay').textContent = targetDate.toLocaleDateString('en-US', options);
+
+        function updateCountdown() {
+            const now = new Date().getTime();
+            const distance = targetDate.getTime() - now;
+
+            if (distance < 0) {
+                document.getElementById('years').textContent = "00";
+                document.getElementById('days').textContent = "00";
+                document.getElementById('hours').textContent = "00";
+                document.getElementById('minutes').textContent = "00";
+                document.getElementById('seconds').textContent = "00";
+                document.getElementById('speechBubble').textContent = "CALI IS HERE! 🎉💖";
+                return;
+            }
+
+            // Approximate conversion breakdown
+            const msPerSecond = 1000;
+            const msPerMinute = msPerSecond * 60;
+            const msPerHour = msPerMinute * 60;
+            const msPerDay = msPerHour * 24;
+            const msPerYear = msPerDay * 365.25;
+
+            const years = Math.floor(distance / msPerYear);
+            const remainderAfterYears = distance % msPerYear;
+
+            const days = Math.floor(remainderAfterYears / msPerDay);
+            const remainderAfterDays = remainderAfterYears % msPerDay;
+
+            const hours = Math.floor(remainderAfterDays / msPerHour);
+            const remainderAfterHours = remainderAfterDays % msPerHour;
+
+            const minutes = Math.floor(remainderAfterHours / msPerMinute);
+            const remainderAfterMinutes = remainderAfterHours % msPerMinute;
+
+            const seconds = Math.floor(remainderAfterMinutes / msPerSecond);
+
+            document.getElementById('years').textContent = String(years).padStart(2, '0');
+            document.getElementById('days').textContent = String(days).padStart(2, '0');
+            document.getElementById('hours').textContent = String(hours).padStart(2, '0');
+            document.getElementById('minutes').textContent = String(minutes).padStart(2, '0');
+            document.getElementById('seconds').textContent = String(seconds).padStart(2, '0');
         }
 
-        const indicators = document.querySelectorAll('.indicator');
+        // Update immediately & interval
+        updateCountdown();
+        setInterval(updateCountdown, 1000);
 
-        function updateSlide() {
-            slides.forEach((slide, index) => {
-                slide.classList.toggle('active', index === currentSlide);
+
+        // --- 3. Background Particles Generator ---
+        const particlesContainer = document.getElementById('particles-container');
+        const particleEmojis = ['💖', '🌸', '✨', '🎀', '⭐', '☁️'];
+
+        function createParticle() {
+            const particle = document.createElement('div');
+            particle.className = 'floating-heart';
+            particle.textContent = particleEmojis[Math.floor(Math.random() * particleEmojis.length)];
+            
+            const startX = Math.random() * 100; // % width
+            const duration = 6 + Math.random() * 8; // seconds
+            const fontSize = 14 + Math.random() * 18; // px
+
+            particle.style.left = `${startX}vw`;
+            particle.style.animationDuration = `${duration}s`;
+            particle.style.fontSize = `${fontSize}px`;
+            particle.style.opacity = Math.random() * 0.7 + 0.3;
+
+            particlesContainer.appendChild(particle);
+
+            setTimeout(() => {
+                particle.remove();
+            }, duration * 1000);
+        }
+
+        // Periodically generate particles
+        setInterval(createParticle, 800);
+        for(let i = 0; i < 8; i++) createParticle();
+
+
+        // --- 4. Interactive Kawaii Character & Speech Logic ---
+        const girlContainer = document.getElementById('girlCharacterContainer');
+        const speechBubble = document.getElementById('speechBubble');
+        const blushLeft = document.getElementById('blushLeft');
+        const blushRight = document.getElementById('blushRight');
+        const mouth = document.getElementById('mouth');
+
+        const cutePhrases = [
+            "I miss Cali so much! 🎀",
+            "Can't wait to see Cali's smile! ✨",
+            "Sending giant hugs to Cali! 🥰",
+            "Counting down every single second! ⏰",
+            "Cali makes the world brighter! 🌸",
+            "Yay! Another second closer! 💕"
+        ];
+
+        function triggerGirlReaction(text = null) {
+            // Sound effect
+            playCuteSound(["E5", "A5", "C6"]);
+
+            // Change speech text
+            const randomQuote = text || cutePhrases[Math.floor(Math.random() * cutePhrases.length)];
+            speechBubble.textContent = randomQuote;
+
+            // Extra Blush animation
+            blushLeft.classList.add('super-blush');
+            blushRight.classList.add('super-blush');
+            
+            // Mouth changes to open happy mouth
+            mouth.setAttribute('d', 'M 93,105 Q 100,118 107,105 Z');
+            mouth.setAttribute('fill', '#FF4B72');
+
+            // Wink character briefly
+            girlContainer.classList.add('wink');
+
+            setTimeout(() => {
+                blushLeft.classList.remove('super-blush');
+                blushRight.classList.remove('super-blush');
+                mouth.setAttribute('d', 'M 94,106 Q 100,112 106,106');
+                mouth.setAttribute('fill', 'none');
+                girlContainer.classList.remove('wink');
+            }, 1800);
+        }
+
+        girlContainer.addEventListener('click', () => {
+            triggerGirlReaction();
+            // Confetti burst on click character
+            confetti({
+                particleCount: 25,
+                spread: 50,
+                origin: { y: 0.6 },
+                colors: ['#FFB7B2', '#FFD1DC', '#E6E6FA']
             });
-            indicators.forEach((ind, index) => {
-                ind.classList.toggle('active', index === currentSlide);
+        });
+
+
+        // --- 5. Interactive Buttons & Confetti Effects ---
+        
+        // Send Love Button
+        document.getElementById('sendLoveBtn').addEventListener('click', () => {
+            playCuteSound(["C5", "F5", "A5", "C6"]);
+            triggerGirlReaction("Sending Cali 1000x Love! 💖");
+
+            // Heart Confetti Explosion
+            confetti({
+                particleCount: 60,
+                spread: 70,
+                origin: { y: 0.7 },
+                colors: ['#FF4B72', '#FFB7B2', '#FF69B4', '#FFF'],
+                shapes: ['circle'],
+                scalar: 1.2
             });
-            currentNum.textContent = String(currentSlide + 1).padStart(2, '0');
-        }
-
-        function goToSlide(n) {
-            currentSlide = (n + totalSlides) % totalSlides;
-            updateSlide();
-        }
-
-        prevBtn.addEventListener('click', () => goToSlide(currentSlide - 1));
-        nextBtn.addEventListener('click', () => goToSlide(currentSlide + 1));
-
-        // Keyboard navigation
-        document.addEventListener('keydown', (e) => {
-            if (e.key === 'ArrowRight' || e.key === 'PageDown' || e.key === ' ') {
-                goToSlide(currentSlide + 1);
-            } else if (e.key === 'ArrowLeft' || e.key === 'PageUp') {
-                goToSlide(currentSlide - 1);
-            }
         });
 
-        // Touch swipe support for mobile
-        let touchStartX = 0;
-        let touchEndX = 0;
+        // Cheer Button
+        document.getElementById('cheerBtn').addEventListener('click', () => {
+            playCuteSound(["G5", "B5", "D6", "G6"]);
+            triggerGirlReaction("Hip Hip Hooray for Cali! ✨🎉");
 
-        document.addEventListener('touchstart', e => {
-            touchStartX = e.changedTouches[0].screenX;
+            // Gold & Pastel Sparkle Explosion
+            confetti({
+                particleCount: 80,
+                angle: 60,
+                spread: 55,
+                origin: { x: 0 },
+                colors: ['#FFD700', '#D8B4FE', '#FF9EAA']
+            });
+            confetti({
+                particleCount: 80,
+                angle: 120,
+                spread: 55,
+                origin: { x: 1 },
+                colors: ['#FFD700', '#D8B4FE', '#FF9EAA']
+            });
         });
 
-        document.addEventListener('touchend', e => {
-            touchEndX = e.changedTouches[0].screenX;
-            if (touchEndX < touchStartX - 40) {
-                goToSlide(currentSlide + 1);
-            }
-            if (touchEndX > touchStartX + 40) {
-                goToSlide(currentSlide - 1);
-            }
+        // Hug Girl Button
+        document.getElementById('hugGirlBtn').addEventListener('click', () => {
+            playCuteSound(["A5", "C6"]);
+            triggerGirlReaction("Warm big hug accepted! 🤗💕");
+
+            // Cute burst
+            confetti({
+                particleCount: 40,
+                spread: 100,
+                origin: { y: 0.8 },
+                colors: ['#FFE5B4', '#FFD1DC', '#E6E6FA']
+            });
         });
+
+        // Dynamic Quotes Switcher for Sweet Note
+        const quotes = [
+            '"No matter how many days or miles stand between us, every tick of this clock brings Cali one second closer to home!"',
+            '"Distance only makes the heart grow fonder. Cali is worth every second of waiting! 🌸"',
+            '"Counting down days, hours, and minutes until the sweetest reunion ever! ✨"',
+            '"Stars shine brighter knowing Cali is returning! 💖"'
+        ];
+        let quoteIndex = 0;
+        setInterval(() => {
+            quoteIndex = (quoteIndex + 1) % quotes.length;
+            const quoteEl = document.getElementById('sweetQuote');
+            quoteEl.style.opacity = '0';
+            setTimeout(() => {
+                quoteEl.textContent = quotes[quoteIndex];
+                quoteEl.style.opacity = '1';
+            }, 500);
+        }, 8000);
+
     </script>
 </body>
 </html>
+```
