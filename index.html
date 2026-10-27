@@ -3,620 +3,1108 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Counting Down to Cali's Return ✨</title>
-    <!-- Tailwind CSS -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Font Awesome Icons -->
+    <title>Cali's Return Countdown ✨ 💕</title>
+
+    <!-- Google Fonts & Font Awesome Icons -->
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=Nunito:wght@400;600;700;800&family=Quicksand:wght@500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <!-- Google Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
-    <!-- Canvas Confetti -->
+
+    <!-- Canvas Confetti & Tone.js libraries -->
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
-    <!-- Tone.js for Web Audio SFX -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/tone/14.8.49/Tone.js"></script>
 
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    colors: {
-                        pastelPink: '#FFD1DC',
-                        pastelPurple: '#E6E6FA',
-                        pastelPeach: '#FFE5B4',
-                        pastelRose: '#FFB7B2',
-                        pastelLav: '#D8B4FE',
-                        softBackground: '#FFF5F7',
-                        cardBg: 'rgba(255, 255, 255, 0.85)',
-                    },
-                    fontFamily: {
-                        fredoka: ['Fredoka', 'sans-serif'],
-                        nunito: ['Nunito', 'sans-serif'],
-                    },
-                    animation: {
-                        'float': 'float 4s ease-in-out infinite',
-                        'bounce-soft': 'bounceSoft 2s infinite',
-                        'sparkle': 'sparkle 1.5s ease-in-out infinite alternate',
-                        'pulse-glow': 'pulseGlow 2s infinite alternate',
-                        'blink': 'blink 4s infinite',
-                        'tail-wag': 'tailWag 1.2s ease-in-out infinite alternate',
-                    },
-                    keyframes: {
-                        float: {
-                            '0%, 100%': { transform: 'translateY(0px) rotate(0deg)' },
-                            '50%': { transform: 'translateY(-12px) rotate(2deg)' },
-                        },
-                        bounceSoft: {
-                            '0%, 100%': { transform: 'translateY(0)' },
-                            '50%': { transform: 'translateY(-8px)' },
-                        },
-                        sparkle: {
-                            '0%': { opacity: '0.4', transform: 'scale(0.8)' },
-                            '100%': { opacity: '1', transform: 'scale(1.2)' },
-                        },
-                        pulseGlow: {
-                            '0%': { boxShadow: '0 0 15px rgba(255, 182, 193, 0.4)' },
-                            '100%': { boxShadow: '0 0 30px rgba(255, 105, 180, 0.8)' },
-                        },
-                        blink: {
-                            '0%, 90%, 100%': { transform: 'scaleY(1)' },
-                            '95%': { transform: 'scaleY(0.1)' }
-                        },
-                        tailWag: {
-                            '0%': { transform: 'rotate(-5deg)' },
-                            '100%': { transform: 'rotate(5deg)' }
-                        }
-                    }
-                }
-            }
-        }
-    </script>
-
     <style>
-        body {
-            font-family: 'Nunito', sans-serif;
-            background: linear-gradient(135deg, #FFF0F5 0%, #F3E8FF 50%, #FFE4E1 100%);
-            min-height: 100vh;
-            overflow-x: hidden;
+        :root {
+            --pink-light: #fff0f5;
+            --pink-soft: #ffb6c1;
+            --pink-accent: #ff6b8b;
+            --pink-deep: #e83e8c;
+            --lavender: #e6e6fa;
+            --purple-soft: #d8b4fe;
+            --peach: #ffe5d9;
+            --text-dark: #4a3e4d;
+            --card-bg: rgba(255, 255, 255, 0.85);
+            --shadow-cute: 0 10px 25px rgba(255, 107, 139, 0.2);
+            --border-radius: 24px;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
             user-select: none;
+            -webkit-tap-highlight-color: transparent;
         }
 
-        /* Custom Scrollbar */
-        ::-webkit-scrollbar {
-            width: 8px;
-        }
-        ::-webkit-scrollbar-track {
-            background: #FFF5F7;
-        }
-        ::-webkit-scrollbar-thumb {
-            background: #FFB7B2;
-            border-radius: 10px;
+        body {
+            font-family: 'Fredoka', 'Quicksand', sans-serif;
+            background: linear-gradient(135deg, #ffedee 0%, #f3e7e9 50%, #e3eeff 100%);
+            min-height: 100vh;
+            color: var(--text-dark);
+            overflow-x: hidden;
+            position: relative;
+            padding-bottom: 60px;
         }
 
-        /* Glassmorphism Card Style */
-        .glass-card {
-            background: rgba(255, 255, 255, 0.75);
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
-            border: 2px solid rgba(255, 255, 255, 0.9);
-            box-shadow: 0 10px 30px rgba(236, 72, 153, 0.12);
-        }
-
-        .floating-heart {
-            position: absolute;
+        /* Floating background elements */
+        .bg-particle {
+            position: fixed;
             pointer-events: none;
-            animation: floatUp linear infinite;
+            z-index: 0;
+            animation: floatUp 12s infinite linear;
+            opacity: 0.6;
         }
 
         @keyframes floatUp {
-            0% {
-                transform: translateY(100vh) scale(0) rotate(0deg);
-                opacity: 1;
-            }
-            100% {
-                transform: translateY(-10vh) scale(1.2) rotate(360deg);
-                opacity: 0;
-            }
+            0% { transform: translateY(100vh) rotate(0deg); opacity: 0; }
+            20% { opacity: 0.7; }
+            80% { opacity: 0.7; }
+            100% { transform: translateY(-10vh) rotate(360deg); opacity: 0; }
         }
 
-        /* Kawaii Girl interactive animations */
-        .eye-left, .eye-right {
-            transform-origin: center;
-            animation: blink 4s infinite;
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 20px;
+            position: relative;
+            z-index: 10;
         }
 
-        .wink .eye-right {
-            animation: none !important;
-            transform: scaleY(0.1);
+        /* Header Styling */
+        header {
+            text-align: center;
+            margin-top: 15px;
+            margin-bottom: 25px;
+            animation: bounceIn 1.2s ease;
+        }
+
+        @keyframes bounceIn {
+            0% { opacity: 0; transform: scale(0.8); }
+            60% { opacity: 1; transform: scale(1.03); }
+            100% { transform: scale(1); }
+        }
+
+        .badge {
+            display: inline-block;
+            background: linear-gradient(45deg, var(--pink-accent), var(--purple-soft));
+            color: white;
+            padding: 6px 18px;
+            border-radius: 50px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            box-shadow: 0 4px 12px rgba(255, 107, 139, 0.3);
+            margin-bottom: 12px;
+            letter-spacing: 0.5px;
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            color: #432838;
+            text-shadow: 2px 2px 0px #ffffff;
+            margin-bottom: 8px;
+        }
+
+        .subtitle {
+            font-size: 1.1rem;
+            color: #6c5268;
+            font-family: 'Nunito', sans-serif;
+            font-weight: 600;
+        }
+
+        /* Interactive Character & Visual Area */
+        .hero-section {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-bottom: 30px;
+        }
+
+        .kawaii-character-box {
+            position: relative;
+            cursor: pointer;
+            transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            margin-bottom: 10px;
+        }
+
+        .kawaii-character-box:hover {
+            transform: scale(1.05);
+        }
+
+        .kawaii-character-box:active {
+            transform: scale(0.95);
+        }
+
+        /* Speech Bubble */
+        .speech-bubble {
+            position: absolute;
+            top: -25px;
+            right: -20px;
+            background: white;
+            padding: 8px 16px;
+            border-radius: 20px;
+            border-bottom-left-radius: 0;
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: var(--pink-deep);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+            border: 2px solid var(--peach);
+            animation: floatBubble 3s ease-in-out infinite;
+            z-index: 15;
+            white-space: nowrap;
+        }
+
+        @keyframes floatBubble {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-6px); }
+        }
+
+        /* SVG Girl Styling */
+        .kawaii-svg {
+            width: 190px;
+            height: 190px;
+            filter: drop-shadow(0 10px 15px rgba(255, 182, 193, 0.4));
         }
 
         .blush {
+            opacity: 0.6;
+            transition: opacity 0.3s;
+        }
+
+        .winking-eye {
+            display: none;
+        }
+
+        .happy-mouth {
+            display: none;
+        }
+
+        /* Active emotion classes */
+        .kawaii-character-box.blushing .blush { opacity: 1; }
+        .kawaii-character-box.winking .normal-eye { display: none; }
+        .kawaii-character-box.winking .winking-eye { display: block; }
+        .kawaii-character-box.happy .normal-mouth { display: none; }
+        .kawaii-character-box.happy .happy-mouth { display: block; }
+
+        /* Timer Cards Grid */
+        .countdown-grid {
+            display: grid;
+            grid-template-columns: repeat( auto-fit, minmax(130px, 1fr) );
+            gap: 16px;
+            margin-bottom: 30px;
+        }
+
+        .time-card {
+            background: var(--card-bg);
+            backdrop-filter: blur(10px);
+            border: 2px solid rgba(255, 255, 255, 0.9);
+            border-radius: var(--border-radius);
+            padding: 20px 10px;
+            text-align: center;
+            box-shadow: var(--shadow-cute);
             transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
         }
 
-        .super-blush {
-            fill: #FF69B4 !important;
-            opacity: 0.9 !important;
-            transform: scale(1.3);
-            transform-origin: center;
+        .time-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 6px;
+            background: linear-gradient(90deg, var(--pink-soft), var(--purple-soft));
         }
 
-        .arm-wave {
-            transform-origin: 20% 80%;
-            animation: wave 1.5s ease-in-out infinite alternate;
+        .time-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 30px rgba(255, 107, 139, 0.3);
         }
 
-        @keyframes wave {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(-25deg); }
+        .time-value {
+            font-size: 2.2rem;
+            font-weight: 700;
+            color: var(--pink-deep);
+            line-height: 1.1;
+            margin-bottom: 4px;
+        }
+
+        .time-label {
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: #7d6278;
+            font-weight: 600;
+        }
+
+        /* Action Buttons */
+        .actions-container {
+            display: flex;
+            justify-content: center;
+            gap: 12px;
+            flex-wrap: wrap;
+            margin-bottom: 35px;
+        }
+
+        .cute-btn {
+            background: white;
+            border: 2px solid var(--pink-soft);
+            color: var(--pink-deep);
+            padding: 12px 24px;
+            border-radius: 50px;
+            font-size: 1rem;
+            font-weight: 700;
+            cursor: pointer;
+            box-shadow: 0 6px 15px rgba(255, 182, 193, 0.3);
+            transition: all 0.2s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            font-family: 'Fredoka', sans-serif;
+        }
+
+        .cute-btn:hover {
+            background: var(--pink-soft);
+            color: white;
+            transform: translateY(-3px) scale(1.02);
+            box-shadow: 0 10px 20px rgba(255, 107, 139, 0.4);
+        }
+
+        .cute-btn:active {
+            transform: translateY(1px) scale(0.98);
+        }
+
+        .cute-btn.primary {
+            background: linear-gradient(45deg, var(--pink-accent), var(--pink-deep));
+            color: white;
+            border: none;
+        }
+
+        .cute-btn.primary:hover {
+            background: linear-gradient(45deg, var(--pink-deep), var(--pink-accent));
+        }
+
+        /* Target Date Display Info Box */
+        .info-card {
+            background: rgba(255, 255, 255, 0.7);
+            border-radius: var(--border-radius);
+            padding: 20px;
+            text-align: center;
+            border: 1px solid rgba(255, 255, 255, 0.8);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.04);
+            margin-bottom: 25px;
+        }
+
+        .info-card h3 {
+            color: #5a3d52;
+            margin-bottom: 8px;
+            font-size: 1.2rem;
+        }
+
+        .info-card p {
+            color: #7a5e72;
+            font-size: 0.95rem;
+            font-family: 'Nunito', sans-serif;
+        }
+
+        /* Floating Action Chat Button */
+        .floating-chat-btn {
+            position: fixed;
+            bottom: 25px;
+            right: 25px;
+            background: linear-gradient(45deg, var(--pink-accent), var(--pink-deep));
+            color: white;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            box-shadow: 0 8px 25px rgba(232, 62, 140, 0.5);
+            cursor: pointer;
+            z-index: 99;
+            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            border: 3px solid white;
+        }
+
+        .floating-chat-btn:hover {
+            transform: scale(1.1) rotate(10deg);
+        }
+
+        .chat-badge {
+            position: absolute;
+            top: -2px;
+            right: -2px;
+            background: #ff3b30;
+            color: white;
+            border-radius: 50%;
+            width: 18px;
+            height: 18px;
+            font-size: 0.7rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 2px solid white;
+            animation: pulseBadge 2s infinite;
+        }
+
+        @keyframes pulseBadge {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.3); }
+            100% { transform: scale(1); }
+        }
+
+        /* Modal Drawer for Chat / Notes */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(74, 62, 77, 0.4);
+            backdrop-filter: blur(4px);
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease;
+            padding: 20px;
+        }
+
+        .modal-overlay.active {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .modal-box {
+            background: white;
+            width: 100%;
+            max-width: 450px;
+            border-radius: 28px;
+            padding: 25px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+            transform: translateY(30px) scale(0.95);
+            transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            position: relative;
+            border: 3px solid var(--peach);
+        }
+
+        .modal-overlay.active .modal-box {
+            transform: translateY(0) scale(1);
+        }
+
+        .close-modal-btn {
+            position: absolute;
+            top: 18px;
+            right: 20px;
+            background: #f0e6ed;
+            color: #6c5268;
+            border: none;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 1.1rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background 0.2s;
+        }
+
+        .close-modal-btn:hover {
+            background: var(--pink-soft);
+            color: white;
+        }
+
+        .modal-header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .modal-header h2 {
+            font-size: 1.5rem;
+            color: var(--pink-deep);
+        }
+
+        /* Form Controls */
+        .input-group {
+            margin-bottom: 15px;
+        }
+
+        .input-group label {
+            display: block;
+            font-size: 0.85rem;
+            font-weight: 700;
+            color: #6c5268;
+            margin-bottom: 6px;
+        }
+
+        .input-group input,
+        .input-group textarea {
+            width: 100%;
+            padding: 12px 16px;
+            border-radius: 16px;
+            border: 2px solid #f0dbe4;
+            font-family: 'Nunito', sans-serif;
+            font-size: 0.95rem;
+            outline: none;
+            transition: border-color 0.2s;
+            background: #fffafa;
+        }
+
+        .input-group input:focus,
+        .input-group textarea:focus {
+            border-color: var(--pink-accent);
+            background: #fff;
+        }
+
+        /* Quick message chips */
+        .quick-chips {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-bottom: 18px;
+        }
+
+        .chip {
+            background: var(--pink-light);
+            border: 1px solid var(--pink-soft);
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            color: var(--pink-deep);
+            cursor: pointer;
+            transition: all 0.2s;
+            font-weight: 600;
+        }
+
+        .chip:hover {
+            background: var(--pink-accent);
+            color: white;
+        }
+
+        /* Saved Notes Log inside Modal */
+        .notes-log {
+            max-height: 150px;
+            overflow-y: auto;
+            border-top: 1px dashed #e0d0dc;
+            padding-top: 12px;
+            margin-top: 15px;
+        }
+
+        .note-item {
+            background: #fcf5f8;
+            padding: 10px 14px;
+            border-radius: 12px;
+            font-size: 0.85rem;
+            margin-bottom: 8px;
+            border-left: 3px solid var(--pink-accent);
+        }
+
+        .note-item .time {
+            font-size: 0.7rem;
+            color: #998094;
+            display: block;
+            margin-top: 4px;
+        }
+
+        /* Toast Notifications */
+        .toast-container {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 2000;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            pointer-events: none;
+        }
+
+        .toast {
+            background: white;
+            padding: 12px 20px;
+            border-radius: 50px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.12);
+            border: 2px solid var(--pink-soft);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: var(--text-dark);
+            transform: translateX(120%);
+            transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            pointer-events: auto;
+        }
+
+        .toast.show {
+            transform: translateX(0);
+        }
+
+        .toast i {
+            color: var(--pink-deep);
+            font-size: 1.2rem;
+        }
+
+        /* Sound Control Switch */
+        .sound-toggle {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            z-index: 99;
+            background: white;
+            border: 2px solid var(--pink-soft);
+            width: 42px;
+            height: 42px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--pink-deep);
+            cursor: pointer;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+            transition: all 0.2s;
+        }
+
+        .sound-toggle:hover {
+            transform: scale(1.1);
+        }
+
+        /* Footer */
+        footer {
+            text-align: center;
+            font-size: 0.85rem;
+            color: #8c7286;
+            margin-top: 30px;
+        }
+
+        /* Responsive Tweaks */
+        @media (max-width: 600px) {
+            h1 { font-size: 1.9rem; }
+            .countdown-grid { grid-template-columns: repeat(2, 1fr); }
+            .kawaii-svg { width: 160px; height: 160px; }
+            .speech-bubble { font-size: 0.8rem; right: -10px; }
         }
     </style>
 </head>
-<body class="flex flex-col min-h-screen justify-between items-center relative p-4 md:p-8">
+<body>
 
-    <!-- Floating Background Particles (Hearts & Stars) -->
-    <div id="particles-container" class="fixed inset-0 pointer-events-none z-0 overflow-hidden"></div>
+    <!-- Sound Audio Toggle -->
+    <button class="sound-toggle" id="soundToggleBtn" title="Toggle Sound Effects">
+        <i class="fas fa-volume-up" id="soundIcon"></i>
+    </button>
 
-    <!-- Header / Navigation Bar -->
-    <header class="w-full max-w-4xl z-10 flex justify-between items-center py-2 px-4 glass-card rounded-full mb-4">
-        <div class="flex items-center gap-2">
-            <span class="text-2xl animate-bounce">💖</span>
-            <span class="font-fredoka text-lg md:text-xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-pink-500 to-purple-600">
-                Cali's Journey Home
-            </span>
-        </div>
-        <div class="flex items-center gap-3">
-            <button id="soundToggle" class="p-2.5 px-4 bg-pink-100 hover:bg-pink-200 text-pink-600 rounded-full text-sm font-semibold transition-all transform active:scale-95 flex items-center gap-2 shadow-sm">
-                <i class="fas font-bold fa-volume-up" id="soundIcon"></i>
-                <span id="soundText" class="hidden sm:inline">Sound ON</span>
-            </button>
-        </div>
-    </header>
+    <!-- Toast Container -->
+    <div class="toast-container" id="toastContainer"></div>
 
-    <!-- Main Content Container -->
-    <main class="w-full max-w-4xl z-10 flex flex-col items-center justify-center my-auto space-y-6">
+    <div class="container">
+        <!-- Header -->
+        <header>
+            <span class="badge"><i class="fas fa-heart"></i> Counting Down for Cali</span>
+            <h1>Cali's Return 💕</h1>
+            <p class="subtitle">5 Years, 120 Days & 50 Seconds Countdown!</p>
+        </header>
 
-        <!-- Title Banner -->
-        <div class="text-center space-y-2">
-            <div class="inline-block px-4 py-1.5 bg-pink-200/60 rounded-full text-pink-700 font-fredoka text-sm md:text-base font-semibold tracking-wide animate-pulse">
-                ✨ Counting down every second until we meet! ✨
-            </div>
-            <h1 class="font-fredoka text-3xl sm:text-5xl md:text-6xl font-bold text-gray-800 drop-shadow-sm leading-tight">
-                CALI RETURNS IN <span class="bg-gradient-to-r from-pink-500 via-purple-500 to-indigo-500 bg-clip-text text-transparent">...</span>
-            </h1>
-            <p class="text-gray-600 text-sm sm:text-base max-w-md mx-auto">
-                Target Date: <span id="targetDateDisplay" class="font-semibold text-pink-600">Calculating...</span>
-            </p>
-        </div>
+        <!-- Kawaii Anime Girl Character -->
+        <div class="hero-section">
+            <div class="kawaii-character-box" id="characterBox" title="Click me for a surprise!">
+                <div class="speech-bubble" id="speechBubble">Click me! I miss Cali ~ ✨</div>
+                
+                <svg class="kawaii-svg" viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <!-- Cat Ear Headband -->
+                    <path d="M60 65 L40 30 L80 50 Z" fill="#ffb6c1" stroke="#e83e8c" stroke-width="3" stroke-linejoin="round"/>
+                    <path d="M140 65 L160 30 L120 50 Z" fill="#ffb6c1" stroke="#e83e8c" stroke-width="3" stroke-linejoin="round"/>
+                    <path d="M50 45 L43 33 L62 48 Z" fill="#ff6b8b"/>
+                    <path d="M150 45 L157 33 L138 48 Z" fill="#ff6b8b"/>
 
-        <!-- Kawaii Girl Character Illustration -->
-        <div class="relative group cursor-pointer my-2" id="girlCharacterContainer" title="Click to interact with me!">
-            <!-- Speech Bubble -->
-            <div id="speechBubble" class="absolute -top-12 left-1/2 transform -translate-x-1/2 bg-white px-4 py-1.5 rounded-2xl shadow-md border-2 border-pink-300 text-xs sm:text-sm font-fredoka font-semibold text-pink-600 whitespace-nowrap z-20 transition-all duration-300 animate-bounce-soft">
-                Cali! 🎀
-            </div>
+                    <!-- Hair back -->
+                    <path d="M45 80 C 30 130, 40 170, 55 180 C 65 170, 60 120, 60 100" fill="#6c4f3d"/>
+                    <path d="M155 80 C 170 130, 160 170, 145 180 C 135 170, 140 120, 140 100" fill="#6c4f3d"/>
 
-            <!-- SVG Vector Anime/Kawaii Girl Character -->
-            <div class="w-44 h-44 sm:w-56 sm:h-56 relative animate-float">
-                <svg viewBox="0 0 200 200" class="w-full h-full drop-shadow-lg">
-                    <!-- Soft Halo Sparkle -->
-                    <circle cx="100" cy="100" r="90" fill="url(#pastelGrad)" opacity="0.3"/>
+                    <!-- Head/Face -->
+                    <circle cx="100" cy="100" r="50" fill="#fff0e6" stroke="#f1c2a8" stroke-width="2"/>
 
-                    <defs>
-                        <linearGradient id="pastelGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-                            <stop offset="0%" stop-color="#FFD1DC"/>
-                            <stop offset="100%" stop-color="#E6E6FA"/>
-                        </linearGradient>
-                        <linearGradient id="hairGrad" x1="0%" y1="0%" x2="0%" y2="100%">
-                            <stop offset="0%" stop-color="#FF9EAA"/>
-                            <stop offset="100%" stop-color="#FF7088"/>
-                        </linearGradient>
-                    </defs>
-
-                    <!-- Hair Back / Twintails -->
-                    <path d="M 40,80 Q 20,120 30,160 Q 55,140 60,100 Z" fill="url(#hairGrad)" />
-                    <path d="M 160,80 Q 180,120 170,160 Q 145,140 140,100 Z" fill="url(#hairGrad)" />
-
-                    <!-- Twintail Ribbons -->
-                    <circle cx="50" cy="85" r="8" fill="#FF4B72"/>
-                    <circle cx="150" cy="85" r="8" fill="#FF4B72"/>
-
-                    <!-- Body / Cute Dress -->
-                    <path d="M 70,135 Q 100,125 130,135 L 145,190 Q 100,200 55,190 Z" fill="#D8B4FE"/>
-                    <!-- Collar -->
-                    <path d="M 85,135 Q 100,145 115,135 L 100,150 Z" fill="#FFFFFF"/>
-
-                    <!-- Head / Face -->
-                    <ellipse cx="100" cy="95" rx="45" ry="40" fill="#FFE5D9"/>
-
-                    <!-- Hair Bangs -->
-                    <path d="M 55,85 Q 80,60 100,80 Q 120,60 145,85 Q 130,65 100,65 Q 70,65 55,85 Z" fill="url(#hairGrad)"/>
-
-                    <!-- Cute Cat Ears / Headband -->
-                    <path d="M 65,60 L 50,35 L 75,50 Z" fill="#FF9EAA"/>
-                    <path d="M 68,57 L 57,40 L 74,50 Z" fill="#FFD1DC"/>
-                    <path d="M 135,60 L 150,35 L 125,50 Z" fill="#FF9EAA"/>
-                    <path d="M 132,57 L 143,40 L 126,50 Z" fill="#FFD1DC"/>
-
-                    <!-- Blush Circles -->
-                    <ellipse class="blush" id="blushLeft" cx="72" cy="104" rx="7" ry="4" fill="#FF8DA1" opacity="0.6"/>
-                    <ellipse class="blush" id="blushRight" cx="128" cy="104" rx="7" ry="4" fill="#FF8DA1" opacity="0.6"/>
+                    <!-- Bangs Hair front -->
+                    <path d="M50 90 C 60 60, 90 60, 100 75 C 110 60, 140 60, 150 90 C 135 70, 115 70, 100 85 C 85 70, 65 70, 50 90 Z" fill="#805d47"/>
 
                     <!-- Eyes -->
-                    <g id="eyesGroup">
-                        <!-- Left Eye -->
-                        <ellipse class="eye-left" cx="78" cy="95" rx="5" ry="7" fill="#332233"/>
-                        <circle cx="76" cy="93" r="2" fill="#FFFFFF"/>
-                        <!-- Right Eye -->
-                        <ellipse class="eye-right" cx="122" cy="95" rx="5" ry="7" fill="#332233"/>
-                        <circle cx="120" cy="93" r="2" fill="#FFFFFF"/>
+                    <!-- Normal Eyes -->
+                    <g class="normal-eye">
+                        <ellipse cx="80" cy="102" rx="7" ry="9" fill="#4a3e4d"/>
+                        <ellipse cx="120" cy="102" rx="7" ry="9" fill="#4a3e4d"/>
+                        <circle cx="78" cy="99" r="3" fill="white"/>
+                        <circle cx="118" cy="99" r="3" fill="white"/>
+                        <circle cx="82" cy="105" r="1.5" fill="white"/>
+                        <circle cx="122" cy="105" r="1.5" fill="white"/>
                     </g>
 
-                    <!-- Mouth -->
-                    <path id="mouth" d="M 94,106 Q 100,112 106,106" fill="none" stroke="#663344" stroke-width="2.5" stroke-linecap="round"/>
-
-                    <!-- Left Arm holding Star -->
-                    <g class="arm-wave">
-                        <path d="M 65,140 Q 45,130 40,110" fill="none" stroke="#FFE5D9" stroke-width="9" stroke-linecap="round"/>
-                        <polygon points="40,105 43,112 50,112 45,116 47,123 40,119 33,123 35,116 30,112 37,112" fill="#FFD700"/>
+                    <!-- Winking Eye (hidden by default) -->
+                    <g class="winking-eye">
+                        <path d="M73 102 Q 80 95 87 102" stroke="#4a3e4d" stroke-width="3.5" stroke-linecap="round" fill="none"/>
+                        <ellipse cx="120" cy="102" rx="7" ry="9" fill="#4a3e4d"/>
+                        <circle cx="118" cy="99" r="3" fill="white"/>
                     </g>
 
-                    <!-- Right Arm holding Heart -->
-                    <g>
-                        <path d="M 135,140 Q 155,135 150,115" fill="none" stroke="#FFE5D9" stroke-width="9" stroke-linecap="round"/>
-                        <!-- Sparkly Heart in Hand -->
-                        <path d="M 150,108 C 150,105 145,100 140,104 C 135,108 140,115 150,122 C 160,115 165,108 160,104 C 155,100 150,105 150,108 Z" fill="#FF4B72" class="animate-pulse"/>
-                    </g>
+                    <!-- Blushes -->
+                    <ellipse cx="70" cy="112" rx="7" ry="4" fill="#ff6b8b" class="blush"/>
+                    <ellipse cx="130" cy="112" rx="7" ry="4" fill="#ff6b8b" class="blush"/>
+
+                    <!-- Mouths -->
+                    <path class="normal-mouth" d="M94 113 Q 100 119 106 113" stroke="#e83e8c" stroke-width="2.5" stroke-linecap="round" fill="none"/>
+                    <path class="happy-mouth" d="M93 112 Q 100 122 107 112 Z" fill="#e83e8c"/>
+
+                    <!-- Cute Body & Dress -->
+                    <path d="M75 145 Q 100 135 125 145 L 135 190 Q 100 195 65 190 Z" fill="#ffb6c1" stroke="#ff6b8b" stroke-width="2"/>
+                    <!-- Collar -->
+                    <path d="M85 142 L 100 155 L 115 142" fill="white" stroke="#e83e8c" stroke-width="1.5"/>
+                    <circle cx="100" cy="162" r="3" fill="#ff6b8b"/>
+
+                    <!-- Star Magic Wand in Hand -->
+                    <path d="M140 130 L 160 110" stroke="#ffd166" stroke-width="4" stroke-linecap="round"/>
+                    <polygon points="160,103 162,108 167,109 163,113 164,118 160,115 156,118 157,113 153,109 158,108" fill="#ffd166"/>
                 </svg>
             </div>
         </div>
 
-        <!-- Countdown Timer Grid Cards -->
-        <div class="grid grid-cols-2 sm:grid-cols-5 gap-3 sm:gap-4 w-full">
-
-            <!-- Years Card -->
-            <div class="glass-card rounded-3xl p-4 sm:p-5 text-center transform transition-all duration-300 hover:scale-105 hover:-translate-y-1">
-                <div class="text-3xl sm:text-4xl md:text-5xl font-fredoka font-bold text-pink-600 tracking-tight" id="years">00</div>
-                <div class="text-xs sm:text-sm font-bold text-gray-500 uppercase tracking-wider mt-1">Years</div>
-                <div class="mt-1 text-xs text-pink-400 font-medium">✨ 5 Years</div>
+        <!-- Countdown Display Cards -->
+        <div class="countdown-grid">
+            <div class="time-card">
+                <div class="time-value" id="years">0</div>
+                <div class="time-label">Years</div>
             </div>
-
-            <!-- Days Card -->
-            <div class="glass-card rounded-3xl p-4 sm:p-5 text-center transform transition-all duration-300 hover:scale-105 hover:-translate-y-1">
-                <div class="text-3xl sm:text-4xl md:text-5xl font-fredoka font-bold text-purple-600 tracking-tight" id="days">00</div>
-                <div class="text-xs sm:text-sm font-bold text-gray-500 uppercase tracking-wider mt-1">Days</div>
-                <div class="mt-1 text-xs text-purple-400 font-medium">🌸 120 Days</div>
+            <div class="time-card">
+                <div class="time-value" id="days">0</div>
+                <div class="time-label">Days</div>
             </div>
-
-            <!-- Hours Card -->
-            <div class="glass-card rounded-3xl p-4 sm:p-5 text-center transform transition-all duration-300 hover:scale-105 hover:-translate-y-1">
-                <div class="text-3xl sm:text-4xl md:text-5xl font-fredoka font-bold text-indigo-600 tracking-tight" id="hours">00</div>
-                <div class="text-xs sm:text-sm font-bold text-gray-500 uppercase tracking-wider mt-1">Hours</div>
-                <div class="mt-1 text-xs text-indigo-400 font-medium">⏰ Today</div>
+            <div class="time-card">
+                <div class="time-value" id="hours">00</div>
+                <div class="time-label">Hours</div>
             </div>
-
-            <!-- Minutes Card -->
-            <div class="glass-card rounded-3xl p-4 sm:p-5 text-center transform transition-all duration-300 hover:scale-105 hover:-translate-y-1">
-                <div class="text-3xl sm:text-4xl md:text-5xl font-fredoka font-bold text-rose-500 tracking-tight" id="minutes">00</div>
-                <div class="text-xs sm:text-sm font-bold text-gray-500 uppercase tracking-wider mt-1">Minutes</div>
-                <div class="mt-1 text-xs text-rose-400 font-medium">🎀 Live</div>
+            <div class="time-card">
+                <div class="time-value" id="minutes">00</div>
+                <div class="time-label">Minutes</div>
             </div>
-
-            <!-- Seconds Card -->
-            <div class="glass-card rounded-3xl p-4 sm:p-5 text-center col-span-2 sm:col-span-1 transform transition-all duration-300 hover:scale-105 hover:-translate-y-1 border-2 border-pink-300">
-                <div class="text-3xl sm:text-4xl md:text-5xl font-fredoka font-bold text-pink-500 tracking-tight animate-pulse" id="seconds">00</div>
-                <div class="text-xs sm:text-sm font-bold text-gray-500 uppercase tracking-wider mt-1">Seconds</div>
-                <div class="mt-1 text-xs text-pink-400 font-medium">💖 Custom +50s</div>
+            <div class="time-card">
+                <div class="time-value" id="seconds">00</div>
+                <div class="time-label">Seconds</div>
             </div>
-
         </div>
 
-        <!-- Interactive Buttons Bar -->
-        <div class="flex flex-wrap justify-center items-center gap-4 pt-2 w-full">
-            <button id="sendLoveBtn" class="px-6 py-3 bg-gradient-to-r from-pink-400 to-rose-400 hover:from-pink-500 hover:to-rose-500 text-white font-fredoka font-semibold rounded-2xl shadow-lg shadow-pink-200 transform hover:-translate-y-0.5 active:translate-y-0 active:scale-95 transition-all flex items-center gap-2">
-                <i class="fas fa-heart text-pink-100"></i>
-                <span>Send message to Cali</span>
-     L   </button>
-
-            <button id="cheerBtn" class="px-6 py-3 bg-gradient-to-r from-purple-400 to-indigo-400 hover:from-purple-500 hover:to-indigo-500 text-white font-fredoka font-semibold rounded-2xl shadow-lg shadow-purple-200 transform hover:-translate-y-0.5 active:translate-y-0 active:scale-95 transition-all flex items-center gap-2">
-                <i class="fas fa-magic text-yellow-200"></i>
-                <span>Cheer & Sparkle</span>
+        <!-- Action Buttons -->
+        <div class="actions-container">
+            <button class="cute-btn primary" id="sendLoveBtn">
+                <i class="fas fa-heart"></i> Send Love
             </button>
-
-            <button id="hugGirlBtn" class="px-6 py-3 bg-gradient-to-r from-peach-300 via-pink-300 to-purple-300 text-pink-700 font-fredoka font-semibold rounded-2xl shadow-md transform hover:-translate-y-0.5 active:translate-y-0 active:scale-95 transition-all flex items-center gap-2">
-                <i class="fas fa-hand-holding-heart"></i>
-                <span>Give hug</span>
+            <button class="cute-btn" id="cheerBtn">
+                <i class="fas fa-magic"></i> Sparkle & Cheer
+            </button>
+            <button class="cute-btn" id="hugBtn">
+                <i class="fas fa-hand-holding-heart"></i> Give Hug
+            </button>
+            <button class="cute-btn" id="openChatBtn">
+                <i class="fas fa-comment-dots"></i> Send Message / Note
             </button>
         </div>
 
-        <!-- Sweet Message Card -->
-        <div class="w-full glass-card rounded-3xl p-6 text-center relative overflow-hidden">
-            <div class="absolute -right-4 -bottom-4 text-7xl opacity-10 text-pink-500 pointer-events-none">
-                <i class="fas fa-envelope-open-text"></i>
-            </div>
-            <h3 class="font-fredoka text-xl font-bold text-pink-600 mb-2 flex items-center justify-center gap-2">
-                <i class="fas fa-star text-yellow-400"></i> Sweet Note for Cali <i class="fas fa-star text-yellow-400"></i>
-            </h3>
-            <p id="sweetQuote" class="text-gray-700 italic font-medium max-w-xl mx-auto text-sm sm:text-base">
-                "No matter how many days or miles stand between us, every tick of this clock brings Cali one second closer to home!"
-            </p>
+        <!-- Target Info Box -->
+        <div class="info-card">
+            <h3><i class="fas fa-calendar-alt"></i> Countdown Target</h3>
+            <p id="targetDateText">Calculating exact arrival timestamp...</p>
         </div>
 
-    </main>
+        <!-- Footer -->
+        <footer>
+            <p>Made with 💕 for Cali | Waiting patiently every single second ✨</p>
+        </footer>
+    </div>
 
-    <!-- Footer -->
-    <footer class="w-full max-w-4xl z-10 text-center py-4 text-xs font-semibold text-gray-400">
-        Crafted with 💖 for Cali • Countdown initialized for 5 Years, 120 Days & 50 Seconds
-    </footer>
+    <!-- Floating Chat Trigger -->
+    <div class="floating-chat-btn" id="floatingChatBtn" title="Send a note directly to Cali's email">
+        <i class="fas fa-paper-plane"></i>
+        <div class="chat-badge">1</div>
+    </div>
 
-    <!-- JavaScript Logic -->
+    <!-- Interactive Chat / Mailbox Modal Drawer -->
+    <div class="modal-overlay" id="chatModal">
+        <div class="modal-box">
+            <button class="close-modal-btn" id="closeModalBtn"><i class="fas fa-times"></i></button>
+
+            <div class="modal-header">
+                <h2><i class="fas fa-envelope-open-text"></i> Send Note to Cali</h2>
+                <p style="font-size: 0.85rem; color: #886b82; margin-top: 4px;">
+                    Messages are sent directly to <b>calixynnn@gmail.com</b>! 💌
+                </p>
+            </div>
+
+            <form id="noteForm">
+                <div class="input-group">
+                    <label for="senderName"><i class="fas fa-user"></i> Your Name:</label>
+                    <input type="text" id="senderName" placeholder="e.g. Bestie / Someone who misses you" required>
+                </div>
+
+                <div class="input-group">
+                    <label for="messageText"><i class="fas fa-heart"></i> Message for Cali:</label>
+                    <textarea id="messageText" rows="3" placeholder="Write something sweet for Cali's return..." required></textarea>
+                </div>
+
+                <label style="font-size: 0.8rem; font-weight: 700; color: #6c5268; display: block; margin-bottom: 6px;">
+                    Quick Click Suggestions:
+                </label>
+                <div class="quick-chips">
+                    <span class="chip" onclick="setQuickMsg('I miss you so much, Cali! 💕')">I miss you 💕</span>
+                    <span class="chip" onclick="setQuickMsg('Counting down every single second! ⏳')">Counting down ⏳</span>
+                    <span class="chip" onclick="setQuickMsg('Can\'t wait for your return! 🎉')">Can't wait! 🎉</span>
+                    <span class="chip" onclick="setQuickMsg('Sending warm hugs and smiles! 🤗')">Warm hugs 🤗</span>
+                </div>
+
+                <button type="submit" class="cute-btn primary" style="width: 100%; justify-content: center; margin-top: 5px;" id="submitMsgBtn">
+                    <i class="fas fa-paper-plane"></i> Send Direct to Email 💌
+                </button>
+            </form>
+
+            <div class="notes-log">
+                <div style="font-size: 0.8rem; font-weight: 700; color: #7a5e72; margin-bottom: 8px;">
+                    <i class="fas fa-history"></i> Local Sent History:
+                </div>
+                <div id="notesContainer">
+                    <!-- Dynamic notes inserted here -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- JavaScript Application Logic -->
     <script>
-        // --- 1. Audio Setup using Tone.js ---
+        // FORMSPREE ENDPOINT LINKED TO calixynnn@gmail.com
+        const FORMSPREE_URL = "https://formspree.io/f/mdeegnyp";
+
+        // Calculate Target Date: Exactly 5 Years, 120 Days, and 50 Seconds from NOW
+        const now = new Date();
+        const targetDate = new Date(now.getTime());
+        
+        // Add 5 years
+        targetDate.setFullYear(targetDate.getFullYear() + 5);
+        // Add 120 days
+        targetDate.setDate(targetDate.getDate() + 120);
+        // Add 50 seconds
+        targetDate.setSeconds(targetDate.getSeconds() + 50);
+
+        // Display formatted target date string
+        document.getElementById('targetDateText').innerText = 
+            `Target Return Date: ${targetDate.toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })} at ${targetDate.toLocaleTimeString()}`;
+
+        // Audio synthesizer & sound toggle
         let soundEnabled = true;
-        const soundToggleBtn = document.getElementById('soundToggle');
+        const soundToggleBtn = document.getElementById('soundToggleBtn');
         const soundIcon = document.getElementById('soundIcon');
-        const soundText = document.getElementById('soundText');
-
-        // Synth for cute sound effects
-        let synth;
-        function initAudio() {
-            if (!synth) {
-                synth = new Tone.PolySynth(Tone.Synth, {
-                    oscillator: { type: "sine" },
-                    envelope: { attack: 0.01, decay: 0.1, sustain: 0.1, release: 0.5 }
-                }).toDestination();
-                synth.volume.value = -12;
-            }
-        }
-
-        function playCuteSound(notes = ["C5", "E5", "G5"]) {
-            if (!soundEnabled) return;
-            try {
-                initAudio();
-                Tone.start();
-                const now = Tone.now();
-                notes.forEach((note, index) => {
-                    synth.triggerAttackRelease(note, "8n", now + index * 0.08);
-                });
-            } catch (e) {
-                console.log("Audio play error:", e);
-            }
-        }
 
         soundToggleBtn.addEventListener('click', () => {
             soundEnabled = !soundEnabled;
-            if (soundEnabled) {
-                soundIcon.className = 'fas fa-volume-up font-bold';
-                soundText.textContent = 'Sound ON';
-                playCuteSound(["G5", "C6"]);
+            if(soundEnabled) {
+                soundIcon.className = 'fas fa-volume-up';
+                showToast('Sound Effects Enabled 🎵');
+                playTone('C5', '8n');
             } else {
-                soundIcon.className = 'fas fa-volume-mute font-bold';
-                soundText.textContent = 'Sound OFF';
+                soundIcon.className = 'fas fa-volume-mute';
+                showToast('Sound Effects Muted 🔇');
             }
         });
 
+        function playTone(note = 'C5', duration = '8n') {
+            if(!soundEnabled) return;
+            try {
+                const synth = new Tone.Synth().toDestination();
+                synth.triggerAttackRelease(note, duration);
+            } catch(e) {
+                // Audio context backup
+            }
+        }
 
-        // --- 2. Countdown Calculation Logic ---
-        // Target requested: Today + 5 years + 120 days + 50 seconds
-        // Today relative base: Oct 27, 2026
-        // Base launch date stored in memory
-        const startDate = new Date(); // Dynamic live current date
-        
-        // Calculate Target: Add 5 years, 120 days, and 50 seconds
-        const targetDate = new Date(startDate.getTime());
-        targetDate.setFullYear(targetDate.getFullYear() + 5);
-        targetDate.setDate(targetDate.getDate() + 120);
-        targetDate.setSeconds(targetDate.getSeconds() + 50);
+        function playChime() {
+            if(!soundEnabled) return;
+            try {
+                const nowTime = Tone.now();
+                const synth = new Tone.PolySynth(Tone.Synth).toDestination();
+                synth.triggerAttackRelease(["E5", "G5", "B5", "E6"], "8n", nowTime);
+            } catch(e) {}
+        }
 
-        // Display Target Date formatted sweetly
-        const options = { year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit' };
-        document.getElementById('targetDateDisplay').textContent = targetDate.toLocaleDateString('en-US', options);
-
+        // Precise Countdown Logic
         function updateCountdown() {
-            const now = new Date().getTime();
-            const distance = targetDate.getTime() - now;
+            const currentTime = new Date().getTime();
+            const distance = targetDate.getTime() - currentTime;
 
             if (distance < 0) {
-                document.getElementById('years').textContent = "00";
-                document.getElementById('days').textContent = "00";
-                document.getElementById('hours').textContent = "00";
-                document.getElementById('minutes').textContent = "00";
-                document.getElementById('seconds').textContent = "00";
-                document.getElementById('speechBubble').textContent = "CALI IS HERE! 🎉💖";
+                document.getElementById('years').innerText = "0";
+                document.getElementById('days').innerText = "0";
+                document.getElementById('hours').innerText = "00";
+                document.getElementById('minutes').innerText = "00";
+                document.getElementById('seconds').innerText = "00";
+                document.getElementById('speechBubble').innerText = "WELCOME BACK CALI! 🎉💕";
                 return;
             }
 
-            // Approximate conversion breakdown
-            const msPerSecond = 1000;
-            const msPerMinute = msPerSecond * 60;
-            const msPerHour = msPerMinute * 60;
-            const msPerDay = msPerHour * 24;
-            const msPerYear = msPerDay * 365.25;
+            const msPerDay = 1000 * 60 * 60 * 24;
+            const msPerYear = msPerDay * 365.25; // Accounting for leap years
 
             const years = Math.floor(distance / msPerYear);
-            const remainderAfterYears = distance % msPerYear;
+            const remainingAfterYears = distance % msPerYear;
 
-            const days = Math.floor(remainderAfterYears / msPerDay);
-            const remainderAfterDays = remainderAfterYears % msPerDay;
+            const days = Math.floor(remainingAfterYears / msPerDay);
+            const hours = Math.floor((distance % msPerDay) / (1000 * 60 * 60));
+            const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+            const seconds = Math.floor((distance % (1000 * 60)) / 1000);
 
-            const hours = Math.floor(remainderAfterDays / msPerHour);
-            const remainderAfterHours = remainderAfterDays % msPerHour;
-
-            const minutes = Math.floor(remainderAfterHours / msPerMinute);
-            const remainderAfterMinutes = remainderAfterHours % msPerMinute;
-
-            const seconds = Math.floor(remainderAfterMinutes / msPerSecond);
-
-            document.getElementById('years').textContent = String(years).padStart(2, '0');
-            document.getElementById('days').textContent = String(days).padStart(2, '0');
-            document.getElementById('hours').textContent = String(hours).padStart(2, '0');
-            document.getElementById('minutes').textContent = String(minutes).padStart(2, '0');
-            document.getElementById('seconds').textContent = String(seconds).padStart(2, '0');
+            document.getElementById('years').innerText = years;
+            document.getElementById('days').innerText = days;
+            document.getElementById('hours').innerText = hours < 10 ? '0' + hours : hours;
+            document.getElementById('minutes').innerText = minutes < 10 ? '0' + minutes : minutes;
+            document.getElementById('seconds').innerText = seconds < 10 ? '0' + seconds : seconds;
         }
 
-        // Update immediately & interval
-        updateCountdown();
         setInterval(updateCountdown, 1000);
+        updateCountdown();
 
-
-        // --- 3. Background Particles Generator ---
-        const particlesContainer = document.getElementById('particles-container');
-        const particleEmojis = ['💖', '🌸', '✨', '🎀', '⭐', '☁️'];
-
-        function createParticle() {
-            const particle = document.createElement('div');
-            particle.className = 'floating-heart';
-            particle.textContent = particleEmojis[Math.floor(Math.random() * particleEmojis.length)];
-            
-            const startX = Math.random() * 100; // % width
-            const duration = 6 + Math.random() * 8; // seconds
-            const fontSize = 14 + Math.random() * 18; // px
-
-            particle.style.left = `${startX}vw`;
-            particle.style.animationDuration = `${duration}s`;
-            particle.style.fontSize = `${fontSize}px`;
-            particle.style.opacity = Math.random() * 0.7 + 0.3;
-
-            particlesContainer.appendChild(particle);
-
-            setTimeout(() => {
-                particle.remove();
-            }, duration * 1000);
-        }
-
-        // Periodically generate particles
-        setInterval(createParticle, 800);
-        for(let i = 0; i < 8; i++) createParticle();
-
-
-        // --- 4. Interactive Kawaii Character & Speech Logic ---
-        const girlContainer = document.getElementById('girlCharacterContainer');
+        // Interactive Kawaii Character Interactions
+        const charBox = document.getElementById('characterBox');
         const speechBubble = document.getElementById('speechBubble');
-        const blushLeft = document.getElementById('blushLeft');
-        const blushRight = document.getElementById('blushRight');
-        const mouth = document.getElementById('mouth');
 
-        const cutePhrases = [
-            "I miss Cali so much! 🎀",
-            "Can't wait to see Cali's smile! ✨",
-            "Sending giant hugs to Cali! 🥰",
-            "Counting down every single second! ⏰",
-            "Cali makes the world brighter! 🌸",
-            "Yay! Another second closer! 💕"
+        const phrases = [
+            "I miss Cali so much! 💕",
+            "5 years & 120 days countdown! ⏳",
+            "Sending big hugs to Cali! 🤗",
+            "Can't wait for return day! ✨",
+            "You clicked me! Hehe ~ 😊",
+            "Make a wish for Cali! ⭐",
+            "Every second gets us closer! 💖"
         ];
 
-        function triggerGirlReaction(text = null) {
-            // Sound effect
-            playCuteSound(["E5", "A5", "C6"]);
-
-            // Change speech text
-            const randomQuote = text || cutePhrases[Math.floor(Math.random() * cutePhrases.length)];
-            speechBubble.textContent = randomQuote;
-
-            // Extra Blush animation
-            blushLeft.classList.add('super-blush');
-            blushRight.classList.add('super-blush');
+        charBox.addEventListener('click', () => {
+            // Random character emotion
+            charBox.classList.add('blushing', 'winking', 'happy');
             
-            // Mouth changes to open happy mouth
-            mouth.setAttribute('d', 'M 93,105 Q 100,118 107,105 Z');
-            mouth.setAttribute('fill', '#FF4B72');
+            // Random phrase
+            const randomPhrase = phrases[Math.floor(Math.random() * phrases.length)];
+            speechBubble.innerText = randomPhrase;
 
-            // Wink character briefly
-            girlContainer.classList.add('wink');
+            // Audio effect
+            playTone('G5', '8n');
 
-            setTimeout(() => {
-                blushLeft.classList.remove('super-blush');
-                blushRight.classList.remove('super-blush');
-                mouth.setAttribute('d', 'M 94,106 Q 100,112 106,106');
-                mouth.setAttribute('fill', 'none');
-                girlContainer.classList.remove('wink');
-            }, 1800);
-        }
-
-        girlContainer.addEventListener('click', () => {
-            triggerGirlReaction();
-            // Confetti burst on click character
+            // Heart Confetti explosion
             confetti({
                 particleCount: 25,
-                spread: 50,
-                origin: { y: 0.6 },
-                colors: ['#FFB7B2', '#FFD1DC', '#E6E6FA']
+                spread: 60,
+                origin: { y: 0.4 },
+                colors: ['#ffb6c1', '#ff6b8b', '#ffffff']
             });
+
+            setTimeout(() => {
+                charBox.classList.remove('winking', 'happy');
+            }, 1200);
+
+            setTimeout(() => {
+                charBox.classList.remove('blushing');
+            }, 2500);
         });
 
-
-        // --- 5. Interactive Buttons & Confetti Effects ---
-        
-        // Send Love Button
+        // Action Buttons Setup
         document.getElementById('sendLoveBtn').addEventListener('click', () => {
-            playCuteSound(["C5", "F5", "A5", "C6"]);
-            triggerGirlReaction("Sending Cali 1000x Love! 💖");
+            playTone('C5', '8n');
+            setTimeout(() => playTone('E5', '8n'), 120);
+            setTimeout(() => playTone('G5', '8n'), 240);
 
-            // Heart Confetti Explosion
             confetti({
                 particleCount: 60,
-                spread: 70,
-                origin: { y: 0.7 },
-                colors: ['#FF4B72', '#FFB7B2', '#FF69B4', '#FFF'],
+                spread: 80,
+                origin: { y: 0.6 },
                 shapes: ['circle'],
-                scalar: 1.2
+                colors: ['#ff6b8b', '#e83e8c', '#ffb6c1']
             });
+
+            showToast("Love sent to Cali's heart! 💕");
+            speechBubble.innerText = "Yay! Love received! 🥰";
+            charBox.classList.add('blushing', 'happy');
+            setTimeout(() => charBox.classList.remove('blushing', 'happy'), 2000);
         });
 
-        // Cheer Button
         document.getElementById('cheerBtn').addEventListener('click', () => {
-            playCuteSound(["G5", "B5", "D6", "G6"]);
-            triggerGirlReaction("Hip Hip Hooray for Cali! ✨🎉");
+            playChime();
 
-            // Gold & Pastel Sparkle Explosion
-            confetti({
-                particleCount: 80,
-                angle: 60,
-                spread: 55,
-                origin: { x: 0 },
-                colors: ['#FFD700', '#D8B4FE', '#FF9EAA']
-            });
-            confetti({
-                particleCount: 80,
-                angle: 120,
-                spread: 55,
-                origin: { x: 1 },
-                colors: ['#FFD700', '#D8B4FE', '#FF9EAA']
-            });
+            // Dual confetti sides
+            confetti({ particleCount: 40, angle: 60, spread: 55, origin: { x: 0 } });
+            confetti({ particleCount: 40, angle: 120, spread: 55, origin: { x: 1 } });
+
+            showToast("Sparkles & Cheers for Cali! ✨🎉");
+            speechBubble.innerText = "Cheering for Cali! ⭐";
         });
 
-        // Hug Girl Button
-        document.getElementById('hugGirlBtn').addEventListener('click', () => {
-            playCuteSound(["A5", "C6"]);
-            triggerGirlReaction("Warm big hug accepted! 🤗💕");
-
-            // Cute burst
-            confetti({
-                particleCount: 40,
-                spread: 100,
-                origin: { y: 0.8 },
-                colors: ['#FFE5B4', '#FFD1DC', '#E6E6FA']
-            });
+        document.getElementById('hugBtn').addEventListener('click', () => {
+            playTone('A4', '4n');
+            showToast("Warm digital hug sent! 🤗");
+            speechBubble.innerText = "Aww, big warm hugs! 🤗";
+            charBox.classList.add('blushing');
+            setTimeout(() => charBox.classList.remove('blushing'), 2000);
         });
 
-        // Dynamic Quotes Switcher for Sweet Note
-        const quotes = [
-            '"No matter how many days or miles stand between us, every tick of this clock brings Cali one second closer to home!"',
-            '"Distance only makes the heart grow fonder. Cali is worth every second of waiting! 🌸"',
-            '"Counting down days, hours, and minutes until the sweetest reunion ever! ✨"',
-            '"Stars shine brighter knowing Cali is returning! 💖"'
-        ];
-        let quoteIndex = 0;
-        setInterval(() => {
-            quoteIndex = (quoteIndex + 1) % quotes.length;
-            const quoteEl = document.getElementById('sweetQuote');
-            quoteEl.style.opacity = '0';
+        // Toast Notification System
+        function showToast(message, iconClass = 'fas fa-heart') {
+            const container = document.getElementById('toastContainer');
+            const toast = document.createElement('div');
+            toast.className = 'toast';
+            toast.innerHTML = `<i class="${iconClass}"></i> <span>${message}</span>`;
+
+            container.appendChild(toast);
+
+            setTimeout(() => toast.classList.add('show'), 50);
+
             setTimeout(() => {
-                quoteEl.textContent = quotes[quoteIndex];
-                quoteEl.style.opacity = '1';
-            }, 500);
-        }, 8000);
+                toast.classList.remove('show');
+                setTimeout(() => toast.remove(), 400);
+            }, 3500);
+        }
 
+        // Modal Chat / Mailbox Controls
+        const chatModal = document.getElementById('chatModal');
+        const openChatBtn = document.getElementById('openChatBtn');
+        const floatingChatBtn = document.getElementById('floatingChatBtn');
+        const closeModalBtn = document.getElementById('closeModalBtn');
+
+        function openModal() {
+            chatModal.classList.add('active');
+            playTone('F5', '8n');
+        }
+
+        function closeModal() {
+            chatModal.classList.remove('active');
+        }
+
+        openChatBtn.addEventListener('click', openModal);
+        floatingChatBtn.addEventListener('click', openModal);
+        closeModalBtn.addEventListener('click', closeModal);
+
+        chatModal.addEventListener('click', (e) => {
+            if (e.target === chatModal) closeModal();
+        });
+
+        function setQuickMsg(text) {
+            document.getElementById('messageText').value = text;
+            playTone('A5', '16n');
+        }
+
+        // Local Storage Saved Notes rendering
+        let savedNotes = JSON.parse(localStorage.getItem('cali_return_notes') || '[]');
+
+        function renderNotes() {
+            const container = document.getElementById('notesContainer');
+            if (savedNotes.length === 0) {
+                container.innerHTML = `<p style="font-size: 0.8rem; color: #a0889c; text-align: center;">No notes sent yet. Be the first!</p>`;
+                return;
+            }
+
+            container.innerHTML = savedNotes.map(n => `
+                <div class="note-item">
+                    <b>${escapeHtml(n.name)}:</b> "${escapeHtml(n.message)}"
+                    <span class="time"><i class="far fa-clock"></i> ${n.time}</span>
+                </div>
+            `).join('');
+        }
+
+        function escapeHtml(str) {
+            return str.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+        }
+
+        renderNotes();
+
+        // Handle Note Form Submit & Direct Formspree Sending
+        const noteForm = document.getElementById('noteForm');
+        const submitMsgBtn = document.getElementById('submitMsgBtn');
+
+        noteForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            const name = document.getElementById('senderName').value.trim();
+            const message = document.getElementById('messageText').value.trim();
+
+            if (!name || !message) return;
+
+            // Update UI loading state
+            submitMsgBtn.disabled = true;
+            submitMsgBtn.innerHTML = `<i class="fas fa-spinner fa-spin"></i> Sending to calixynnn@gmail.com...`;
+
+            try {
+                // Send directly to Formspree API
+                const response = await fetch(FORMSPREE_URL, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Accept': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        name: name,
+                        email: "calixynnn@gmail.com",
+                        message: message,
+                        _subject: `New Note for Cali from ${name}! 💌`
+                    })
+                });
+
+                if (response.ok) {
+                    showToast(`Message emailed directly to Cali! 💌`, 'fas fa-paper-plane');
+                } else {
+                    showToast(`Saved locally! (Verification pending)`, 'fas fa-envelope');
+                }
+            } catch (err) {
+                showToast(`Saved locally! 💌`, 'fas fa-heart');
+            }
+
+            // Save locally for browser log history
+            const newNote = {
+                name: name,
+                message: message,
+                time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) + ' ' + new Date().toLocaleDateString()
+            };
+
+            savedNotes.unshift(newNote);
+            if (savedNotes.length > 10) savedNotes.pop(); // Keep top 10
+
+            localStorage.setItem('cali_return_notes', JSON.stringify(savedNotes));
+            renderNotes();
+
+            // Reset form & UI
+            document.getElementById('messageText').value = '';
+            submitMsgBtn.disabled = false;
+            submitMsgBtn.innerHTML = `<i class="fas fa-paper-plane"></i> Send Direct to Email 💌`;
+
+            // Character celebration animation
+            playChime();
+            speechBubble.innerText = "Yay! Message sent to Cali's email! 💌";
+            charBox.classList.add('happy', 'winking', 'blushing');
+
+            setTimeout(() => {
+                charBox.classList.remove('winking', 'happy');
+            }, 1500);
+
+            closeModal();
+        });
+
+        // Floating Hearts Background Effect
+        function createFloatingHearts() {
+            const symbols = ['💖', '✨', '🌸', '💕', '⭐'];
+            for(let i = 0; i < 15; i++) {
+                const particle = document.createElement('div');
+                particle.className = 'bg-particle';
+                particle.innerText = symbols[Math.floor(Math.random() * symbols.length)];
+                particle.style.left = Math.random() * 100 + 'vw';
+                particle.style.animationDuration = (8 + Math.random() * 8) + 's';
+                particle.style.animationDelay = (Math.random() * 5) + 's';
+                particle.style.fontSize = (14 + Math.random() * 16) + 'px';
+                document.body.appendChild(particle);
+            }
+        }
+
+        createFloatingHearts();
     </script>
 </body>
 </html>
-```
