@@ -735,8 +735,7 @@
             <div class="modal-header">
                 <h2><i class="fas fa-envelope-open-text"></i> Send Note to Cali</h2>
                 <p style="font-size: 0.85rem; color: #886b82; margin-top: 4px;">
-                    Messages are sent directly to <b>calixynnn@gmail.com</b>! 💌<br>
-                    <span style="color: #e83e8c; font-weight: 700;">📍 Restricted to users in the Philippines only! 🇵🇭</span>
+                    Messages are sent directly to <b>calixynnn@gmail.com</b>! 💌
                 </p>
             </div>
 
@@ -782,11 +781,15 @@
         // FORMSPREE ENDPOINT LINKED TO calixynnn@gmail.com
         const FORMSPREE_URL = "https://formspree.io/f/mdeegnyp";
 
-        // Calculate Target Date: Exactly 0 Years, 120 Days, and 50 Seconds from NOW
+        // Calculate Target Date: Exactly 5 Years, 120 Days, and 50 Seconds from NOW
         const now = new Date();
         const targetDate = new Date(now.getTime());
         
+        // Add 5 years
+        targetDate.setFullYear(targetDate.getFullYear() + 5);
+        // Add 120 days
         targetDate.setDate(targetDate.getDate() + 120);
+        // Add 50 seconds
         targetDate.setSeconds(targetDate.getSeconds() + 50);
 
         // Display formatted target date string
@@ -815,7 +818,9 @@
             try {
                 const synth = new Tone.Synth().toDestination();
                 synth.triggerAttackRelease(note, duration);
-            } catch(e) {}
+            } catch(e) {
+                // Audio context backup
+            }
         }
 
         function playChime() {
@@ -843,7 +848,7 @@
             }
 
             const msPerDay = 1000 * 60 * 60 * 24;
-            const msPerYear = msPerDay * 365.25;
+            const msPerYear = msPerDay * 365.25; // Accounting for leap years
 
             const years = Math.floor(distance / msPerYear);
             const remainingAfterYears = distance % msPerYear;
@@ -869,7 +874,7 @@
 
         const phrases = [
             "I miss Cali so much! 💕",
-            "0 years & 120 days countdown! ⏳",
+            "5 years & 120 days countdown! ⏳",
             "Sending big hugs to Cali! 🤗",
             "Can't wait for return day! ✨",
             "You clicked me! Hehe ~ 😊",
@@ -878,11 +883,17 @@
         ];
 
         charBox.addEventListener('click', () => {
+            // Random character emotion
             charBox.classList.add('blushing', 'winking', 'happy');
+            
+            // Random phrase
             const randomPhrase = phrases[Math.floor(Math.random() * phrases.length)];
             speechBubble.innerText = randomPhrase;
+
+            // Audio effect
             playTone('G5', '8n');
 
+            // Heart Confetti explosion
             confetti({
                 particleCount: 25,
                 spread: 60,
@@ -921,6 +932,8 @@
 
         document.getElementById('cheerBtn').addEventListener('click', () => {
             playChime();
+
+            // Dual confetti sides
             confetti({ particleCount: 40, angle: 60, spread: 55, origin: { x: 0 } });
             confetti({ particleCount: 40, angle: 120, spread: 55, origin: { x: 1 } });
 
@@ -944,6 +957,7 @@
             toast.innerHTML = `<i class="${iconClass}"></i> <span>${message}</span>`;
 
             container.appendChild(toast);
+
             setTimeout(() => toast.classList.add('show'), 50);
 
             setTimeout(() => {
@@ -1004,48 +1018,24 @@
 
         renderNotes();
 
-        // 🇵🇭 GEOLOCATION / TIMEZONE CHECK FOR PHILIPPINES RESTRICTION
-        function isUserInPhilippines() {
-            try {
-                // Check timezone (Philippine Standard Time is UTC+8)
-                const tz = Intl.DateTimeFormat().resolvedOptions().timeZone;
-                if (tz && tz.includes("Manila")) return true;
-
-                // Check offset (UTC+8 offset in minutes is -480)
-                const offset = new Date().getTimezoneOffset();
-                if (offset === -480) return true;
-
-                return false;
-            } catch (e) {
-                return true; // Fallback to allow if timezone check fails
-            }
-        }
-
-        // Handle Note Form Submit with Philippines Location Restriction
+        // Handle Note Form Submit & Direct Formspree Sending
         const noteForm = document.getElementById('noteForm');
         const submitMsgBtn = document.getElementById('submitMsgBtn');
 
         noteForm.addEventListener('submit', async (e) => {
             e.preventDefault();
 
-            // 🛑 Restrict message sending if not in the Philippines
-            if (!isUserInPhilippines()) {
-                showToast("❌ Sorry, you can't send messages because you are not in the Philippines! 🇵🇭", "fas fa-ban");
-                speechBubble.innerText = "Only folks in the Philippines can send notes! 🇵🇭";
-                playTone('C4', '4n');
-                closeModal();
-                return;
-            }
-
             const name = document.getElementById('senderName').value.trim();
             const message = document.getElementById('messageText').value.trim();
 
             if (!name || !message) return;
 
+            // Update UI loading state
             submitMsgBtn.disabled = true;
             submitMsgBtn.innerHTML = `<i class="fas fa-spinner fa-spin"></i> Sending to calixynnn@gmail.com...`;
 
             try {
+                // Send directly to Formspree API
                 const response = await fetch(FORMSPREE_URL, {
                     method: 'POST',
                     headers: {
@@ -1056,7 +1046,7 @@
                         name: name,
                         email: "calixynnn@gmail.com",
                         message: message,
-                        _subject: `New Note for Cali from ${name} (PH User)! 💌`
+                        _subject: `New Note for Cali from ${name}! 💌`
                     })
                 });
 
@@ -1069,6 +1059,7 @@
                 showToast(`Saved locally! 💌`, 'fas fa-heart');
             }
 
+            // Save locally for browser log history
             const newNote = {
                 name: name,
                 message: message,
@@ -1076,15 +1067,17 @@
             };
 
             savedNotes.unshift(newNote);
-            if (savedNotes.length > 10) savedNotes.pop();
+            if (savedNotes.length > 10) savedNotes.pop(); // Keep top 10
 
             localStorage.setItem('cali_return_notes', JSON.stringify(savedNotes));
             renderNotes();
 
+            // Reset form & UI
             document.getElementById('messageText').value = '';
             submitMsgBtn.disabled = false;
             submitMsgBtn.innerHTML = `<i class="fas fa-paper-plane"></i> Send Direct to Email 💌`;
 
+            // Character celebration animation
             playChime();
             speechBubble.innerText = "Yay! Message sent to Cali's email! 💌";
             charBox.classList.add('happy', 'winking', 'blushing');
