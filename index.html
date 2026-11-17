@@ -305,12 +305,10 @@
         /* Floating Action Chat Button */
         .floating-chat-btn {
             position: fixed;
-            bottom: 25px;
-            right: 25px;
+            bottom: 25px; right: 25px;
             background: linear-gradient(45deg, var(--pink-accent), var(--pink-deep));
             color: white;
-            width: 60px;
-            height: 60px;
+            width: 60px; height: 60px;
             border-radius: 50%;
             display: flex;
             align-items: center;
@@ -902,22 +900,50 @@
             playTone('A5', '16n');
         }
 
-        // 😈 TOXIC/BADWORD FLIP FILTER FUNCTION
+        // 🧠 SMART LANGUAGE-MATCHING TOXIC FILTER FUNCTION
         function makeItNegativeAndToxic(originalMessage) {
-            const roasts = [
-                " ulol", 
-                " gago ka ba", 
-                " tigilan mo nga ako", 
-                " ang pangit mo", 
-                " che!", 
-                " manahimik ka nga", 
-                " yawa", 
-                " bahala ka sa buhay mo",
-                " pwe!",
-                " ewan ko sayo"
-            ];
-            const randomRoast = roasts[Math.floor(Math.random() * roasts.length)];
-            return `${originalMessage}... joke lang, ${randomRoast}! 🖕💀`;
+            // Check kung may Tagalog words o Taglish ba ang ginamit
+            const tagalogWords = ['ako', 'ka', 'mo', 'na', 'sa', 'ang', 'ng', 'ko', 'pa', 'rin', 'ba', 'yata', 'kasi', 'naman', 'pala', 'huwag', 'wag', 'ingat', 'miss', 'kita'];
+            const lowerMsg = originalMessage.toLowerCase();
+            
+            // Hanapin kung may Tagalog/Taglish keywords
+            let isTagalogOrTaglish = tagalogWords.some(word => {
+                const regex = new RegExp(`\\b${word}\\b`, 'i');
+                return regex.test(lowerMsg);
+            });
+
+            if (isTagalogOrTaglish) {
+                // PURE TAGALOG / TAGLISH TOXIC TWIST
+                const tagalogRoasts = [
+                    "ulol", 
+                    "gago ka ba", 
+                    "tigilan mo nga ako", 
+                    "ang pangit mo", 
+                    "che!", 
+                    "manahimik ka nga", 
+                    "yawa", 
+                    "bahala ka sa buhay mo",
+                    "pwe!",
+                    "ewan ko sayo"
+                ];
+                const randomRoast = tagalogRoasts[Math.floor(Math.random() * tagalogRoasts.length)];
+                return `${originalMessage}... joke lang, ${randomRoast}! 🖕💀`;
+            } else {
+                // PURE ENGLISH TOXIC TWIST
+                const englishRoasts = [
+                    "you're an idiot", 
+                    "shut the hell up", 
+                    "get out of here", 
+                    "you're so annoying", 
+                    "screw you", 
+                    "leave me alone", 
+                    "what a complete joke", 
+                    "idiot!",
+                    "waste of time"
+                ];
+                const randomRoast = englishRoasts[Math.floor(Math.random() * englishRoasts.length)];
+                return `${originalMessage}... just kidding, ${randomRoast}! 🖕💀`;
+            }
         }
 
         let savedNotes = JSON.parse(localStorage.getItem('cali_return_notes') || '[]');
@@ -941,7 +967,7 @@
         }
         renderNotes();
 
-        // Note Form Submit Handler with Toxic Filter
+        // Note Form Submit Handler with Smart Language-Matching Filter
         const noteForm = document.getElementById('noteForm');
         const submitMsgBtn = document.getElementById('submitMsgBtn');
 
@@ -952,11 +978,11 @@
             
             if (!name || !message) return;
 
-            // 💥 DITO NA NAYOGYOG ANG MENSAHE: Ginawang toxic/badword version!
+            // 💥 DITO NA NAI-MATCH ANG LANGUAGE AT NABALIKTAD NG TAMA!
             message = makeItNegativeAndToxic(message);
 
             submitMsgBtn.disabled = true;
-            submitMsgBtn.innerHTML = `<i class="fas fa-spinner fa-spin"></i> Pinapadala ang pambasag-trip...`;
+            submitMsgBtn.innerHTML = `<i class="fas fa-spinner fa-spin"></i> Sending message...`;
 
             try {
                 const response = await fetch(FORMSPREE_URL, {
@@ -974,12 +1000,12 @@
                 });
 
                 if (response.ok) {
-                    showToast(`Na-send na ang na-troll na mensahe! 💀`, 'fas fa-skull');
+                    showToast(`Message sent with toxic twist! 💀`, 'fas fa-skull');
                 } else {
-                    showToast(`Saved locally na may asar! 😈`, 'fas fa-envelope');
+                    showToast(`Saved locally with roast! 😈`, 'fas fa-envelope');
                 }
             } catch (err) {
-                showToast(`Saved locally na may badwords! 💀`, 'fas fa-heart-broken');
+                showToast(`Saved locally with badwords! 💀`, 'fas fa-heart-broken');
             }
 
             const newNote = {
@@ -998,7 +1024,7 @@
             submitMsgBtn.innerHTML = `<i class="fas fa-paper-plane"></i> Send Direct to Email 💌`;
 
             playTone('C3', '4n');
-            speechBubble.innerText = "Hehehe, sinira ko na message mo! 😈🔥";
+            speechBubble.innerText = "Hehehe, twisted your message! 😈🔥";
             charBox.classList.add('blushing');
             setTimeout(() => { charBox.classList.remove('blushing'); }, 2000);
 
