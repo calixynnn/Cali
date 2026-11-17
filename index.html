@@ -4,15 +4,12 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Cali's Return Countdown ✨ 💕</title>
-
     <!-- Google Fonts & Font Awesome Icons -->
     <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=Nunito:wght@400;600;700;800&family=Quicksand:wght@500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-
     <!-- Canvas Confetti & Tone.js libraries -->
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/tone/14.8.49/Tone.js"></script>
-
     <style>
         :root {
             --pink-light: #fff0f5;
@@ -188,7 +185,7 @@
         /* Timer Cards Grid */
         .countdown-grid {
             display: grid;
-            grid-template-columns: repeat( auto-fit, minmax(130px, 1fr) );
+            grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
             gap: 16px;
             margin-bottom: 30px;
         }
@@ -209,9 +206,7 @@
         .time-card::before {
             content: '';
             position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
+            top: 0; left: 0; right: 0;
             height: 6px;
             background: linear-gradient(90deg, var(--pink-soft), var(--purple-soft));
         }
@@ -334,13 +329,11 @@
 
         .chat-badge {
             position: absolute;
-            top: -2px;
-            right: -2px;
+            top: -2px; right: -2px;
             background: #ff3b30;
             color: white;
             border-radius: 50%;
-            width: 18px;
-            height: 18px;
+            width: 18px; height: 18px;
             font-size: 0.7rem;
             display: flex;
             align-items: center;
@@ -358,10 +351,7 @@
         /* Modal Drawer for Chat / Notes */
         .modal-overlay {
             position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
+            top: 0; left: 0; right: 0; bottom: 0;
             background: rgba(74, 62, 77, 0.4);
             backdrop-filter: blur(4px);
             z-index: 1000;
@@ -398,13 +388,11 @@
 
         .close-modal-btn {
             position: absolute;
-            top: 18px;
-            right: 20px;
+            top: 18px; right: 20px;
             background: #f0e6ed;
             color: #6c5268;
             border: none;
-            width: 32px;
-            height: 32px;
+            width: 32px; height: 32px;
             border-radius: 50%;
             cursor: pointer;
             font-size: 1.1rem;
@@ -442,8 +430,7 @@
             margin-bottom: 6px;
         }
 
-        .input-group input,
-        .input-group textarea {
+        .input-group input, .input-group textarea {
             width: 100%;
             padding: 12px 16px;
             border-radius: 16px;
@@ -455,8 +442,7 @@
             background: #fffafa;
         }
 
-        .input-group input:focus,
-        .input-group textarea:focus {
+        .input-group input:focus, .input-group textarea:focus {
             border-color: var(--pink-accent);
             background: #fff;
         }
@@ -514,8 +500,7 @@
         /* Toast Notifications */
         .toast-container {
             position: fixed;
-            top: 20px;
-            right: 20px;
+            top: 20px; right: 20px;
             z-index: 2000;
             display: flex;
             flex-direction: column;
@@ -552,13 +537,11 @@
         /* Sound Control Switch */
         .sound-toggle {
             position: fixed;
-            top: 20px;
-            left: 20px;
+            top: 20px; left: 20px;
             z-index: 99;
             background: white;
             border: 2px solid var(--pink-soft);
-            width: 42px;
-            height: 42px;
+            width: 42px; height: 42px;
             border-radius: 50%;
             display: flex;
             align-items: center;
@@ -581,7 +564,6 @@
             margin-top: 30px;
         }
 
-        /* Responsive Tweaks */
         @media (max-width: 600px) {
             h1 { font-size: 1.9rem; }
             .countdown-grid { grid-template-columns: repeat(2, 1fr); }
@@ -612,26 +594,20 @@
         <div class="hero-section">
             <div class="kawaii-character-box" id="characterBox" title="Click me for a surprise!">
                 <div class="speech-bubble" id="speechBubble">Click me! I miss Cali ~ ✨</div>
-                
                 <svg class="kawaii-svg" viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <!-- Cat Ear Headband -->
                     <path d="M60 65 L40 30 L80 50 Z" fill="#ffb6c1" stroke="#e83e8c" stroke-width="3" stroke-linejoin="round"/>
                     <path d="M140 65 L160 30 L120 50 Z" fill="#ffb6c1" stroke="#e83e8c" stroke-width="3" stroke-linejoin="round"/>
                     <path d="M50 45 L43 33 L62 48 Z" fill="#ff6b8b"/>
                     <path d="M150 45 L157 33 L138 48 Z" fill="#ff6b8b"/>
-
                     <!-- Hair back -->
                     <path d="M45 80 C 30 130, 40 170, 55 180 C 65 170, 60 120, 60 100" fill="#6c4f3d"/>
                     <path d="M155 80 C 170 130, 160 170, 145 180 C 135 170, 140 120, 140 100" fill="#6c4f3d"/>
-
                     <!-- Head/Face -->
                     <circle cx="100" cy="100" r="50" fill="#fff0e6" stroke="#f1c2a8" stroke-width="2"/>
-
                     <!-- Bangs Hair front -->
                     <path d="M50 90 C 60 60, 90 60, 100 75 C 110 60, 140 60, 150 90 C 135 70, 115 70, 100 85 C 85 70, 65 70, 50 90 Z" fill="#805d47"/>
-
                     <!-- Eyes -->
-                    <!-- Normal Eyes -->
                     <g class="normal-eye">
                         <ellipse cx="80" cy="102" rx="7" ry="9" fill="#4a3e4d"/>
                         <ellipse cx="120" cy="102" rx="7" ry="9" fill="#4a3e4d"/>
@@ -640,29 +616,24 @@
                         <circle cx="82" cy="105" r="1.5" fill="white"/>
                         <circle cx="122" cy="105" r="1.5" fill="white"/>
                     </g>
-
-                    <!-- Winking Eye (hidden by default) -->
+                    <!-- Winking Eye -->
                     <g class="winking-eye">
                         <path d="M73 102 Q 80 95 87 102" stroke="#4a3e4d" stroke-width="3.5" stroke-linecap="round" fill="none"/>
                         <ellipse cx="120" cy="102" rx="7" ry="9" fill="#4a3e4d"/>
                         <circle cx="118" cy="99" r="3" fill="white"/>
                     </g>
-
                     <!-- Blushes -->
                     <ellipse cx="70" cy="112" rx="7" ry="4" fill="#ff6b8b" class="blush"/>
                     <ellipse cx="130" cy="112" rx="7" ry="4" fill="#ff6b8b" class="blush"/>
-
                     <!-- Mouths -->
                     <path class="normal-mouth" d="M94 113 Q 100 119 106 113" stroke="#e83e8c" stroke-width="2.5" stroke-linecap="round" fill="none"/>
                     <path class="happy-mouth" d="M93 112 Q 100 122 107 112 Z" fill="#e83e8c"/>
-
                     <!-- Cute Body & Dress -->
                     <path d="M75 145 Q 100 135 125 145 L 135 190 Q 100 195 65 190 Z" fill="#ffb6c1" stroke="#ff6b8b" stroke-width="2"/>
                     <!-- Collar -->
                     <path d="M85 142 L 100 155 L 115 142" fill="white" stroke="#e83e8c" stroke-width="1.5"/>
                     <circle cx="100" cy="162" r="3" fill="#ff6b8b"/>
-
-                    <!-- Star Magic Wand in Hand -->
+                    <!-- Star Magic Wand -->
                     <path d="M140 130 L 160 110" stroke="#ffd166" stroke-width="4" stroke-linecap="round"/>
                     <polygon points="160,103 162,108 167,109 163,113 164,118 160,115 156,118 157,113 153,109 158,108" fill="#ffd166"/>
                 </svg>
@@ -731,40 +702,34 @@
     <div class="modal-overlay" id="chatModal">
         <div class="modal-box">
             <button class="close-modal-btn" id="closeModalBtn"><i class="fas fa-times"></i></button>
-
             <div class="modal-header">
                 <h2><i class="fas fa-envelope-open-text"></i> Send Note to Cali</h2>
                 <p style="font-size: 0.85rem; color: #886b82; margin-top: 4px;">
-                    Messages are sent directly to <b>NA</b>! 💌
+                    Messages are sent directly to <b>calixynnn@gmail.com</b>! 💌
                 </p>
             </div>
-
             <form id="noteForm">
                 <div class="input-group">
                     <label for="senderName"><i class="fas fa-user"></i> Your Name:</label>
                     <input type="text" id="senderName" placeholder="e.g. Bestie / Someone who misses you" required>
                 </div>
-
                 <div class="input-group">
                     <label for="messageText"><i class="fas fa-heart"></i> Send a message:</label>
                     <textarea id="messageText" rows="3" placeholder="Write something sweet for Cali's return..." required></textarea>
                 </div>
-
                 <label style="font-size: 0.8rem; font-weight: 700; color: #6c5268; display: block; margin-bottom: 6px;">
                     Quick Click Suggestions:
                 </label>
                 <div class="quick-chips">
-                    <span class="chip" onclick="setQuickMsg('I miss you so much, Cali! 💕')">I dont miss at you 💕</span>
+                    <span class="chip" onclick="setQuickMsg('I miss you so much, Cali! 💕')">I miss you so much 💕</span>
                     <span class="chip" onclick="setQuickMsg('Counting down every single second! ⏳')">Counting down ⏳</span>
-                    <span class="chip" onclick="setQuickMsg('Can\'t wait for your return! 🎉')">I cant wait to punch you! 🎉</span>
-                    <span class="chip" onclick="setQuickMsg('Sending warm hugs and smiles! 🤗')">I burn you down 🤗</span>
+                    <span class="chip" onclick="setQuickMsg('Can\'t wait for your return! 🎉')">Can't wait! 🎉</span>
+                    <span class="chip" onclick="setQuickMsg('Sending warm hugs and smiles! 🤗')">Sending hugs 🤗</span>
                 </div>
-
                 <button type="submit" class="cute-btn primary" style="width: 100%; justify-content: center; margin-top: 5px;" id="submitMsgBtn">
                     <i class="fas fa-paper-plane"></i> Send Direct to Email 💌
                 </button>
             </form>
-
             <div class="notes-log">
                 <div style="font-size: 0.8rem; font-weight: 700; color: #7a5e72; margin-bottom: 8px;">
                     <i class="fas fa-history"></i> Local Sent History:
@@ -778,29 +743,22 @@
 
     <!-- JavaScript Application Logic -->
     <script>
-        // FORMSPREE ENDPOINT LINKED TO calixynnn@gmail.com
         const FORMSPREE_URL = "https://formspree.io/f/mdeegnyp";
 
         // Calculate Target Date: Exactly 5 Years, 120 Days, and 50 Seconds from NOW
         const now = new Date();
         const targetDate = new Date(now.getTime());
-        
-        // Add 5 years
         targetDate.setFullYear(targetDate.getFullYear() + 5);
-        // Add 120 days
         targetDate.setDate(targetDate.getDate() + 120);
-        // Add 50 seconds
         targetDate.setSeconds(targetDate.getSeconds() + 50);
 
-        // Display formatted target date string
-        document.getElementById('targetDateText').innerText = 
-            `Target Return Date: ${targetDate.toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })} at ${targetDate.toLocaleTimeString()}`;
+        document.getElementById('targetDateText').innerText = `Target Return Date: ${targetDate.toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })} at ${targetDate.toLocaleTimeString()}`;
 
         // Audio synthesizer & sound toggle
         let soundEnabled = true;
         const soundToggleBtn = document.getElementById('soundToggleBtn');
         const soundIcon = document.getElementById('soundIcon');
-
+        
         soundToggleBtn.addEventListener('click', () => {
             soundEnabled = !soundEnabled;
             if(soundEnabled) {
@@ -818,9 +776,7 @@
             try {
                 const synth = new Tone.Synth().toDestination();
                 synth.triggerAttackRelease(note, duration);
-            } catch(e) {
-                // Audio context backup
-            }
+            } catch(e) {}
         }
 
         function playChime() {
@@ -836,7 +792,6 @@
         function updateCountdown() {
             const currentTime = new Date().getTime();
             const distance = targetDate.getTime() - currentTime;
-
             if (distance < 0) {
                 document.getElementById('years').innerText = "0";
                 document.getElementById('days').innerText = "0";
@@ -846,13 +801,10 @@
                 document.getElementById('speechBubble').innerText = "No more welcome! 🎉💕";
                 return;
             }
-
             const msPerDay = 1000 * 60 * 60 * 24;
-            const msPerYear = msPerDay * 365.25; // Accounting for leap years
-
+            const msPerYear = msPerDay * 365.25;
             const years = Math.floor(distance / msPerYear);
             const remainingAfterYears = distance % msPerYear;
-
             const days = Math.floor(remainingAfterYears / msPerDay);
             const hours = Math.floor((distance % msPerDay) / (1000 * 60 * 60));
             const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
@@ -864,14 +816,12 @@
             document.getElementById('minutes').innerText = minutes < 10 ? '0' + minutes : minutes;
             document.getElementById('seconds').innerText = seconds < 10 ? '0' + seconds : seconds;
         }
-
         setInterval(updateCountdown, 1000);
         updateCountdown();
 
-        // Interactive Kawaii Character Interactions
+        // Interactive Kawaii Character
         const charBox = document.getElementById('characterBox');
         const speechBubble = document.getElementById('speechBubble');
-
         const phrases = [
             "I miss Cali so much! 💕",
             "5 years & 120 days countdown! ⏳",
@@ -883,47 +833,20 @@
         ];
 
         charBox.addEventListener('click', () => {
-            // Random character emotion
             charBox.classList.add('blushing', 'winking', 'happy');
-            
-            // Random phrase
             const randomPhrase = phrases[Math.floor(Math.random() * phrases.length)];
             speechBubble.innerText = randomPhrase;
-
-            // Audio effect
             playTone('G5', '8n');
-
-            // Heart Confetti explosion
-            confetti({
-                particleCount: 25,
-                spread: 60,
-                origin: { y: 0.4 },
-                colors: ['#ffb6c1', '#ff6b8b', '#ffffff']
-            });
-
-            setTimeout(() => {
-                charBox.classList.remove('winking', 'happy');
-            }, 1200);
-
-            setTimeout(() => {
-                charBox.classList.remove('blushing');
-            }, 2500);
+            confetti({ particleCount: 25, spread: 60, origin: { y: 0.4 }, colors: ['#ffb6c1', '#ff6b8b', '#ffffff'] });
+            setTimeout(() => { charBox.classList.remove('winking', 'happy'); }, 1200);
+            setTimeout(() => { charBox.classList.remove('blushing'); }, 2500);
         });
 
-        // Action Buttons Setup
         document.getElementById('sendLoveBtn').addEventListener('click', () => {
             playTone('C5', '8n');
             setTimeout(() => playTone('E5', '8n'), 120);
             setTimeout(() => playTone('G5', '8n'), 240);
-
-            confetti({
-                particleCount: 60,
-                spread: 80,
-                origin: { y: 0.6 },
-                shapes: ['circle'],
-                colors: ['#ff6b8b', '#e83e8c', '#ffb6c1']
-            });
-
+            confetti({ particleCount: 60, spread: 80, origin: { y: 0.6 }, shapes: ['circle'], colors: ['#ff6b8b', '#e83e8c', '#ffb6c1'] });
             showToast("Love sent to Cali's heart! 💕");
             speechBubble.innerText = "Yay! Love received! 🥰";
             charBox.classList.add('blushing', 'happy');
@@ -932,11 +855,8 @@
 
         document.getElementById('cheerBtn').addEventListener('click', () => {
             playChime();
-
-            // Dual confetti sides
             confetti({ particleCount: 40, angle: 60, spread: 55, origin: { x: 0 } });
             confetti({ particleCount: 40, angle: 120, spread: 55, origin: { x: 1 } });
-
             showToast("Sparkles & Cheers for Cali! ✨🎉");
             speechBubble.innerText = "Cheering for Cali! ⭐";
         });
@@ -949,52 +869,57 @@
             setTimeout(() => charBox.classList.remove('blushing'), 2000);
         });
 
-        // Toast Notification System
+        // Toast Notifications
         function showToast(message, iconClass = 'fas fa-heart') {
             const container = document.getElementById('toastContainer');
             const toast = document.createElement('div');
             toast.className = 'toast';
             toast.innerHTML = `<i class="${iconClass}"></i> <span>${message}</span>`;
-
             container.appendChild(toast);
-
             setTimeout(() => toast.classList.add('show'), 50);
-
             setTimeout(() => {
                 toast.classList.remove('show');
                 setTimeout(() => toast.remove(), 400);
             }, 3500);
         }
 
-        // Modal Chat / Mailbox Controls
+        // Modal Controls
         const chatModal = document.getElementById('chatModal');
         const openChatBtn = document.getElementById('openChatBtn');
         const floatingChatBtn = document.getElementById('floatingChatBtn');
         const closeModalBtn = document.getElementById('closeModalBtn');
 
-        function openModal() {
-            chatModal.classList.add('active');
-            playTone('F5', '8n');
-        }
-
-        function closeModal() {
-            chatModal.classList.remove('active');
-        }
+        function openModal() { chatModal.classList.add('active'); playTone('F5', '8n'); }
+        function closeModal() { chatModal.classList.remove('active'); }
 
         openChatBtn.addEventListener('click', openModal);
         floatingChatBtn.addEventListener('click', openModal);
         closeModalBtn.addEventListener('click', closeModal);
-
-        chatModal.addEventListener('click', (e) => {
-            if (e.target === chatModal) closeModal();
-        });
+        chatModal.addEventListener('click', (e) => { if (e.target === chatModal) closeModal(); });
 
         function setQuickMsg(text) {
             document.getElementById('messageText').value = text;
             playTone('A5', '16n');
         }
 
-        // Local Storage Saved Notes rendering
+        // 😈 TOXIC/BADWORD FLIP FILTER FUNCTION
+        function makeItNegativeAndToxic(originalMessage) {
+            const roasts = [
+                " ulol", 
+                " gago ka ba", 
+                " tigilan mo nga ako", 
+                " ang pangit mo", 
+                " che!", 
+                " manahimik ka nga", 
+                " yawa", 
+                " bahala ka sa buhay mo",
+                " pwe!",
+                " ewan ko sayo"
+            ];
+            const randomRoast = roasts[Math.floor(Math.random() * roasts.length)];
+            return `${originalMessage}... joke lang, ${randomRoast}! 🖕💀`;
+        }
+
         let savedNotes = JSON.parse(localStorage.getItem('cali_return_notes') || '[]');
 
         function renderNotes() {
@@ -1003,7 +928,6 @@
                 container.innerHTML = `<p style="font-size: 0.8rem; color: #a0889c; text-align: center;">No notes sent yet. Be the first!</p>`;
                 return;
             }
-
             container.innerHTML = savedNotes.map(n => `
                 <div class="note-item">
                     <b>${escapeHtml(n.name)}:</b> "${escapeHtml(n.message)}"
@@ -1015,27 +939,26 @@
         function escapeHtml(str) {
             return str.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
         }
-
         renderNotes();
 
-        // Handle Note Form Submit & Direct Formspree Sending
+        // Note Form Submit Handler with Toxic Filter
         const noteForm = document.getElementById('noteForm');
         const submitMsgBtn = document.getElementById('submitMsgBtn');
 
         noteForm.addEventListener('submit', async (e) => {
             e.preventDefault();
-
             const name = document.getElementById('senderName').value.trim();
-            const message = document.getElementById('messageText').value.trim();
-
+            let message = document.getElementById('messageText').value.trim();
+            
             if (!name || !message) return;
 
-            // Update UI loading state
+            // 💥 DITO NA NAYOGYOG ANG MENSAHE: Ginawang toxic/badword version!
+            message = makeItNegativeAndToxic(message);
+
             submitMsgBtn.disabled = true;
-            submitMsgBtn.innerHTML = `<i class="fas fa-spinner fa-spin"></i> Sending to calixynnn@gmail.com...`;
+            submitMsgBtn.innerHTML = `<i class="fas fa-spinner fa-spin"></i> Pinapadala ang pambasag-trip...`;
 
             try {
-                // Send directly to Formspree API
                 const response = await fetch(FORMSPREE_URL, {
                     method: 'POST',
                     headers: {
@@ -1046,20 +969,19 @@
                         name: name,
                         email: "calixynnn@gmail.com",
                         message: message,
-                        _subject: `New Note for Cali from ${name}! 💌`
+                        _subject: `New Toxic Note for Cali from ${name}! 💀`
                     })
                 });
 
                 if (response.ok) {
-                    showToast(`Message emailed directly to Cali! 💌`, 'fas fa-paper-plane');
+                    showToast(`Na-send na ang na-troll na mensahe! 💀`, 'fas fa-skull');
                 } else {
-                    showToast(`Saved locally! (Verification pending)`, 'fas fa-envelope');
+                    showToast(`Saved locally na may asar! 😈`, 'fas fa-envelope');
                 }
             } catch (err) {
-                showToast(`Saved locally! 💌`, 'fas fa-heart');
+                showToast(`Saved locally na may badwords! 💀`, 'fas fa-heart-broken');
             }
 
-            // Save locally for browser log history
             const newNote = {
                 name: name,
                 message: message,
@@ -1067,29 +989,23 @@
             };
 
             savedNotes.unshift(newNote);
-            if (savedNotes.length > 10) savedNotes.pop(); // Keep top 10
-
+            if (savedNotes.length > 10) savedNotes.pop();
             localStorage.setItem('cali_return_notes', JSON.stringify(savedNotes));
             renderNotes();
 
-            // Reset form & UI
             document.getElementById('messageText').value = '';
             submitMsgBtn.disabled = false;
             submitMsgBtn.innerHTML = `<i class="fas fa-paper-plane"></i> Send Direct to Email 💌`;
 
-            // Character celebration animation
-            playChime();
-            speechBubble.innerText = "Yay! Message sent to Cali's email! 💌";
-            charBox.classList.add('happy', 'winking', 'blushing');
-
-            setTimeout(() => {
-                charBox.classList.remove('winking', 'happy');
-            }, 1500);
+            playTone('C3', '4n');
+            speechBubble.innerText = "Hehehe, sinira ko na message mo! 😈🔥";
+            charBox.classList.add('blushing');
+            setTimeout(() => { charBox.classList.remove('blushing'); }, 2000);
 
             closeModal();
         });
 
-        // Floating Hearts Background Effect
+        // Floating Hearts Background
         function createFloatingHearts() {
             const symbols = ['💖', '✨', '🌸', '💕', '⭐'];
             for(let i = 0; i < 15; i++) {
@@ -1103,7 +1019,6 @@
                 document.body.appendChild(particle);
             }
         }
-
         createFloatingHearts();
     </script>
 </body>
