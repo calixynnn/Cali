@@ -98,7 +98,6 @@ footer{text-align:center;color:#a99ab1;margin:62px auto 0;font-size:.9rem;font-w
     <div class="time-card"><div class="value" id="seconds">00</div><div class="label">SECONDS / 秒</div></div>
   </div>
   <div class="actions">
-    <button class="btn primary" id="customizeBtn">✨ Customize Event / Edit</button>
     <button class="btn" id="demoBtn">🎆 10s Demo Celebration</button>
     <button class="btn" id="messageBtn">💌 Send Note to Cali</button>
   </div>
@@ -111,16 +110,6 @@ footer{text-align:center;color:#a99ab1;margin:62px auto 0;font-size:.9rem;font-w
 </section>
 <footer>夢を見続ける限り、物語は終わらない。 — As long as you keep dreaming, the story never ends.</footer>
 </main>
-
-<div class="modal" id="editModal">
- <div class="modal-box">
-  <button class="close" data-close="editModal">×</button>
-  <h2>✨ Customize Countdown</h2>
-  <label for="eventInput">Event title</label><input id="eventInput" maxlength="45" value="CALI'S RETURN">
-  <label for="dateInput">Target date and time</label><input id="dateInput" type="datetime-local">
-  <div class="modal-actions"><button class="btn primary" id="saveEvent">Save Event</button><button class="btn" data-close="editModal">Cancel</button></div>
- </div>
-</div>
 
 <div class="modal" id="noteModal">
  <div class="modal-box">
@@ -140,7 +129,6 @@ let targetDate = new Date();
 targetDate.setFullYear(targetDate.getFullYear()+5);
 targetDate.setDate(targetDate.getDate()+120);
 targetDate.setSeconds(targetDate.getSeconds()+50);
-let eventName = "CALI'S RETURN";
 let soundOn = true;
 let demoTimer = null;
 
@@ -175,22 +163,6 @@ function closeModal(id){$(id).classList.remove("open")}
 document.querySelectorAll("[data-close]").forEach(b=>b.addEventListener("click",()=>closeModal(b.dataset.close)));
 document.querySelectorAll(".modal").forEach(m=>m.addEventListener("click",e=>{if(e.target===m)m.classList.remove("open")}));
 
-$("customizeBtn").addEventListener("click",()=>{
- $("eventInput").value=eventName;
- const local=new Date(targetDate.getTime()-targetDate.getTimezoneOffset()*60000);
- $("dateInput").value=local.toISOString().slice(0,16);
- openModal("editModal");
-});
-$("saveEvent").addEventListener("click",()=>{
- const title=$("eventInput").value.trim();
- const dateValue=$("dateInput").value;
- if(!title||!dateValue){showToast("Please enter an event title and date.");return}
- const newDate=new Date(dateValue);
- if(Number.isNaN(newDate.getTime())){showToast("Please choose a valid date.");return}
- if(newDate<=new Date()){showToast("Please choose a future date.");return}
- eventName=title.toUpperCase();targetDate=newDate;$("eventTitle").textContent=eventName;
- updateCountdown();closeModal("editModal");showToast("Countdown updated! ✨");
-});
 document.querySelectorAll("[data-add]").forEach(b=>b.addEventListener("click",()=>{
  targetDate=new Date(Math.max(Date.now(),targetDate.getTime())+Number(b.dataset.add));
  updateCountdown();showToast("Countdown extended! ⏳");
