@@ -1,1154 +1,275 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cali's Return Countdown ✨ 💕</title>
-    <!-- Google Fonts & Font Awesome Icons -->
-    <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=Nunito:wght@400;600;700;800&family=Quicksand:wght@500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <!-- Canvas Confetti & Tone.js libraries -->
-    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/tone/14.8.49/Tone.js"></script>
-    <style>
-        :root {
-            --pink-light: #fff0f5;
-            --pink-soft: #ffb6c1;
-            --pink-accent: #ff6b8b;
-            --pink-deep: #e83e8c;
-            --lavender: #e6e6fa;
-            --purple-soft: #d8b4fe;
-            --peach: #ffe5d9;
-            --text-dark: #4a3e4d;
-            --card-bg: rgba(255, 255, 255, 0.85);
-            --shadow-cute: 0 10px 25px rgba(255, 107, 139, 0.2);
-            --border-radius: 24px;
-        }
-
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-            user-select: none;
-            -webkit-tap-highlight-color: transparent;
-        }
-
-        body {
-            font-family: 'Fredoka', 'Quicksand', sans-serif;
-            background: linear-gradient(135deg, #ffedee 0%, #f3e7e9 50%, #e3eeff 100%);
-            min-height: 100vh;
-            color: var(--text-dark);
-            overflow-x: hidden;
-            position: relative;
-            padding-bottom: 60px;
-        }
-
-        /* Floating background elements */
-        .bg-particle {
-            position: fixed;
-            pointer-events: none;
-            z-index: 0;
-            animation: floatUp 12s infinite linear;
-            opacity: 0.6;
-        }
-
-        @keyframes floatUp {
-            0% { transform: translateY(100vh) rotate(0deg); opacity: 0; }
-            20% { opacity: 0.7; }
-            80% { opacity: 0.7; }
-            100% { transform: translateY(-10vh) rotate(360deg); opacity: 0; }
-        }
-
-        .container {
-            max-width: 900px;
-            margin: 0 auto;
-            padding: 20px;
-            position: relative;
-            z-index: 10;
-        }
-
-        /* Header Styling */
-        header {
-            text-align: center;
-            margin-top: 15px;
-            margin-bottom: 25px;
-            animation: bounceIn 1.2s ease;
-        }
-
-        @keyframes bounceIn {
-            0% { opacity: 0; transform: scale(0.8); }
-            60% { opacity: 1; transform: scale(1.03); }
-            100% { transform: scale(1); }
-        }
-
-        .badge {
-            display: inline-block;
-            background: linear-gradient(45deg, var(--pink-accent), var(--purple-soft));
-            color: white;
-            padding: 6px 18px;
-            border-radius: 50px;
-            font-size: 0.9rem;
-            font-weight: 600;
-            box-shadow: 0 4px 12px rgba(255, 107, 139, 0.3);
-            margin-bottom: 12px;
-            letter-spacing: 0.5px;
-        }
-
-        h1 {
-            font-size: 2.5rem;
-            color: #432838;
-            text-shadow: 2px 2px 0px #ffffff;
-            margin-bottom: 8px;
-        }
-
-        .subtitle {
-            font-size: 1.1rem;
-            color: #6c5268;
-            font-family: 'Nunito', sans-serif;
-            font-weight: 600;
-        }
-
-        /* Interactive Character & Visual Area */
-        .hero-section {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            margin-bottom: 30px;
-        }
-
-        .kawaii-character-box {
-            position: relative;
-            cursor: pointer;
-            transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            margin-bottom: 10px;
-        }
-
-        .kawaii-character-box:hover {
-            transform: scale(1.05);
-        }
-
-        .kawaii-character-box:active {
-            transform: scale(0.95);
-        }
-
-        /* Speech Bubble */
-        .speech-bubble {
-            position: absolute;
-            top: -25px;
-            right: -20px;
-            background: white;
-            padding: 8px 16px;
-            border-radius: 20px;
-            border-bottom-left-radius: 0;
-            font-size: 0.9rem;
-            font-weight: 600;
-            color: var(--pink-deep);
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
-            border: 2px solid var(--peach);
-            animation: floatBubble 3s ease-in-out infinite;
-            z-index: 15;
-            white-space: nowrap;
-        }
-
-        @keyframes floatBubble {
-            0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-6px); }
-        }
-
-        /* SVG Girl Styling */
-        .kawaii-svg {
-            width: 190px;
-            height: 190px;
-            filter: drop-shadow(0 10px 15px rgba(255, 182, 193, 0.4));
-        }
-
-        .blush {
-            opacity: 0.6;
-            transition: opacity 0.3s;
-        }
-
-        .winking-eye {
-            display: none;
-        }
-
-        .happy-mouth {
-            display: none;
-        }
-
-        /* Active emotion classes */
-        .kawaii-character-box.blushing .blush { opacity: 1; }
-        .kawaii-character-box.winking .normal-eye { display: none; }
-        .kawaii-character-box.winking .winking-eye { display: block; }
-        .kawaii-character-box.happy .normal-mouth { display: none; }
-        .kawaii-character-box.happy .happy-mouth { display: block; }
-
-        /* Timer Cards Grid */
-        .countdown-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
-            gap: 16px;
-            margin-bottom: 30px;
-        }
-
-        .time-card {
-            background: var(--card-bg);
-            backdrop-filter: blur(10px);
-            border: 2px solid rgba(255, 255, 255, 0.9);
-            border-radius: var(--border-radius);
-            padding: 20px 10px;
-            text-align: center;
-            box-shadow: var(--shadow-cute);
-            transition: all 0.3s ease;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .time-card::before {
-            content: '';
-            position: absolute;
-            top: 0; left: 0; right: 0;
-            height: 6px;
-            background: linear-gradient(90deg, var(--pink-soft), var(--purple-soft));
-        }
-
-        .time-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 15px 30px rgba(255, 107, 139, 0.3);
-        }
-
-        .time-value {
-            font-size: 2.2rem;
-            font-weight: 700;
-            color: var(--pink-deep);
-            line-height: 1.1;
-            margin-bottom: 4px;
-        }
-
-        .time-label {
-            font-size: 0.85rem;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            color: #7d6278;
-            font-weight: 600;
-        }
-
-        /* Action Buttons */
-        .actions-container {
-            display: flex;
-            justify-content: center;
-            gap: 12px;
-            flex-wrap: wrap;
-            margin-bottom: 35px;
-        }
-
-        .cute-btn {
-            background: white;
-            border: 2px solid var(--pink-soft);
-            color: var(--pink-deep);
-            padding: 12px 24px;
-            border-radius: 50px;
-            font-size: 1rem;
-            font-weight: 700;
-            cursor: pointer;
-            box-shadow: 0 6px 15px rgba(255, 182, 193, 0.3);
-            transition: all 0.2s ease;
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            font-family: 'Fredoka', sans-serif;
-        }
-
-        .cute-btn:hover {
-            background: var(--pink-soft);
-            color: white;
-            transform: translateY(-3px) scale(1.02);
-            box-shadow: 0 10px 20px rgba(255, 107, 139, 0.4);
-        }
-
-        .cute-btn:active {
-            transform: translateY(1px) scale(0.98);
-        }
-
-        .cute-btn.primary {
-            background: linear-gradient(45deg, var(--pink-accent), var(--pink-deep));
-            color: white;
-            border: none;
-        }
-
-        .cute-btn.primary:hover {
-            background: linear-gradient(45deg, var(--pink-deep), var(--pink-accent));
-        }
-
-        /* Target Date Display Info Box */
-        .info-card {
-            background: rgba(255, 255, 255, 0.7);
-            border-radius: var(--border-radius);
-            padding: 20px;
-            text-align: center;
-            border: 1px solid rgba(255, 255, 255, 0.8);
-            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.04);
-            margin-bottom: 25px;
-        }
-
-        .info-card h3 {
-            color: #5a3d52;
-            margin-bottom: 8px;
-            font-size: 1.2rem;
-        }
-
-        .info-card p {
-            color: #7a5e72;
-            font-size: 0.95rem;
-            font-family: 'Nunito', sans-serif;
-        }
-
-        /* Floating Action Chat Button */
-        .floating-chat-btn {
-            position: fixed;
-            bottom: 25px; right: 25px;
-            background: linear-gradient(45deg, var(--pink-accent), var(--pink-deep));
-            color: white;
-            width: 60px; height: 60px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1.5rem;
-            box-shadow: 0 8px 25px rgba(232, 62, 140, 0.5);
-            cursor: pointer;
-            z-index: 99;
-            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            border: 3px solid white;
-        }
-
-        .floating-chat-btn:hover {
-            transform: scale(1.1) rotate(10deg);
-        }
-
-        .chat-badge {
-            position: absolute;
-            top: -2px; right: -2px;
-            background: #ff3b30;
-            color: white;
-            border-radius: 50%;
-            width: 18px; height: 18px;
-            font-size: 0.7rem;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            border: 2px solid white;
-            animation: pulseBadge 2s infinite;
-        }
-
-        @keyframes pulseBadge {
-            0% { transform: scale(1); }
-            50% { transform: scale(1.3); }
-            100% { transform: scale(1); }
-        }
-
-        /* Modal Drawer for Chat / Notes */
-        .modal-overlay {
-            position: fixed;
-            top: 0; left: 0; right: 0; bottom: 0;
-            background: rgba(74, 62, 77, 0.4);
-            backdrop-filter: blur(4px);
-            z-index: 1000;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            opacity: 0;
-            pointer-events: none;
-            transition: opacity 0.3s ease;
-            padding: 20px;
-        }
-
-        .modal-overlay.active {
-            opacity: 1;
-            pointer-events: auto;
-        }
-
-        .modal-box {
-            background: white;
-            width: 100%;
-            max-width: 450px;
-            border-radius: 28px;
-            padding: 25px;
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
-            transform: translateY(30px) scale(0.95);
-            transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            position: relative;
-            border: 3px solid var(--peach);
-        }
-
-        .modal-overlay.active .modal-box {
-            transform: translateY(0) scale(1);
-        }
-
-        .close-modal-btn {
-            position: absolute;
-            top: 18px; right: 20px;
-            background: #f0e6ed;
-            color: #6c5268;
-            border: none;
-            width: 32px; height: 32px;
-            border-radius: 50%;
-            cursor: pointer;
-            font-size: 1.1rem;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: background 0.2s;
-        }
-
-        .close-modal-btn:hover {
-            background: var(--pink-soft);
-            color: white;
-        }
-
-        .modal-header {
-            text-align: center;
-            margin-bottom: 20px;
-        }
-
-        .modal-header h2 {
-            font-size: 1.5rem;
-            color: var(--pink-deep);
-        }
-
-        /* Form Controls */
-        .input-group {
-            margin-bottom: 15px;
-        }
-
-        .input-group label {
-            display: block;
-            font-size: 0.85rem;
-            font-weight: 700;
-            color: #6c5268;
-            margin-bottom: 6px;
-        }
-
-        .input-group input, .input-group textarea {
-            width: 100%;
-            padding: 12px 16px;
-            border-radius: 16px;
-            border: 2px solid #f0dbe4;
-            font-family: 'Nunito', sans-serif;
-            font-size: 0.95rem;
-            outline: none;
-            transition: border-color 0.2s;
-            background: #fffafa;
-        }
-
-        .input-group input:focus, .input-group textarea:focus {
-            border-color: var(--pink-accent);
-            background: #fff;
-        }
-
-        /* Quick message chips */
-        .quick-chips {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 8px;
-            margin-bottom: 18px;
-        }
-
-        .chip {
-            background: var(--pink-light);
-            border: 1px solid var(--pink-soft);
-            padding: 6px 12px;
-            border-radius: 20px;
-            font-size: 0.8rem;
-            color: var(--pink-deep);
-            cursor: pointer;
-            transition: all 0.2s;
-            font-weight: 600;
-        }
-
-        .chip:hover {
-            background: var(--pink-accent);
-            color: white;
-        }
-
-        /* Saved Notes Log inside Modal */
-        .notes-log {
-            max-height: 150px;
-            overflow-y: auto;
-            border-top: 1px dashed #e0d0dc;
-            padding-top: 12px;
-            margin-top: 15px;
-        }
-
-        .note-item {
-            background: #fcf5f8;
-            padding: 10px 14px;
-            border-radius: 12px;
-            font-size: 0.85rem;
-            margin-bottom: 8px;
-            border-left: 3px solid var(--pink-accent);
-        }
-
-        .note-item .time {
-            font-size: 0.7rem;
-            color: #998094;
-            display: block;
-            margin-top: 4px;
-        }
-
-        /* Toast Notifications */
-        .toast-container {
-            position: fixed;
-            top: 20px; right: 20px;
-            z-index: 2000;
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-            pointer-events: none;
-        }
-
-        .toast {
-            background: white;
-            padding: 12px 20px;
-            border-radius: 50px;
-            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.12);
-            border: 2px solid var(--pink-soft);
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            font-size: 0.9rem;
-            font-weight: 600;
-            color: var(--text-dark);
-            transform: translateX(120%);
-            transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            pointer-events: auto;
-        }
-
-        .toast.show {
-            transform: translateX(0);
-        }
-
-        .toast i {
-            color: var(--pink-deep);
-            font-size: 1.2rem;
-        }
-
-        /* Sound Control Switch */
-        .sound-toggle {
-            position: fixed;
-            top: 20px; left: 20px;
-            z-index: 99;
-            background: white;
-            border: 2px solid var(--pink-soft);
-            width: 42px; height: 42px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: var(--pink-deep);
-            cursor: pointer;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
-            transition: all 0.2s;
-        }
-
-        .sound-toggle:hover {
-            transform: scale(1.1);
-        }
-
-        /* Footer */
-        footer {
-            text-align: center;
-            font-size: 0.85rem;
-            color: #8c7286;
-            margin-top: 30px;
-        }
-
-        @media (max-width: 600px) {
-            h1 { font-size: 1.9rem; }
-            .countdown-grid { grid-template-columns: repeat(2, 1fr); }
-            .kawaii-svg { width: 160px; height: 160px; }
-            .speech-bubble { font-size: 0.8rem; right: -10px; }
-        }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cali's Return Countdown ✨</title>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;600;700;800;900&family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+<style>
+:root{--bg:#170b27;--panel:#211033;--panel2:#14091f;--pink:#ff5db1;--pink2:#c77dff;--text:#fff7ff;--muted:#b8a8c5;--line:rgba(255,255,255,.14);--glow:rgba(255,77,174,.3)}
+*{box-sizing:border-box;margin:0;padding:0}
+body{min-height:100vh;overflow-x:hidden;color:var(--text);font-family:Nunito,Arial,sans-serif;background:radial-gradient(circle at 75% 18%,#4a1760 0,transparent 25%),radial-gradient(circle at 15% 75%,#321044 0,transparent 30%),linear-gradient(145deg,#10071c,#211033 55%,#10071d);padding:22px 18px 35px}
+body.cyber{--bg:#071523;--panel:#0c2034;--panel2:#071522;--pink:#00e5ff;--pink2:#397bff;--glow:rgba(0,229,255,.3);background:radial-gradient(circle at 75% 18%,#064b68 0,transparent 26%),linear-gradient(145deg,#04101c,#0b2036 55%,#06111e)}
+body.shonen{--bg:#211006;--panel:#321707;--panel2:#1b0d05;--pink:#ff9b35;--pink2:#ff426e;--glow:rgba(255,125,35,.3);background:radial-gradient(circle at 75% 18%,#773019 0,transparent 26%),linear-gradient(145deg,#170904,#351707 55%,#160803)}
+button{font:inherit;cursor:pointer}
+.sky{position:fixed;inset:0;pointer-events:none;overflow:hidden;z-index:0;background-image:linear-gradient(rgba(255,255,255,.025) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.025) 1px,transparent 1px);background-size:48px 48px;mask-image:linear-gradient(to bottom,transparent,black 18%,black 85%,transparent)}
+.star{position:absolute;width:3px;height:3px;border-radius:50%;background:white;opacity:.65;animation:twinkle 2.5s infinite alternate}
+@keyframes twinkle{to{opacity:.15;transform:scale(.5)}}
+.moon{position:absolute;right:19%;top:7%;width:150px;height:150px;border-radius:50%;background:radial-gradient(circle at 35% 30%,#ffd5f0,#ff64b7 55%,#a42b9b);box-shadow:0 0 35px #ff5db1,0 0 90px #e43ba8;filter:blur(.3px);opacity:.9}
+.petal{position:absolute;top:-30px;color:#ffc0e2;animation:fall linear infinite;opacity:.75}
+@keyframes fall{to{transform:translate3d(70px,110vh,0) rotate(600deg)}}
+.scene{position:relative;z-index:1;max-width:1100px;margin:auto}
+nav{display:flex;align-items:center;justify-content:space-between;gap:15px;max-width:980px;margin:0 auto 75px}
+.brand{display:flex;align-items:center;gap:13px;font-weight:900;letter-spacing:2px;color:#d9cadd}
+.onair{padding:7px 14px;border-radius:9px;background:linear-gradient(110deg,var(--pink),var(--pink2));color:#190b25;box-shadow:0 0 22px var(--glow);font-weight:900}
+.nav-right{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.pill{border:1px solid var(--line);border-radius:30px;padding:9px 14px;background:#ffffff0b;color:var(--muted);font-weight:800}
+.pill.active,.pill:hover{color:white;border-color:var(--pink);background:var(--glow)}
+.panel{max-width:910px;margin:auto;padding:48px 48px 34px;text-align:center;position:relative;border:1px solid rgba(255,255,255,.24);border-radius:30px;background:linear-gradient(145deg,rgba(40,20,59,.94),rgba(22,10,35,.96));box-shadow:0 35px 90px #0009,0 0 55px var(--glow),inset 0 1px 0 #ffffff28,inset 0 -18px 35px #0003;transform:perspective(1200px) rotateX(1deg);backdrop-filter:blur(16px);isolation:isolate}
+.panel:before{content:"";position:absolute;inset:-1px;border-radius:inherit;padding:1px;background:linear-gradient(135deg,var(--pink),transparent 35%,#ffffff30 65%,var(--pink2));-webkit-mask:linear-gradient(#fff 0 0) content-box,linear-gradient(#fff 0 0);-webkit-mask-composite:xor;mask-composite:exclude;pointer-events:none;z-index:-1}
+.panel:after{content:"";position:absolute;inset:12px;border-radius:22px;border:1px solid #ffffff08;pointer-events:none;z-index:-1}
+body.cyber .panel{background:linear-gradient(145deg,rgba(12,38,60,.96),rgba(5,19,34,.97))}
+body.shonen .panel{background:linear-gradient(145deg,rgba(65,31,12,.96),rgba(28,13,5,.97))}
+.corner{position:absolute;width:24px;height:24px;border-color:#ffffff65;border-style:solid}
+.tl{top:19px;left:19px;border-width:2px 0 0 2px;border-radius:8px 0 0}
+.tr{top:19px;right:19px;border-width:2px 2px 0 0;border-radius:0 8px 0 0}
+.bl{bottom:19px;left:19px;border-width:0 0 2px 2px;border-radius:0 0 0 8px}
+.br{bottom:19px;right:19px;border-width:0 2px 2px 0;border-radius:0 0 8px}
+.eyebrow{display:inline-block;padding:8px 19px;border-radius:30px;background:#ffffff0b;border:1px solid var(--line);color:#e7dce9;font-weight:800;letter-spacing:.4px;margin-bottom:20px}
+h1{font-family:Orbitron,sans-serif;font-size:clamp(2.2rem,6vw,3.8rem);line-height:1.12;font-weight:900;letter-spacing:1px;color:#fff;text-shadow:0 2px 0 #d45aa9,0 4px 0 #9d3b91,0 7px 0 #57245f,0 12px 25px #0009,0 0 32px var(--glow);margin-bottom:12px;transform:translateZ(35px);animation:titleFloat 4s ease-in-out infinite}
+@keyframes titleFloat{0%,100%{transform:translateY(0) translateZ(35px)}50%{transform:translateY(-5px) translateZ(35px)}}
+.schedule{color:var(--muted);font-size:1rem;font-weight:800;margin-bottom:34px}
+.countdown{display:grid;grid-template-columns:repeat(4,1fr);gap:18px;margin:0 auto 34px}
+.time-card{position:relative;overflow:hidden;padding:23px 10px 20px;border-radius:21px;border:1px solid rgba(255,255,255,.2);background:linear-gradient(145deg,#21102f,#0b0613);box-shadow:0 18px 28px #0007,inset 0 2px 0 #ffffff20,inset 0 -8px 18px #0005;transition:transform .3s,border-color .3s,box-shadow .3s;transform:perspective(700px) rotateX(2deg) translateY(0);min-width:0}
+body.cyber .time-card{background:linear-gradient(145deg,#071c2c,#061321)}
+body.shonen .time-card{background:linear-gradient(145deg,#281205,#160902)}
+.time-card:before{content:"";position:absolute;inset:0;background:linear-gradient(120deg,transparent 25%,#ffffff0d 45%,transparent 65%);transform:translateX(-120%);transition:.6s}
+.time-card:hover{transform:translateY(-8px) rotateX(7deg);border-color:var(--pink);box-shadow:0 18px 35px #0007,0 0 25px var(--glow)}
+.time-card:hover:before{transform:translateX(120%)}
+.value{font-family:Orbitron,sans-serif;font-size:clamp(2.3rem,6vw,4.1rem);font-weight:900;line-height:1.2;color:var(--pink);text-shadow:0 2px 0 #8b2d78,0 4px 0 #4c1c53,0 0 12px var(--pink),0 0 30px var(--glow);font-variant-numeric:tabular-nums}
+.label{margin-top:8px;color:#c9bdce;font-size:.85rem;letter-spacing:1px;font-weight:900}
+.actions{display:flex;justify-content:center;gap:12px;flex-wrap:wrap;margin-bottom:24px}
+.btn{border:1px solid var(--line);border-radius:14px;padding:14px 21px;background:#ffffff0b;color:white;font-weight:900;box-shadow:0 8px 18px #0003;transition:.2s}
+.btn:hover{transform:translateY(-3px);border-color:var(--pink);box-shadow:0 10px 25px var(--glow)}
+.btn.primary{background:linear-gradient(110deg,var(--pink),var(--pink2));border:0;color:#1a0b23;box-shadow:0 8px 25px var(--glow)}
+.presets{border-top:1px solid var(--line);padding-top:18px;display:flex;justify-content:center;align-items:center;gap:9px;flex-wrap:wrap;color:#a999b4;font-size:.9rem;font-weight:800}
+.small{padding:7px 13px;border-radius:10px;font-size:.82rem}
+footer{text-align:center;color:#a99ab1;margin:62px auto 0;font-size:.9rem;font-weight:800}
+.toast{position:fixed;top:20px;right:20px;z-index:20;background:#241333;border:1px solid var(--pink);border-radius:14px;padding:13px 18px;box-shadow:0 8px 25px #0008;transform:translateX(150%);transition:.3s;color:white}
+.toast.show{transform:translateX(0)}
+.modal{position:fixed;inset:0;z-index:30;background:#07030bbd;display:none;align-items:center;justify-content:center;padding:18px}
+.modal.open{display:flex}
+.modal-box{width:min(100%,460px);background:#211033;border:1px solid var(--pink);border-radius:22px;padding:26px;box-shadow:0 15px 55px #000b,0 0 30px var(--glow);position:relative}
+.modal-box h2{font-family:Orbitron,sans-serif;color:var(--pink);font-size:1.25rem;margin-bottom:17px}
+.modal-box label{display:block;text-align:left;color:#d9cadd;font-weight:800;margin:12px 0 6px}
+.modal-box input,.modal-box textarea{width:100%;border:1px solid #ffffff30;border-radius:11px;background:#10091a;color:white;padding:12px;font:inherit;outline:none}
+.modal-box input:focus,.modal-box textarea:focus{border-color:var(--pink)}
+.modal-actions{display:flex;gap:9px;flex-wrap:wrap;margin-top:17px}
+.close{position:absolute;right:16px;top:13px;background:transparent;border:0;color:white;font-size:1.5rem}
+.note-list{max-height:130px;overflow:auto;margin-top:15px;text-align:left}
+.note{background:#ffffff0b;border-left:3px solid var(--pink);padding:9px 12px;border-radius:8px;margin:7px 0;font-size:.88rem;color:#eee}
+@media(max-width:650px){body{padding:15px 12px 28px}.moon{width:95px;height:95px;right:8%;top:10%}nav{margin-bottom:45px;align-items:flex-start;flex-direction:column}.panel{padding:42px 17px 25px;border-radius:23px}.countdown{grid-template-columns:repeat(2,1fr);gap:12px}.time-card{padding:18px 7px}.schedule{font-size:.88rem}.presets{font-size:.82rem}footer{margin-top:40px}.nav-right{gap:6px}.pill{padding:8px 11px;font-size:.8rem}}
+</style>
 </head>
-<body style="visibility:hidden;">\n
-    <!-- Philippines-only location verification screen -->
-    <div id="locationChecking" style="
-        position:fixed;
-        inset:0;
-        display:flex;
-        align-items:center;
-        justify-content:center;
-        text-align:center;
-        padding:24px;
-        background:linear-gradient(135deg,#ffedee,#e3eeff);
-        z-index:999999;
-        visibility:visible;
-        font-family:'Nunito',Arial,sans-serif;
-    ">
-        <div style="background:white;padding:32px 24px;border-radius:25px;max-width:390px;width:100%;box-shadow:0 10px 30px rgba(255,107,139,.2);">
-            <div style="font-size:52px;">🇵🇭 💕</div>
-            <h2 style="color:#e83e8c;margin:12px 0;">Checking Your Location...</h2>
-            <p style="color:#6c5268;">Please wait while we verify whether this website is available in your country.</p>
-        </div>
-    </div>
+<body>
+<div class="sky" id="sky"><div class="moon"></div></div>
+<div class="toast" id="toast"></div>
+<main class="scene">
+<nav>
+  <div class="brand"><span class="onair">ON AIR</span><span>カウントダウン • ANIME TIMER</span></div>
+  <div class="nav-right">
+    <button class="pill active" data-theme="sakura">🌸 Sakura</button>
+    <button class="pill" data-theme="cyber">⚡ Cyber</button>
+    <button class="pill" data-theme="shonen">🔥 Shonen</button>
+    <button class="pill" id="soundBtn">🔊 Sound On</button>
+  </div>
+</nav>
 
+<section class="panel">
+  <i class="corner tl"></i><i class="corner tr"></i><i class="corner bl"></i><i class="corner br"></i>
+  <div class="eyebrow">新たな物語が始まる • Special Anime Countdown</div>
+  <h1 id="eventTitle">CALI'S RETURN</h1>
+  <p class="schedule" id="targetText">Target Schedule: Calculating...</p>
+  <div class="countdown">
+    <div class="time-card"><div class="value" id="days">000</div><div class="label">DAYS / 日</div></div>
+    <div class="time-card"><div class="value" id="hours">00</div><div class="label">HOURS / 時間</div></div>
+    <div class="time-card"><div class="value" id="minutes">00</div><div class="label">MINUTES / 分</div></div>
+    <div class="time-card"><div class="value" id="seconds">00</div><div class="label">SECONDS / 秒</div></div>
+  </div>
+  <div class="actions">
+    <button class="btn primary" id="customizeBtn">✨ Customize Event / Edit</button>
+    <button class="btn" id="demoBtn">🎆 10s Demo Celebration</button>
+    <button class="btn" id="messageBtn">💌 Send Note to Cali</button>
+  </div>
+  <div class="presets">
+    <span>Quick Presets:</span>
+    <button class="btn small" data-add="60000">+1 Min</button>
+    <button class="btn small" data-add="86400000">+1 Day</button>
+    <button class="btn small" data-add="604800000">+7 Days</button>
+  </div>
+</section>
+<footer>夢を見続ける限り、物語は終わらない。 — As long as you keep dreaming, the story never ends.</footer>
+</main>
 
-    <!-- Sound Audio Toggle -->
-    <button class="sound-toggle" id="soundToggleBtn" title="Toggle Sound Effects">
-        <i class="fas fa-volume-up" id="soundIcon"></i>
-    </button>
+<div class="modal" id="editModal">
+ <div class="modal-box">
+  <button class="close" data-close="editModal">×</button>
+  <h2>✨ Customize Countdown</h2>
+  <label for="eventInput">Event title</label><input id="eventInput" maxlength="45" value="CALI'S RETURN">
+  <label for="dateInput">Target date and time</label><input id="dateInput" type="datetime-local">
+  <div class="modal-actions"><button class="btn primary" id="saveEvent">Save Event</button><button class="btn" data-close="editModal">Cancel</button></div>
+ </div>
+</div>
 
-    <!-- Toast Container -->
-    <div class="toast-container" id="toastContainer"></div>
+<div class="modal" id="noteModal">
+ <div class="modal-box">
+  <button class="close" data-close="noteModal">×</button>
+  <h2>💌 Send Note to Cali</h2>
+  <label for="sender">Your name</label><input id="sender" maxlength="60" placeholder="Your name">
+  <label for="message">Message</label><textarea id="message" rows="4" maxlength="1000" placeholder="Write a message for Cali..."></textarea>
+  <div class="modal-actions"><button class="btn primary" id="sendNote">Save Note</button><button class="btn" data-close="noteModal">Close</button></div>
+  <div class="note-list" id="notesList"></div>
+ </div>
+</div>
 
-    <div class="container">
-        <!-- Header -->
-        <header>
-            <span class="badge"><i class="fas fa-heart"></i> Counting Down for Cali</span>
-            <h1>Cali's Return 💕</h1>
-            <p class="subtitle">Anytime and will depend on time</p>
-        </header>
+<script>
+const $ = id => document.getElementById(id);
+const FORMspree_URL = "https://formspree.io/f/mdeegnyp";
+let targetDate = new Date();
+targetDate.setFullYear(targetDate.getFullYear()+5);
+targetDate.setDate(targetDate.getDate()+120);
+targetDate.setSeconds(targetDate.getSeconds()+50);
+let eventName = "CALI'S RETURN";
+let soundOn = true;
+let demoTimer = null;
 
-        <!-- Kawaii Anime Girl Character -->
-        <div class="hero-section">
-            <div class="kawaii-character-box" id="characterBox" title="Click me for a surprise!">
-                <div class="speech-bubble" id="speechBubble">Click me! I miss Cali ~ ✨</div>
-                <svg class="kawaii-svg" viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <!-- Cat Ear Headband -->
-                    <path d="M60 65 L40 30 L80 50 Z" fill="#ffb6c1" stroke="#e83e8c" stroke-width="3" stroke-linejoin="round"/>
-                    <path d="M140 65 L160 30 L120 50 Z" fill="#ffb6c1" stroke="#e83e8c" stroke-width="3" stroke-linejoin="round"/>
-                    <path d="M50 45 L43 33 L62 48 Z" fill="#ff6b8b"/>
-                    <path d="M150 45 L157 33 L138 48 Z" fill="#ff6b8b"/>
-                    <!-- Hair back -->
-                    <path d="M45 80 C 30 130, 40 170, 55 180 C 65 170, 60 120, 60 100" fill="#6c4f3d"/>
-                    <path d="M155 80 C 170 130, 160 170, 145 180 C 135 170, 140 120, 140 100" fill="#6c4f3d"/>
-                    <!-- Head/Face -->
-                    <circle cx="100" cy="100" r="50" fill="#fff0e6" stroke="#f1c2a8" stroke-width="2"/>
-                    <!-- Bangs Hair front -->
-                    <path d="M50 90 C 60 60, 90 60, 100 75 C 110 60, 140 60, 150 90 C 135 70, 115 70, 100 85 C 85 70, 65 70, 50 90 Z" fill="#805d47"/>
-                    <!-- Eyes -->
-                    <g class="normal-eye">
-                        <ellipse cx="80" cy="102" rx="7" ry="9" fill="#4a3e4d"/>
-                        <ellipse cx="120" cy="102" rx="7" ry="9" fill="#4a3e4d"/>
-                        <circle cx="78" cy="99" r="3" fill="white"/>
-                        <circle cx="118" cy="99" r="3" fill="white"/>
-                        <circle cx="82" cy="105" r="1.5" fill="white"/>
-                        <circle cx="122" cy="105" r="1.5" fill="white"/>
-                    </g>
-                    <!-- Winking Eye -->
-                    <g class="winking-eye">
-                        <path d="M73 102 Q 80 95 87 102" stroke="#4a3e4d" stroke-width="3.5" stroke-linecap="round" fill="none"/>
-                        <ellipse cx="120" cy="102" rx="7" ry="9" fill="#4a3e4d"/>
-                        <circle cx="118" cy="99" r="3" fill="white"/>
-                    </g>
-                    <!-- Blushes -->
-                    <ellipse cx="70" cy="112" rx="7" ry="4" fill="#ff6b8b" class="blush"/>
-                    <ellipse cx="130" cy="112" rx="7" ry="4" fill="#ff6b8b" class="blush"/>
-                    <!-- Mouths -->
-                    <path class="normal-mouth" d="M94 113 Q 100 119 106 113" stroke="#e83e8c" stroke-width="2.5" stroke-linecap="round" fill="none"/>
-                    <path class="happy-mouth" d="M93 112 Q 100 122 107 112 Z" fill="#e83e8c"/>
-                    <!-- Cute Body & Dress -->
-                    <path d="M75 145 Q 100 135 125 145 L 135 190 Q 100 195 65 190 Z" fill="#ffb6c1" stroke="#ff6b8b" stroke-width="2"/>
-                    <!-- Collar -->
-                    <path d="M85 142 L 100 155 L 115 142" fill="white" stroke="#e83e8c" stroke-width="1.5"/>
-                    <circle cx="100" cy="162" r="3" fill="#ff6b8b"/>
-                    <!-- Star Magic Wand -->
-                    <path d="M140 130 L 160 110" stroke="#ffd166" stroke-width="4" stroke-linecap="round"/>
-                    <polygon points="160,103 162,108 167,109 163,113 164,118 160,115 156,118 157,113 153,109 158,108" fill="#ffd166"/>
-                </svg>
-            </div>
-        </div>
+function showToast(message){
+  const t=$("toast"); t.textContent=message; t.classList.add("show");
+  setTimeout(()=>t.classList.remove("show"),2600);
+}
+function formatDate(date){
+ return date.toLocaleString("en-US",{weekday:"short",month:"short",day:"numeric",year:"numeric",hour:"numeric",minute:"2-digit",second:"2-digit"});
+}
+function updateCountdown(){
+ const diff=targetDate.getTime()-Date.now();
+ if(diff<=0){
+  $("days").textContent="000";$("hours").textContent="00";$("minutes").textContent="00";$("seconds").textContent="00";
+  $("targetText").textContent="The event has started! Welcome back, Cali! ✨";
+  return;
+ }
+ const days=Math.floor(diff/86400000);
+ const hours=Math.floor(diff%86400000/3600000);
+ const minutes=Math.floor(diff%3600000/60000);
+ const seconds=Math.floor(diff%60000/1000);
+ $("days").textContent=String(days).padStart(3,"0");
+ $("hours").textContent=String(hours).padStart(2,"0");
+ $("minutes").textContent=String(minutes).padStart(2,"0");
+ $("seconds").textContent=String(seconds).padStart(2,"0");
+ $("targetText").textContent="Target Schedule: "+formatDate(targetDate);
+}
+setInterval(updateCountdown,1000); updateCountdown();
 
-        <!-- Countdown Display Cards -->
-        <div class="countdown-grid">
-            <div class="time-card">
-                <div class="time-value" id="years">0</div>
-                <div class="time-label">Years</div>
-            </div>
-            <div class="time-card">
-                <div class="time-value" id="days">0</div>
-                <div class="time-label">Days</div>
-            </div>
-            <div class="time-card">
-                <div class="time-value" id="hours">00</div>
-                <div class="time-label">Hours</div>
-            </div>
-            <div class="time-card">
-                <div class="time-value" id="minutes">00</div>
-                <div class="time-label">Minutes</div>
-            </div>
-            <div class="time-card">
-                <div class="time-value" id="seconds">00</div>
-                <div class="time-label">Seconds</div>
-            </div>
-        </div>
+function openModal(id){$(id).classList.add("open")}
+function closeModal(id){$(id).classList.remove("open")}
+document.querySelectorAll("[data-close]").forEach(b=>b.addEventListener("click",()=>closeModal(b.dataset.close)));
+document.querySelectorAll(".modal").forEach(m=>m.addEventListener("click",e=>{if(e.target===m)m.classList.remove("open")}));
 
-        <!-- Action Buttons -->
-        <div class="actions-container">
-            <button class="cute-btn primary" id="sendLoveBtn">
-                <i class="fas fa-heart"></i> Send Love
-            </button>
-            <button class="cute-btn" id="cheerBtn">
-                <i class="fas fa-magic"></i> Sparkle & Cheer
-            </button>
-            <button class="cute-btn" id="hugBtn">
-                <i class="fas fa-hand-holding-heart"></i> Give Hug
-            </button>
-            <button class="cute-btn" id="openChatBtn">
-                <i class="fas fa-comment-dots"></i> Send Message / Note
-            </button>
-        </div>
+$("customizeBtn").addEventListener("click",()=>{
+ $("eventInput").value=eventName;
+ const local=new Date(targetDate.getTime()-targetDate.getTimezoneOffset()*60000);
+ $("dateInput").value=local.toISOString().slice(0,16);
+ openModal("editModal");
+});
+$("saveEvent").addEventListener("click",()=>{
+ const title=$("eventInput").value.trim();
+ const dateValue=$("dateInput").value;
+ if(!title||!dateValue){showToast("Please enter an event title and date.");return}
+ const newDate=new Date(dateValue);
+ if(Number.isNaN(newDate.getTime())){showToast("Please choose a valid date.");return}
+ if(newDate<=new Date()){showToast("Please choose a future date.");return}
+ eventName=title.toUpperCase();targetDate=newDate;$("eventTitle").textContent=eventName;
+ updateCountdown();closeModal("editModal");showToast("Countdown updated! ✨");
+});
+document.querySelectorAll("[data-add]").forEach(b=>b.addEventListener("click",()=>{
+ targetDate=new Date(Math.max(Date.now(),targetDate.getTime())+Number(b.dataset.add));
+ updateCountdown();showToast("Countdown extended! ⏳");
+}));
 
-        <!-- Target Info Box -->
-        <div class="info-card">
-            <h3><i class="fas fa-calendar-alt"></i> Countdown Target</h3>
-            <p id="targetDateText">Calculating exact arrival timestamp...</p>
-        </div>
+document.querySelectorAll("[data-theme]").forEach(b=>b.addEventListener("click",()=>{
+ document.body.classList.remove("cyber","shonen");
+ if(b.dataset.theme!=="sakura")document.body.classList.add(b.dataset.theme);
+ document.querySelectorAll("[data-theme]").forEach(x=>x.classList.toggle("active",x===b));
+ showToast(b.dataset.theme.toUpperCase()+" theme activated");
+}));
+$("soundBtn").addEventListener("click",()=>{
+ soundOn=!soundOn;$("soundBtn").textContent=soundOn?"🔊 Sound On":"🔇 Sound Off";
+ showToast(soundOn?"Sound setting is on":"Sound setting is off");
+});
+function celebrate(){
+ if(!window.confetti){showToast("Celebration! 🎉");return}
+ confetti({particleCount:130,spread:100,origin:{y:.65},colors:["#ff5db1","#c77dff","#ffffff","#ffd166"]});
+}
+$("demoBtn").addEventListener("click",()=>{
+ if(demoTimer)clearInterval(demoTimer);
+ let count=0;showToast("Demo celebration started! 🎆");celebrate();
+ demoTimer=setInterval(()=>{celebrate();count++;if(count>=10){clearInterval(demoTimer);demoTimer=null;showToast("Demo celebration complete! ✨")}},1000);
+});
 
-        <!-- Footer -->
-        <footer>
-            <p>Made with 💕 for Cali | Waiting patiently every single second ✨</p>
-        </footer>
-    </div>
+let notes=JSON.parse(localStorage.getItem("cali_anime_notes")||"[]");
+function renderNotes(){
+ const list=$("notesList");list.innerHTML="";
+ if(!notes.length){list.textContent="No saved notes yet.";return}
+ notes.forEach(n=>{
+  const div=document.createElement("div");div.className="note";
+  const strong=document.createElement("strong");strong.textContent=n.name+": ";
+  const span=document.createElement("span");span.textContent=n.message;
+  const small=document.createElement("small");small.style.display="block";small.style.opacity=".65";small.textContent=n.time;
+  div.append(strong,span,small);list.appendChild(div);
+ });
+}
+$("messageBtn").addEventListener("click",()=>{renderNotes();openModal("noteModal")});
+$("sendNote").addEventListener("click",async()=>{
+ const name=$("sender").value.trim(),message=$("message").value.trim();
+ if(!name||!message){showToast("Please enter your name and message.");return}
+ const button=$("sendNote");button.disabled=true;button.textContent="Sending...";
+ let sent=false;
+ try{
+  const response=await fetch(FORMspree_URL,{method:"POST",headers:{"Content-Type":"application/json","Accept":"application/json"},body:JSON.stringify({name:name,message:message,_subject:"A note for Cali"})});
+  sent=response.ok;
+ }catch(error){sent=false}
+ notes.unshift({name,message,time:new Date().toLocaleString()});
+ notes=notes.slice(0,20);localStorage.setItem("cali_anime_notes",JSON.stringify(notes));
+ renderNotes();$("message").value="";button.disabled=false;button.textContent="Save Note";
+ showToast(sent?"Message sent and saved! 💌":"Note saved on this device. Email service unavailable.");
+});
+renderNotes();
 
-    <!-- Floating Chat Trigger -->
-    <div class="floating-chat-btn" id="floatingChatBtn" title="Send a note directly to Cali's email">
-        <i class="fas fa-paper-plane"></i>
-        <div class="chat-badge">1</div>
-    </div>
+const panel=document.querySelector(".panel");
+if(window.matchMedia("(pointer:fine)").matches){
+ panel.addEventListener("pointermove",e=>{
+  const r=panel.getBoundingClientRect();
+  const x=(e.clientX-r.left)/r.width-.5;
+  const y=(e.clientY-r.top)/r.height-.5;
+  panel.style.transform=`perspective(1200px) rotateX(${-y*3+1}deg) rotateY(${x*3}deg) translateY(-2px)`;
+ });
+ panel.addEventListener("pointerleave",()=>panel.style.transform="perspective(1200px) rotateX(1deg) rotateY(0deg)");
+}
 
-    <!-- Interactive Chat / Mailbox Modal Drawer -->
-    <div class="modal-overlay" id="chatModal">
-        <div class="modal-box">
-            <button class="close-modal-btn" id="closeModalBtn"><i class="fas fa-times"></i></button>
-            <div class="modal-header">
-                <h2><i class="fas fa-envelope-open-text"></i> Send Note to Cali</h2>
-                <p style="font-size: 0.85rem; color: #886b82; margin-top: 4px;">
-                    Messages are sent directly to <b>calixynnn@gmail.com</b>! 💌
-                </p>
-            </div>
-            <form id="noteForm">
-                <div class="input-group">
-                    <label for="senderName"><i class="fas fa-user"></i> Your Name:</label>
-                    <input type="text" id="senderName" placeholder="e.g. Bestie / Someone who misses you" required>
-                </div>
-                <div class="input-group">
-                    <label for="messageText"><i class="fas fa-heart"></i> Send a message:</label>
-                    <textarea id="messageText" rows="3" placeholder="Write something sweet for Cali's return..." required></textarea>
-                </div>
-                <label style="font-size: 0.8rem; font-weight: 700; color: #6c5268; display: block; margin-bottom: 6px;">
-                    Quick Click Suggestions:
-                </label>
-                <div class="quick-chips">
-                    <span class="chip" onclick="setQuickMsg('I miss you so much, Cali! 💕')">I miss you so much 💕</span>
-                    <span class="chip" onclick="setQuickMsg('Counting down every single second! ⏳')">Counting down ⏳</span>
-                    <span class="chip" onclick="setQuickMsg('Can\'t wait for your return! 🎉')">Can't wait! 🎉</span>
-                    <span class="chip" onclick="setQuickMsg('Sending warm hugs and smiles! 🤗')">Sending hugs 🤗</span>
-                </div>
-                <button type="submit" class="cute-btn primary" style="width: 100%; justify-content: center; margin-top: 5px;" id="submitMsgBtn">
-                    <i class="fas fa-paper-plane"></i> Send Direct to Email 💌
-                </button>
-            </form>
-            <div class="notes-log">
-                <div style="font-size: 0.8rem; font-weight: 700; color: #7a5e72; margin-bottom: 8px;">
-                    <i class="fas fa-history"></i> Local Sent History:
-                </div>
-                <div id="notesContainer">
-                    <!-- Dynamic notes inserted here -->
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- JavaScript Application Logic -->
-    <script>
-        const FORMSPREE_URL = "https://formspree.io/f/mdeegnyp";
-
-        // Calculate Target Date: Exactly 5 Years, 120 Days, and 50 Seconds from NOW
-        const now = new Date();
-        const targetDate = new Date(now.getTime());
-        targetDate.setFullYear(targetDate.getFullYear() + 5);
-        targetDate.setDate(targetDate.getDate() + 120);
-        targetDate.setSeconds(targetDate.getSeconds() + 50);
-
-        document.getElementById('targetDateText').innerText = `Target Return Date: ${targetDate.toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })} at ${targetDate.toLocaleTimeString()}`;
-
-        // Audio synthesizer & sound toggle
-        let soundEnabled = true;
-        const soundToggleBtn = document.getElementById('soundToggleBtn');
-        const soundIcon = document.getElementById('soundIcon');
-        
-        soundToggleBtn.addEventListener('click', () => {
-            soundEnabled = !soundEnabled;
-            if(soundEnabled) {
-                soundIcon.className = 'fas fa-volume-up';
-                showToast('Sound Effects Enabled 🎵');
-                playTone('C5', '8n');
-            } else {
-                soundIcon.className = 'fas fa-volume-mute';
-                showToast('Sound Effects Muted 🔇');
-            }
-        });
-
-        function playTone(note = 'C5', duration = '8n') {
-            if(!soundEnabled) return;
-            try {
-                const synth = new Tone.Synth().toDestination();
-                synth.triggerAttackRelease(note, duration);
-            } catch(e) {}
-        }
-
-        function playChime() {
-            if(!soundEnabled) return;
-            try {
-                const nowTime = Tone.now();
-                const synth = new Tone.PolySynth(Tone.Synth).toDestination();
-                synth.triggerAttackRelease(["E5", "G5", "B5", "E6"], "8n", nowTime);
-            } catch(e) {}
-        }
-
-        // Precise Countdown Logic
-        function updateCountdown() {
-            const currentTime = new Date().getTime();
-            const distance = targetDate.getTime() - currentTime;
-            if (distance < 0) {
-                document.getElementById('years').innerText = "0";
-                document.getElementById('days').innerText = "0";
-                document.getElementById('hours').innerText = "00";
-                document.getElementById('minutes').innerText = "00";
-                document.getElementById('seconds').innerText = "00";
-                document.getElementById('speechBubble').innerText = "No more welcome! 🎉💕";
-                return;
-            }
-            const msPerDay = 1000 * 60 * 60 * 24;
-            const msPerYear = msPerDay * 365.25;
-            const years = Math.floor(distance / msPerYear);
-            const remainingAfterYears = distance % msPerYear;
-            const days = Math.floor(remainingAfterYears / msPerDay);
-            const hours = Math.floor((distance % msPerDay) / (1000 * 60 * 60));
-            const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
-            const seconds = Math.floor((distance % (1000 * 60)) / 1000);
-
-            document.getElementById('years').innerText = years;
-            document.getElementById('days').innerText = days;
-            document.getElementById('hours').innerText = hours < 10 ? '0' + hours : hours;
-            document.getElementById('minutes').innerText = minutes < 10 ? '0' + minutes : minutes;
-            document.getElementById('seconds').innerText = seconds < 10 ? '0' + seconds : seconds;
-        }
-        setInterval(updateCountdown, 1000);
-        updateCountdown();
-
-        // Interactive Kawaii Character
-        const charBox = document.getElementById('characterBox');
-        const speechBubble = document.getElementById('speechBubble');
-        const phrases = [
-            "I miss Cali so much! 💕",
-            "5 years & 120 days countdown! ⏳",
-            "Sending big hugs to Cali! 🤗",
-            "Can't wait for return day! ✨",
-            "You clicked me! Hehe ~ 😊",
-            "Make a wish for Cali! ⭐",
-            "Every second gets us closer! 💖"
-        ];
-
-        charBox.addEventListener('click', () => {
-            charBox.classList.add('blushing', 'winking', 'happy');
-            const randomPhrase = phrases[Math.floor(Math.random() * phrases.length)];
-            speechBubble.innerText = randomPhrase;
-            playTone('G5', '8n');
-            confetti({ particleCount: 25, spread: 60, origin: { y: 0.4 }, colors: ['#ffb6c1', '#ff6b8b', '#ffffff'] });
-            setTimeout(() => { charBox.classList.remove('winking', 'happy'); }, 1200);
-            setTimeout(() => { charBox.classList.remove('blushing'); }, 2500);
-        });
-
-        document.getElementById('sendLoveBtn').addEventListener('click', () => {
-            playTone('C5', '8n');
-            setTimeout(() => playTone('E5', '8n'), 120);
-            setTimeout(() => playTone('G5', '8n'), 240);
-            confetti({ particleCount: 60, spread: 80, origin: { y: 0.6 }, shapes: ['circle'], colors: ['#ff6b8b', '#e83e8c', '#ffb6c1'] });
-            showToast("Love sent to Cali's heart! 💕");
-            speechBubble.innerText = "Yay! Love received! 🥰";
-            charBox.classList.add('blushing', 'happy');
-            setTimeout(() => charBox.classList.remove('blushing', 'happy'), 2000);
-        });
-
-        document.getElementById('cheerBtn').addEventListener('click', () => {
-            playChime();
-            confetti({ particleCount: 40, angle: 60, spread: 55, origin: { x: 0 } });
-            confetti({ particleCount: 40, angle: 120, spread: 55, origin: { x: 1 } });
-            showToast("Sparkles & Cheers for Cali! ✨🎉");
-            speechBubble.innerText = "Cheering for Cali! ⭐";
-        });
-
-        document.getElementById('hugBtn').addEventListener('click', () => {
-            playTone('A4', '4n');
-            showToast("Warm digital hug sent! 🤗");
-            speechBubble.innerText = "Aww, big warm hugs! 🤗";
-            charBox.classList.add('blushing');
-            setTimeout(() => charBox.classList.remove('blushing'), 2000);
-        });
-
-        // Toast Notifications
-        function showToast(message, iconClass = 'fas fa-heart') {
-            const container = document.getElementById('toastContainer');
-            const toast = document.createElement('div');
-            toast.className = 'toast';
-            toast.innerHTML = `<i class="${iconClass}"></i> <span>${message}</span>`;
-            container.appendChild(toast);
-            setTimeout(() => toast.classList.add('show'), 50);
-            setTimeout(() => {
-                toast.classList.remove('show');
-                setTimeout(() => toast.remove(), 400);
-            }, 3500);
-        }
-
-        // Modal Controls
-        const chatModal = document.getElementById('chatModal');
-        const openChatBtn = document.getElementById('openChatBtn');
-        const floatingChatBtn = document.getElementById('floatingChatBtn');
-        const closeModalBtn = document.getElementById('closeModalBtn');
-
-        function openModal() { chatModal.classList.add('active'); playTone('F5', '8n'); }
-        function closeModal() { chatModal.classList.remove('active'); }
-
-        openChatBtn.addEventListener('click', openModal);
-        floatingChatBtn.addEventListener('click', openModal);
-        closeModalBtn.addEventListener('click', closeModal);
-        chatModal.addEventListener('click', (e) => { if (e.target === chatModal) closeModal(); });
-
-        function setQuickMsg(text) {
-            document.getElementById('messageText').value = text;
-            playTone('A5', '16n');
-        }
-
-        // 🧠 SMART LANGUAGE-MATCHING TOXIC FILTER FUNCTION
-        function makeItNegativeAndToxic(originalMessage) {
-            // Check kung may Tagalog words o Taglish ba ang ginamit
-            const tagalogWords = ['ako', 'ka', 'mo', 'na', 'sa', 'ang', 'ng', 'ko', 'pa', 'rin', 'ba', 'yata', 'kasi', 'naman', 'pala', 'huwag', 'wag', 'ingat', 'miss', 'kita'];
-            const lowerMsg = originalMessage.toLowerCase();
-            
-            // Hanapin kung may Tagalog/Taglish keywords
-            let isTagalogOrTaglish = tagalogWords.some(word => {
-                const regex = new RegExp(`\\b${word}\\b`, 'i');
-                return regex.test(lowerMsg);
-            });
-
-            if (isTagalogOrTaglish) {
-                // PURE TAGALOG / TAGLISH TOXIC TWIST
-                const tagalogRoasts = [
-                    "ulol", 
-                    "gago ka ba", 
-                    "tigilan mo nga ako", 
-                    "ang pangit mo", 
-                    "che!", 
-                    "manahimik ka nga", 
-                    "yawa", 
-                    "bahala ka sa buhay mo",
-                    "pwe!",
-                    "ewan ko sayo"
-                ];
-                const randomRoast = tagalogRoasts[Math.floor(Math.random() * tagalogRoasts.length)];
-                return `${originalMessage}... joke lang, ${randomRoast}! 🖕💀`;
-            } else {
-                // PURE ENGLISH TOXIC TWIST
-                const englishRoasts = [
-                    "you're an idiot", 
-                    "shut the hell up", 
-                    "get out of here", 
-                    "you're so annoying", 
-                    "screw you", 
-                    "leave me alone", 
-                    "what a complete joke", 
-                    "idiot!",
-                    "waste of time"
-                ];
-                const randomRoast = englishRoasts[Math.floor(Math.random() * englishRoasts.length)];
-                return `${originalMessage}... just kidding, ${randomRoast}! 🖕💀`;
-            }
-        }
-
-        let savedNotes = JSON.parse(localStorage.getItem('cali_return_notes') || '[]');
-
-        function renderNotes() {
-            const container = document.getElementById('notesContainer');
-            if (savedNotes.length === 0) {
-                container.innerHTML = `<p style="font-size: 0.8rem; color: #a0889c; text-align: center;">No notes sent yet. Be the first!</p>`;
-                return;
-            }
-            container.innerHTML = savedNotes.map(n => `
-                <div class="note-item">
-                    <b>${escapeHtml(n.name)}:</b> "${escapeHtml(n.message)}"
-                    <span class="time"><i class="far fa-clock"></i> ${n.time}</span>
-                </div>
-            `).join('');
-        }
-
-        function escapeHtml(str) {
-            return str.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
-        }
-        renderNotes();
-
-        // Note Form Submit Handler with Smart Language-Matching Filter
-        const noteForm = document.getElementById('noteForm');
-        const submitMsgBtn = document.getElementById('submitMsgBtn');
-
-        noteForm.addEventListener('submit', async (e) => {
-            e.preventDefault();
-            const name = document.getElementById('senderName').value.trim();
-            let message = document.getElementById('messageText').value.trim();
-            
-            if (!name || !message) return;
-
-            // 💥 DITO NA NAI-MATCH ANG LANGUAGE AT NABALIKTAD NG TAMA!
-            message = makeItNegativeAndToxic(message);
-
-            submitMsgBtn.disabled = true;
-            submitMsgBtn.innerHTML = `<i class="fas fa-spinner fa-spin"></i> Sending message...`;
-
-            try {
-                const response = await fetch(FORMSPREE_URL, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'Accept': 'application/json'
-                    },
-                    body: JSON.stringify({
-                        name: name,
-                        email: "calixynnn@gmail.com",
-                        message: message,
-                        _subject: `New Toxic Note for Cali from ${name}! 💀`
-                    })
-                });
-
-                if (response.ok) {
-                    showToast(`Message sent with toxic twist! 💀`, 'fas fa-skull');
-                } else {
-                    showToast(`Saved locally with roast! 😈`, 'fas fa-envelope');
-                }
-            } catch (err) {
-                showToast(`Saved locally with badwords! 💀`, 'fas fa-heart-broken');
-            }
-
-            const newNote = {
-                name: name,
-                message: message,
-                time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) + ' ' + new Date().toLocaleDateString()
-            };
-
-            savedNotes.unshift(newNote);
-            if (savedNotes.length > 10) savedNotes.pop();
-            localStorage.setItem('cali_return_notes', JSON.stringify(savedNotes));
-            renderNotes();
-
-            document.getElementById('messageText').value = '';
-            submitMsgBtn.disabled = false;
-            submitMsgBtn.innerHTML = `<i class="fas fa-paper-plane"></i> Send Direct to Email 💌`;
-
-            playTone('C3', '4n');
-            speechBubble.innerText = "Hehehe, twisted your message! 😈🔥";
-            charBox.classList.add('blushing');
-            setTimeout(() => { charBox.classList.remove('blushing'); }, 2000);
-
-            closeModal();
-        });
-
-        // Floating Hearts Background
-        function createFloatingHearts() {
-            const symbols = ['💖', '✨', '🌸', '💕', '⭐'];
-            for(let i = 0; i < 15; i++) {
-                const particle = document.createElement('div');
-                particle.className = 'bg-particle';
-                particle.innerText = symbols[Math.floor(Math.random() * symbols.length)];
-                particle.style.left = Math.random() * 100 + 'vw';
-                particle.style.animationDuration = (8 + Math.random() * 8) + 's';
-                particle.style.animationDelay = (Math.random() * 5) + 's';
-                particle.style.fontSize = (14 + Math.random() * 16) + 'px';
-                document.body.appendChild(particle);
-            }
-        }
-        createFloatingHearts();
-    </script>
-
-    <!-- Philippines-only access restriction -->
-    <script>
-    (async function philippinesOnlyAccess() {
-        const checker = document.getElementById('locationChecking');
-
-        function showVerificationError() {
-            document.body.innerHTML = `
-                <div style="
-                    min-height:100vh;
-                    display:flex;
-                    align-items:center;
-                    justify-content:center;
-                    text-align:center;
-                    padding:24px;
-                    background:linear-gradient(135deg,#ffedee,#e3eeff);
-                    font-family:Arial,sans-serif;
-                ">
-                    <div style="background:white;padding:35px 25px;border-radius:25px;max-width:400px;box-shadow:0 10px 30px rgba(255,107,139,.2);">
-                        <div style="font-size:55px;">⚠️</div>
-                        <h1 style="color:#e83e8c;">Location Verification Failed</h1>
-                        <p style="color:#6c5268;line-height:1.6;">
-                            We couldn't verify your country. Please check your internet connection and reload the page.
-                        </p>
-                    </div>
-                </div>
-            `;
-            document.body.style.visibility = 'visible';
-        }
-
-        try {
-            const response = await fetch('https://ipapi.co/json/', {
-                method: 'GET',
-                cache: 'no-store'
-            });
-
-            if (!response.ok) {
-                throw new Error('Country lookup was unsuccessful.');
-            }
-
-            const locationData = await response.json();
-
-            if (locationData.country_code === 'PH') {
-                document.body.style.visibility = 'visible';
-                if (checker) checker.remove();
-            } else {
-                document.body.innerHTML = `
-                    <div style="
-                        min-height:100vh;
-                        display:flex;
-                        align-items:center;
-                        justify-content:center;
-                        text-align:center;
-                        padding:24px;
-                        background:linear-gradient(135deg,#ffedee,#e3eeff);
-                        font-family:'Nunito',Arial,sans-serif;
-                    ">
-                        <div style="
-                            background:white;
-                            padding:40px 25px;
-                            border-radius:25px;
-                            max-width:420px;
-                            width:100%;
-                            box-shadow:0 10px 30px rgba(255,107,139,.2);
-                        ">
-                            <div style="font-size:65px;">🇵🇭 🔒</div>
-                            <h1 style="color:#e83e8c;margin:15px 0;">Access Denied!</h1>
-                            <p style="color:#6c5268;line-height:1.7;">
-                                Sorry! Cali's Return Countdown is exclusively available in the Philippines.
-                            </p>
-                            <h3 style="color:#e83e8c;margin-top:20px;">Philippines Only 💕</h3>
-                        </div>
-                    </div>
-                `;
-                document.body.style.visibility = 'visible';
-            }
-        } catch (error) {
-            showVerificationError();
-        }
-    })();
-    </script>
-
+const sky=$("sky");
+for(let i=0;i<75;i++){
+ const star=document.createElement("i");star.className="star";
+ star.style.left=Math.random()*100+"%";star.style.top=Math.random()*100+"%";
+ star.style.animationDelay=Math.random()*3+"s";star.style.animationDuration=(1.5+Math.random()*3)+"s";
+ sky.appendChild(star);
+}
+const petals=["🌸","✦","✧","🌸"];
+for(let i=0;i<22;i++){
+ const p=document.createElement("span");p.className="petal";p.textContent=petals[Math.floor(Math.random()*petals.length)];
+ p.style.left=Math.random()*100+"%";p.style.animationDuration=(9+Math.random()*12)+"s";
+ p.style.animationDelay=(-Math.random()*15)+"s";p.style.fontSize=(10+Math.random()*12)+"px";
+ sky.appendChild(p);
+}
+</script>
 </body>
 </html>
