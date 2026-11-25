@@ -1,1 +1,1125 @@
 
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cali's Return Countdown ✨</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;600;700;800;900&family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+
+<script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+
+<style>
+:root {
+    --bg:#170b27;
+    --panel:#211033;
+    --pink:#ff5db1;
+    --pink2:#c77dff;
+    --text:#fff7ff;
+    --muted:#b8a8c5;
+    --line:rgba(255,255,255,.14);
+    --glow:rgba(255,77,174,.3);
+}
+
+* {
+    box-sizing:border-box;
+    margin:0;
+    padding:0;
+}
+
+body {
+    min-height:100vh;
+    overflow-x:hidden;
+    color:var(--text);
+    font-family:Nunito,Arial,sans-serif;
+    background:
+        radial-gradient(circle at 75% 18%,#4a1760 0,transparent 25%),
+        radial-gradient(circle at 15% 75%,#321044 0,transparent 30%),
+        linear-gradient(145deg,#10071c,#211033 55%,#10071d);
+    padding:22px 18px 35px;
+}
+
+body.cyber {
+    --pink:#00e5ff;
+    --pink2:#397bff;
+    --glow:rgba(0,229,255,.3);
+    background:radial-gradient(circle at 75% 18%,#064b68 0,transparent 26%),
+    linear-gradient(145deg,#04101c,#0b2036 55%,#06111e);
+}
+
+body.shonen {
+    --pink:#ff9b35;
+    --pink2:#ff426e;
+    --glow:rgba(255,125,35,.3);
+    background:radial-gradient(circle at 75% 18%,#773019 0,transparent 26%),
+    linear-gradient(145deg,#170904,#351707 55%,#160803);
+}
+
+button {
+    font:inherit;
+    cursor:pointer;
+}
+
+.sky {
+    position:fixed;
+    inset:0;
+    pointer-events:none;
+    overflow:hidden;
+    z-index:0;
+    background-image:
+        linear-gradient(rgba(255,255,255,.025) 1px,transparent 1px),
+        linear-gradient(90deg,rgba(255,255,255,.025) 1px,transparent 1px);
+    background-size:48px 48px;
+    mask-image:linear-gradient(to bottom,transparent,black 18%,black 85%,transparent);
+}
+
+.star {
+    position:absolute;
+    width:3px;
+    height:3px;
+    border-radius:50%;
+    background:white;
+    opacity:.65;
+    animation:twinkle 2.5s infinite alternate;
+}
+
+@keyframes twinkle {
+    to {
+        opacity:.15;
+        transform:scale(.5);
+    }
+}
+
+.moon {
+    position:absolute;
+    right:19%;
+    top:7%;
+    width:150px;
+    height:150px;
+    border-radius:50%;
+    background:radial-gradient(circle at 35% 30%,#ffd5f0,#ff64b7 55%,#a42b9b);
+    box-shadow:0 0 35px #ff5db1,0 0 90px #e43ba8;
+    opacity:.9;
+}
+
+.petal {
+    position:absolute;
+    top:-30px;
+    color:#ffc0e2;
+    animation:fall linear infinite;
+    opacity:.75;
+}
+
+@keyframes fall {
+    to {
+        transform:translate3d(70px,110vh,0) rotate(600deg);
+    }
+}
+
+.scene {
+    position:relative;
+    z-index:1;
+    max-width:1100px;
+    margin:auto;
+}
+
+nav {
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:15px;
+    max-width:980px;
+    margin:0 auto 75px;
+}
+
+.brand {
+    display:flex;
+    align-items:center;
+    gap:13px;
+    font-weight:900;
+    letter-spacing:2px;
+    color:#d9cadd;
+}
+
+.onair {
+    padding:7px 14px;
+    border-radius:9px;
+    background:linear-gradient(110deg,var(--pink),var(--pink2));
+    color:#190b25;
+    font-weight:900;
+    box-shadow:0 0 22px var(--glow);
+}
+
+.nav-right {
+    display:flex;
+    align-items:center;
+    gap:8px;
+    flex-wrap:wrap;
+}
+
+.pill {
+    border:1px solid var(--line);
+    border-radius:30px;
+    padding:9px 14px;
+    background:#ffffff0b;
+    color:var(--muted);
+    font-weight:800;
+}
+
+.pill.active,
+.pill:hover {
+    color:white;
+    border-color:var(--pink);
+    background:var(--glow);
+}
+
+.panel {
+    max-width:910px;
+    margin:auto;
+    padding:48px 48px 34px;
+    text-align:center;
+    position:relative;
+    border:1px solid rgba(255,255,255,.24);
+    border-radius:30px;
+    background:linear-gradient(145deg,rgba(40,20,59,.94),rgba(22,10,35,.96));
+    box-shadow:0 35px 90px #0009,0 0 55px var(--glow),inset 0 1px 0 #ffffff28;
+    transform:perspective(1200px) rotateX(1deg);
+    backdrop-filter:blur(16px);
+    isolation:isolate;
+    transition:transform .2s;
+}
+
+body.cyber .panel {
+    background:linear-gradient(145deg,rgba(12,38,60,.96),rgba(5,19,34,.97));
+}
+
+body.shonen .panel {
+    background:linear-gradient(145deg,rgba(65,31,12,.96),rgba(28,13,5,.97));
+}
+
+.panel:before {
+    content:"";
+    position:absolute;
+    inset:-1px;
+    border-radius:inherit;
+    padding:1px;
+    background:linear-gradient(135deg,var(--pink),transparent 35%,#ffffff30 65%,var(--pink2));
+    -webkit-mask:linear-gradient(#fff 0 0) content-box,linear-gradient(#fff 0 0);
+    -webkit-mask-composite:xor;
+    mask-composite:exclude;
+    pointer-events:none;
+    z-index:-1;
+}
+
+.corner {
+    position:absolute;
+    width:24px;
+    height:24px;
+    border-color:#ffffff65;
+    border-style:solid;
+}
+
+.tl {
+    top:19px;
+    left:19px;
+    border-width:2px 0 0 2px;
+}
+
+.tr {
+    top:19px;
+    right:19px;
+    border-width:2px 2px 0 0;
+}
+
+.bl {
+    bottom:19px;
+    left:19px;
+    border-width:0 0 2px 2px;
+}
+
+.br {
+    bottom:19px;
+    right:19px;
+    border-width:0 2px 2px 0;
+}
+
+.eyebrow {
+    display:inline-block;
+    padding:8px 19px;
+    border-radius:30px;
+    background:#ffffff0b;
+    border:1px solid var(--line);
+    color:#e7dce9;
+    font-weight:800;
+    margin-bottom:20px;
+}
+
+h1 {
+    font-family:Orbitron,sans-serif;
+    font-size:clamp(2.2rem,6vw,3.8rem);
+    line-height:1.12;
+    font-weight:900;
+    letter-spacing:1px;
+    color:#fff;
+    text-shadow:0 2px 0 #d45aa9,0 4px 0 #9d3b91,0 7px 0 #57245f,0 12px 25px #0009,0 0 32px var(--glow);
+    margin-bottom:12px;
+    animation:titleFloat 4s ease-in-out infinite;
+}
+
+@keyframes titleFloat {
+    0%,100% {transform:translateY(0)}
+    50% {transform:translateY(-5px)}
+}
+
+.schedule {
+    color:var(--muted);
+    font-size:1rem;
+    font-weight:800;
+    margin-bottom:34px;
+}
+
+.countdown {
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+    gap:18px;
+    margin:0 auto 34px;
+}
+
+.time-card {
+    position:relative;
+    overflow:hidden;
+    padding:23px 10px 20px;
+    border-radius:21px;
+    border:1px solid rgba(255,255,255,.2);
+    background:linear-gradient(145deg,#21102f,#0b0613);
+    box-shadow:0 18px 28px #0007,inset 0 2px 0 #ffffff20;
+    transition:.3s;
+    min-width:0;
+}
+
+body.cyber .time-card {
+    background:linear-gradient(145deg,#071c2c,#061321);
+}
+
+body.shonen .time-card {
+    background:linear-gradient(145deg,#281205,#160902);
+}
+
+.time-card:hover {
+    transform:translateY(-8px);
+    border-color:var(--pink);
+    box-shadow:0 18px 35px #0007,0 0 25px var(--glow);
+}
+
+.value {
+    font-family:Orbitron,sans-serif;
+    font-size:clamp(2.3rem,6vw,4.1rem);
+    font-weight:900;
+    line-height:1.2;
+    color:var(--pink);
+    text-shadow:0 2px 0 #8b2d78,0 4px 0 #4c1c53,0 0 12px var(--pink),0 0 30px var(--glow);
+    font-variant-numeric:tabular-nums;
+}
+
+.label {
+    margin-top:8px;
+    color:#c9bdce;
+    font-size:.85rem;
+    letter-spacing:1px;
+    font-weight:900;
+}
+
+.actions {
+    display:flex;
+    justify-content:center;
+    gap:12px;
+    flex-wrap:wrap;
+    margin-bottom:24px;
+}
+
+.btn {
+    border:1px solid var(--line);
+    border-radius:14px;
+    padding:14px 21px;
+    background:#ffffff0b;
+    color:white;
+    font-weight:900;
+    box-shadow:0 8px 18px #0003;
+    transition:.2s;
+}
+
+.btn:hover {
+    transform:translateY(-3px);
+    border-color:var(--pink);
+    box-shadow:0 10px 25px var(--glow);
+}
+
+.btn.primary {
+    background:linear-gradient(110deg,var(--pink),var(--pink2));
+    border:0;
+    color:#1a0b23;
+}
+
+.presets {
+    border-top:1px solid var(--line);
+    padding-top:18px;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    gap:9px;
+    flex-wrap:wrap;
+    color:#a999b4;
+    font-size:.9rem;
+    font-weight:800;
+}
+
+.small {
+    padding:7px 13px;
+    border-radius:10px;
+    font-size:.82rem;
+}
+
+footer {
+    text-align:center;
+    color:#a99ab1;
+    margin:40px auto 0;
+    font-size:.9rem;
+    font-weight:800;
+}
+
+.toast {
+    position:fixed;
+    top:20px;
+    right:20px;
+    z-index:50;
+    background:#241333;
+    border:1px solid var(--pink);
+    border-radius:14px;
+    padding:13px 18px;
+    box-shadow:0 8px 25px #0008;
+    transform:translateX(150%);
+    transition:.3s;
+    color:white;
+}
+
+.toast.show {
+    transform:translateX(0);
+}
+
+.modal {
+    position:fixed;
+    inset:0;
+    z-index:30;
+    background:#07030bbd;
+    display:none;
+    align-items:center;
+    justify-content:center;
+    padding:18px;
+}
+
+.modal.open {
+    display:flex;
+}
+
+.modal-box {
+    width:min(100%,460px);
+    background:#211033;
+    border:1px solid var(--pink);
+    border-radius:22px;
+    padding:26px;
+    box-shadow:0 15px 55px #000b,0 0 30px var(--glow);
+    position:relative;
+}
+
+.modal-box h2 {
+    font-family:Orbitron,sans-serif;
+    color:var(--pink);
+    font-size:1.25rem;
+    margin-bottom:17px;
+}
+
+.modal-box label {
+    display:block;
+    text-align:left;
+    color:#d9cadd;
+    font-weight:800;
+    margin:12px 0 6px;
+}
+
+.modal-box input,
+.modal-box textarea {
+    width:100%;
+    border:1px solid #ffffff30;
+    border-radius:11px;
+    background:#10091a;
+    color:white;
+    padding:12px;
+    font:inherit;
+    outline:none;
+}
+
+.modal-box input:focus,
+.modal-box textarea:focus {
+    border-color:var(--pink);
+}
+
+.modal-actions {
+    display:flex;
+    gap:9px;
+    flex-wrap:wrap;
+    margin-top:17px;
+}
+
+.close {
+    position:absolute;
+    right:16px;
+    top:13px;
+    background:transparent;
+    border:0;
+    color:white;
+    font-size:1.5rem;
+}
+
+.note-list {
+    max-height:130px;
+    overflow:auto;
+    margin-top:15px;
+    text-align:left;
+}
+
+.note {
+    background:#ffffff0b;
+    border-left:3px solid var(--pink);
+    padding:9px 12px;
+    border-radius:8px;
+    margin:7px 0;
+    font-size:.88rem;
+    color:#eee;
+}
+
+.btn:disabled {
+    opacity:.6;
+    cursor:not-allowed;
+}
+
+a {
+    color:var(--pink);
+    text-decoration:none;
+    font-weight:900;
+}
+
+a:hover {
+    text-decoration:underline;
+}
+
+@media(max-width:650px) {
+    body {
+        padding:15px 12px 28px;
+    }
+
+    .moon {
+        width:95px;
+        height:95px;
+        right:8%;
+        top:10%;
+    }
+
+    nav {
+        margin-bottom:45px;
+        align-items:flex-start;
+        flex-direction:column;
+    }
+
+    .panel {
+        padding:42px 17px 25px;
+        border-radius:23px;
+    }
+
+    .countdown {
+        grid-template-columns:repeat(2,1fr);
+        gap:12px;
+    }
+
+    .time-card {
+        padding:18px 7px;
+    }
+
+    .schedule {
+        font-size:.88rem;
+    }
+
+    .nav-right {
+        gap:6px;
+    }
+
+    .pill {
+        padding:8px 11px;
+        font-size:.8rem;
+    }
+
+    footer {
+        margin-top:35px;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<div class="sky" id="sky">
+    <div class="moon"></div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<main class="scene">
+
+<nav>
+    <div class="brand">
+        <span class="onair">OFF AIR</span>
+        <span>カウントダウン • ANIME TIMER</span>
+    </div>
+
+    <div class="nav-right">
+        <button class="pill active" data-theme="sakura">🌸 Sakura</button>
+        <button class="pill" data-theme="cyber">⚡ Cyber</button>
+        <button class="pill" data-theme="shonen">🔥 Shonen</button>
+        <button class="pill" id="soundBtn">🔊 Sound On</button>
+    </div>
+</nav>
+
+<section class="panel">
+
+    <i class="corner tl"></i>
+    <i class="corner tr"></i>
+    <i class="corner bl"></i>
+    <i class="corner br"></i>
+
+    <div class="eyebrow">
+      Hi krishna (prince_vegito), hows it been
+    </div>
+
+    <h1 id="eventTitle">CALI'S RETURN</h1>
+
+    <p class="schedule" id="targetText">
+        Target Schedule: Calculating...
+    </p>
+
+    <div class="countdown">
+
+        <div class="time-card">
+            <div class="value" id="days">000</div>
+            <div class="label">DAYS / 日</div>
+        </div>
+
+        <div class="time-card">
+            <div class="value" id="hours">00</div>
+            <div class="label">HOURS / 時間</div>
+        </div>
+
+        <div class="time-card">
+            <div class="value" id="minutes">00</div>
+            <div class="label">MINUTES / 分</div>
+        </div>
+
+        <div class="time-card">
+            <div class="value" id="seconds">00</div>
+            <div class="label">SECONDS / 秒</div>
+        </div>
+
+    </div>
+
+    <div class="actions">
+        <button class="btn" id="demoBtn">🎆 10s Demo Celebration</button>
+        <button class="btn" id="messageBtn">💌 Send Note to Cali</button>
+    </div>
+
+    <div class="presets">
+        <span>Quick Presets:</span>
+        <button class="btn small" data-add="60000">+1 Min</button>
+        <button class="btn small" data-add="86400000">+1 Day</button>
+        <button class="btn small" data-add="604800000">+7 Days</button>
+    </div>
+
+    <div style="margin-top:25px">
+        <a href="https://www.roblox.com/home" target="_blank" rel="noopener noreferrer">
+            Visit Roblox 🎮
+        </a>
+    </div>
+
+</section>
+
+<footer>
+    夢を見続ける限り、物語は終わらない。<br>
+    As long as you keep dreaming, the story never ends.
+</footer>
+
+</main>
+
+<div class="modal" id="noteModal">
+
+    <div class="modal-box">
+
+        <button class="close" data-close="noteModal">×</button>
+
+        <h2>💌 Send Note to Cali</h2>
+
+        <label for="sender">Your name</label>
+        <input id="sender" maxlength="60" placeholder="Your name">
+
+        <label for="message">Message</label>
+        <textarea id="message" rows="4" maxlength="1000" placeholder="Write a message for Cali..."></textarea>
+
+        <div class="modal-actions">
+            <button class="btn primary" id="sendNote">Save Note</button>
+            <button class="btn" data-close="noteModal">Close</button>
+        </div>
+
+        <div class="note-list" id="notesList"></div>
+
+    </div>
+</div>
+
+<script>
+
+const $ = id => document.getElementById(id);
+
+// DEVELOPER SETTINGS
+// Change this date to adjust the countdown.
+
+const TARGET_DATE = "2025-11-27T00:12:00";
+
+const FORMspree_URL = "https://formspree.io/f/mdeegnyp";
+
+let targetDate = new Date(TARGET_DATE);
+let soundOn = true;
+let demoTimer = null;
+
+// TOAST NOTIFICATION
+
+function showToast(message) {
+    const t = $("toast");
+
+    t.textContent = message;
+    t.classList.add("show");
+
+    setTimeout(() => {
+        t.classList.remove("show");
+    }, 2600);
+}
+
+// DATE FORMAT
+
+function formatDate(date) {
+    return date.toLocaleString("en-US", {
+        weekday:"short",
+        month:"short",
+        day:"numeric",
+        year:"numeric",
+        hour:"numeric",
+        minute:"2-digit",
+        second:"2-digit"
+    });
+}
+
+// COUNTDOWN
+
+function updateCountdown() {
+
+    const diff = targetDate.getTime() - Date.now();
+
+    if (diff <= 0) {
+
+        $("days").textContent = "000";
+        $("hours").textContent = "00";
+        $("minutes").textContent = "00";
+        $("seconds").textContent = "00";
+
+        $("targetText").textContent =
+            "The event has started! Welcome back, Cali! ✨";
+
+        return;
+    }
+
+    const days = Math.floor(diff / 86400000);
+    const hours = Math.floor(diff % 86400000 / 3600000);
+    const minutes = Math.floor(diff % 3600000 / 60000);
+    const seconds = Math.floor(diff % 60000 / 1000);
+
+    $("days").textContent = String(days).padStart(3,"0");
+    $("hours").textContent = String(hours).padStart(2,"0");
+    $("minutes").textContent = String(minutes).padStart(2,"0");
+    $("seconds").textContent = String(seconds).padStart(2,"0");
+
+    $("targetText").textContent =
+        "Target Schedule: " + formatDate(targetDate);
+}
+
+updateCountdown();
+
+setInterval(updateCountdown,1000);
+
+// MODAL
+
+function openModal(id) {
+    $(id).classList.add("open");
+}
+
+function closeModal(id) {
+    $(id).classList.remove("open");
+}
+
+document.querySelectorAll("[data-close]").forEach(button => {
+
+    button.addEventListener("click", () => {
+        closeModal(button.dataset.close);
+    });
+
+});
+
+document.querySelectorAll(".modal").forEach(modal => {
+
+    modal.addEventListener("click", event => {
+
+        if (event.target === modal) {
+            modal.classList.remove("open");
+        }
+
+    });
+
+});
+
+// QUICK PRESETS
+
+document.querySelectorAll("[data-add]").forEach(button => {
+
+    button.addEventListener("click", () => {
+
+        targetDate = new Date(
+            Math.max(Date.now(),targetDate.getTime()) +
+            Number(button.dataset.add)
+        );
+
+        updateCountdown();
+
+        showToast("Countdown extended! ⏳");
+
+    });
+
+});
+
+// THEMES
+
+document.querySelectorAll("[data-theme]").forEach(button => {
+
+    button.addEventListener("click", () => {
+
+        document.body.classList.remove("cyber","shonen");
+
+        if (button.dataset.theme !== "sakura") {
+            document.body.classList.add(button.dataset.theme);
+        }
+
+        document.querySelectorAll("[data-theme]").forEach(item => {
+            item.classList.toggle("active",item === button);
+        });
+
+        showToast(button.dataset.theme.toUpperCase() + " theme activated");
+
+    });
+
+});
+
+// SOUND SETTING
+
+$("soundBtn").addEventListener("click", () => {
+
+    soundOn = !soundOn;
+
+    $("soundBtn").textContent =
+        soundOn ? "🔊 Sound On" : "🔇 Sound Off";
+
+    showToast(
+        soundOn ? "Sound setting is on" : "Sound setting is off"
+    );
+
+});
+
+// CELEBRATION
+
+function celebrate() {
+
+    if (!window.confetti) {
+        showToast("Celebration! 🎉");
+        return;
+    }
+
+    confetti({
+        particleCount:130,
+        spread:100,
+        origin:{y:.65},
+        colors:["#ff5db1","#c77dff","#ffffff","#ffd166"]
+    });
+
+}
+
+$("demoBtn").addEventListener("click", () => {
+
+    if (demoTimer) {
+        clearInterval(demoTimer);
+    }
+
+    let count = 0;
+
+    showToast("Demo celebration started! 🎆");
+
+    celebrate();
+
+    demoTimer = setInterval(() => {
+
+        celebrate();
+
+        count++;
+
+        if (count >= 10) {
+
+            clearInterval(demoTimer);
+            demoTimer = null;
+
+            showToast("Demo celebration complete! ✨");
+
+        }
+
+    },1000);
+
+});
+
+// NOTES STORAGE
+
+let notes = [];
+
+try {
+    notes = JSON.parse(
+        localStorage.getItem("cali_anime_notes") || "[]"
+    );
+
+    if (!Array.isArray(notes)) notes = [];
+
+} catch (error) {
+    notes = [];
+}
+
+// DISPLAY NOTES
+
+function renderNotes() {
+
+    const list = $("notesList");
+
+    list.innerHTML = "";
+
+    if (!notes.length) {
+        list.textContent = "No saved notes yet.";
+        return;
+    }
+
+    notes.forEach(note => {
+
+        const div = document.createElement("div");
+        div.className = "note";
+
+        const strong = document.createElement("strong");
+        strong.textContent = note.name + ": ";
+
+        const span = document.createElement("span");
+        span.textContent = note.message;
+
+        const small = document.createElement("small");
+        small.style.display = "block";
+        small.style.opacity = ".65";
+        small.textContent = note.time;
+
+        div.append(strong,span,small);
+
+        list.appendChild(div);
+
+    });
+
+}
+
+// OPEN NOTE MODAL
+
+$("messageBtn").addEventListener("click", () => {
+
+    renderNotes();
+
+    openModal("noteModal");
+
+});
+
+// SAVE AND SEND NOTE
+
+$("sendNote").addEventListener("click", async () => {
+
+    const name = $("sender").value.trim();
+    const message = $("message").value.trim();
+
+    if (!name || !message) {
+        showToast("Please enter your name and message.");
+        return;
+    }
+
+    const button = $("sendNote");
+
+    button.disabled = true;
+    button.textContent = "Sending...";
+
+    let sent = false;
+
+    try {
+
+        const response = await fetch(FORMspree_URL, {
+
+            method:"POST",
+
+            headers:{
+                "Content-Type":"application/json",
+                "Accept":"application/json"
+            },
+
+            body:JSON.stringify({
+                name:name,
+                message:message,
+                _subject:"A note for Cali"
+            })
+
+        });
+
+        sent = response.ok;
+
+    } catch (error) {
+
+        sent = false;
+
+    }
+
+    notes.unshift({
+
+        name:name,
+        message:message,
+        time:new Date().toLocaleString()
+
+    });
+
+    notes = notes.slice(0,20);
+
+    try {
+        localStorage.setItem(
+            "cali_anime_notes",
+            JSON.stringify(notes)
+        );
+    } catch (error) {
+        showToast("Unable to save notes on this device.");
+    }
+
+    renderNotes();
+
+    $("message").value = "";
+
+    button.disabled = false;
+    button.textContent = "Save Note";
+
+    showToast(
+        sent
+        ? "Message sent and saved! 💌"
+        : "Note saved on this device. Email service unavailable."
+    );
+
+});
+
+// INITIAL NOTES
+
+renderNotes();
+
+// 3D MOUSE EFFECT
+
+const panel = document.querySelector(".panel");
+
+if (window.matchMedia("(pointer:fine)").matches) {
+
+    panel.addEventListener("pointermove", event => {
+
+        const rect = panel.getBoundingClientRect();
+
+        const x = (event.clientX - rect.left) / rect.width - .5;
+        const y = (event.clientY - rect.top) / rect.height - .5;
+
+        panel.style.transform =
+            `perspective(1200px) rotateX(${-y*3+1}deg) rotateY(${x*3}deg) translateY(-2px)`;
+
+    });
+
+    panel.addEventListener("pointerleave", () => {
+
+        panel.style.transform =
+            "perspective(1200px) rotateX(1deg) rotateY(0deg)";
+
+    });
+
+}
+
+// BACKGROUND STARS
+
+const sky = $("sky");
+
+for (let i = 0; i < 75; i++) {
+
+    const star = document.createElement("i");
+
+    star.className = "star";
+
+    star.style.left = Math.random() * 100 + "%";
+    star.style.top = Math.random() * 100 + "%";
+
+    star.style.animationDelay = Math.random() * 3 + "s";
+
+    star.style.animationDuration =
+        (1.5 + Math.random() * 3) + "s";
+
+    sky.appendChild(star);
+
+}
+
+// FALLING PETALS
+
+const petals = ["🌸","✦","✧","🌸"];
+
+for (let i = 0; i < 22; i++) {
+
+    const petal = document.createElement("span");
+
+    petal.className = "petal";
+
+    petal.textContent =
+        petals[Math.floor(Math.random() * petals.length)];
+
+    petal.style.left = Math.random() * 100 + "%";
+
+    petal.style.animationDuration =
+        (9 + Math.random() * 12) + "s";
+
+    petal.style.animationDelay =
+        (-Math.random() * 15) + "s";
+
+    petal.style.fontSize =
+        (10 + Math.random() * 12) + "px";
+
+    sky.appendChild(petal);
+
+}
+
+</script>
+
+</body>
+</html>
+
